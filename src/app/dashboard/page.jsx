@@ -498,8 +498,8 @@ export default function Dashboard() {
         setLoading(false);
         return;
       }
-      if (form.description && form.description.length > 200) {
-        setError("Description must be 200 characters or less.");
+      if (form.description && form.description.length > 1000) {
+        setError("Description must be 1000 characters or less.");
         setLoading(false);
         return;
       }
