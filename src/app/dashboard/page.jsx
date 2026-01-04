@@ -158,6 +158,8 @@ export default function Dashboard() {
     chart: null,
     preview: null,
     background: null,
+    removePreview: false,
+    removeBackground: false,
     visibility: "public"
   });
 
@@ -246,8 +248,8 @@ export default function Dashboard() {
   const openUpload = () => {
     setMode("upload");
     setForm({
-      title: "", artists: "", author: "", rating: "", description: "", tags: "",
-      jacket: null, bgm: null, chart: null, preview: null, background: null, visibility: "private"
+      title: "", artists: "", author: "", rating: "", description: "", tags: "", jacket: null, bgm: null,
+      chart: null, preview: null, background: null, visibility: "private", removePreview: false, removeBackground: false
     });
     setError(null);
     setIsOpen(true);
@@ -260,7 +262,7 @@ export default function Dashboard() {
       title: post.title, artists: post.artists, author: post.author_field, rating: String(post.rating ?? ""),
       description: post.description || "", tags: post.tags || "",
       jacket: null, bgm: null, chart: null, preview: null, background: null,
-      visibility: vis
+      visibility: vis, removePreview: false, removeBackground: false
     });
     setEditData({
       id: post.id,
@@ -336,7 +338,7 @@ export default function Dashboard() {
         description: form.description, status: vis,
         includes_jacket: !!form.jacket, includes_audio: !!form.bgm, includes_chart: !!form.chart,
         includes_preview: !!form.preview, includes_background: !!form.background,
-        delete_background: false, delete_preview: false
+        delete_background: !!form.removeBackground, delete_preview: !!form.removePreview
       };
 
       let parsedTags = [];

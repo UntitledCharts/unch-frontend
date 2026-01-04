@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Loader2, Globe, EyeOff, Lock, Unlock, Link as LinkIcon } from "lucide-react";
+import { Loader2, Globe, EyeOff, Lock, Unlock, Link as LinkIcon, XIcon } from "lucide-react";
 import "./ChartModal.css";
 import { useLanguage } from "../../contexts/LanguageContext";
 import AudioControls from "../audio-control/AudioControls";
@@ -173,11 +173,11 @@ export default function ChartModal({
               </div>
 
               <div className="form-group file-section">
-                <label htmlFor="jacket_edit">{t('modal.coverImage', 'Cover Image')} (png, max {limits?.jacket_bytes ? formatBytes(limits.jacket_bytes) : '5MB'})</label>
+                <label htmlFor="jacket_edit">{t('modal.coverImage', 'Cover Image')} (.png/.jpg, max {limits?.jacket_bytes ? formatBytes(limits.jacket_bytes) : '5MB'})</label>
                 <input
                   id="jacket_edit"
                   type="file"
-                  accept="image/png"
+                  accept="image/png, image/jpeg"
                   onChange={checkFileLimit(limits?.jacket_bytes || 5 * 1024 * 1024, onUpdate("jacket"))}
                 />
                 {form.jacket && (
@@ -232,7 +232,7 @@ export default function ChartModal({
               </div>
 
               <div className="form-group file-section">
-                <label htmlFor="chart_edit">{t('modal.chartFile', 'Chart File')} (.SUS/.USC, max {limits?.chart_bytes ? formatBytes(limits.chart_bytes) : '10MB'})</label>
+                <label htmlFor="chart_edit">{t('modal.chartFile', 'Chart File')} (max {limits?.chart_bytes ? formatBytes(limits.chart_bytes) : '10MB'})</label>
                 <input
                   id="chart_edit"
                   type="file"
@@ -252,12 +252,27 @@ export default function ChartModal({
 
               <div className="form-group file-section">
                 <label htmlFor="preview_edit">{t('modal.previewAudio', 'Preview Audio (Optional)')}</label>
-                <input
-                  id="preview_edit"
-                  type="file"
-                  accept="audio/mp3, audio/mpeg"
-                  onChange={checkFileLimit(limits?.preview_bytes || 20 * 1024 * 1024, onUpdate("preview"))}
-                />
+                <div className="flex gap-1">
+                  <input
+                    id="preview_edit"
+                    type="file"
+                    accept="audio/mp3, audio/mpeg"
+                    onChange={checkFileLimit(limits?.preview_bytes || 20 * 1024 * 1024, (e) => {
+                      onUpdate("preview")(e)
+                      onUpdate("removePreview")(false)
+                    })}
+                  />
+                  <div
+                    className={(form?.removePreview ? "border-red-100/80 bg-red-200/15" : "border-red-300/30 bg-red-200/10 hover:border-red-100/80 hover:bg-red-200/15") + " aspect-square h-24 border-2 flex items-center justify-center p-3 rounded-xl border-dashed gap-1 text-sm font-bold cursor-pointer transition-all"}
+                    onClick={() => {
+                      onUpdate("removePreview")(!form.removePreview)
+                      if (!form.removePreview) onUpdate("preview")(null)
+                    }}
+                  >
+                    <XIcon className="size-4" />
+                    Remove
+                  </div>
+                </div>
                 {form.preview && (
                   <div className="file-preview selected">
                     <span>{t('modal.selected', { name: form.preview.name })}</span>
@@ -289,12 +304,27 @@ export default function ChartModal({
 
               <div className="form-group file-section">
                 <label htmlFor="background_edit">{t('modal.backgroundImage', 'Background Image (Optional)')}</label>
-                <input
-                  id="background_edit"
-                  type="file"
-                  accept="image/png"
-                  onChange={checkFileLimit(limits?.background_bytes || 5 * 1024 * 1024, onUpdate("background"))}
-                />
+                <div className="flex gap-1">
+                  <input
+                    id="background_edit"
+                    type="file"
+                    accept="image/png"
+                    onChange={checkFileLimit(limits?.background_bytes || 5 * 1024 * 1024, (e) => {
+                      onUpdate("background")(e)
+                      onUpdate("remvoeBackground")(false)
+                    })}
+                  />
+                  <div
+                    className={(form?.removeBackground ? "border-red-100/80 bg-red-200/15" : "border-red-300/30 bg-red-200/10 hover:border-red-100/80 hover:bg-red-200/15") + " aspect-square h-24 border-2 flex items-center justify-center p-3 rounded-xl border-dashed gap-1 text-sm font-bold cursor-pointer transition-all"}
+                    onClick={() => {
+                      onUpdate("removeBackground")(!form.removeBackground)
+                      if (!form.removeBackground) onUpdate("background")(null)
+                    }}
+                  >
+                    <XIcon className="size-4" />
+                    Remove
+                  </div>
+                </div>
                 {form.background && (
                   <div className="file-preview selected">
                     <span>{t('modal.selected', { name: form.background.name })}</span>
@@ -350,11 +380,11 @@ export default function ChartModal({
               </div>
 
               <div className="form-group file-section">
-                <label htmlFor="jacket_up">{t('modal.coverImage', 'Cover Image')} (png, max {limits?.jacket_bytes ? formatBytes(limits.jacket_bytes) : '5MB'}) *</label>
+                <label htmlFor="jacket_up">{t('modal.coverImage', 'Cover Image')} (.png/.jpg, max {limits?.jacket_bytes ? formatBytes(limits.jacket_bytes) : '5MB'}) *</label>
                 <input
                   id="jacket_up"
                   type="file"
-                  accept="image/png"
+                  accept="image/png, image/jpeg"
                   onChange={checkFileLimit(limits?.jacket_bytes || 5 * 1024 * 1024, onUpdate("jacket"))}
                   required
                 />
@@ -367,7 +397,7 @@ export default function ChartModal({
               </div>
 
               <div className="form-group file-section">
-                <label htmlFor="bgm_up">{t('modal.audio', 'Audio')} (mp3, max {limits?.audio_bytes ? formatBytes(limits.audio_bytes) : '20MB'}) *</label>
+                <label htmlFor="bgm_up">{t('modal.audio', 'Audio')} (.mp3, max {limits?.audio_bytes ? formatBytes(limits.audio_bytes) : '20MB'}) *</label>
                 <input
                   id="bgm_up"
                   type="file"
@@ -384,11 +414,10 @@ export default function ChartModal({
               </div>
 
               <div className="form-group file-section">
-                <label htmlFor="chart_up">{t('modal.chartFile', 'Chart File')} (.sus/.usc, max {limits?.chart_bytes ? formatBytes(limits.chart_bytes) : '10MB'}) *</label>
+                <label htmlFor="chart_up">{t('modal.chartFile', 'Chart File')} (max {limits?.chart_bytes ? formatBytes(limits.chart_bytes) : '10MB'}) *</label>
                 <input
                   id="chart_up"
                   type="file"
-                  accept=".sus,.usc"
                   onChange={checkFileLimit(limits?.chart_bytes || 10 * 1024 * 1024, onUpdate("chart"))}
                   required
                 />

@@ -127,7 +127,7 @@ function HeaderContent() {
                             </div>
                         ) : (
                             <div className="user-profile-container">
-                                <Link href="/login" className="user-profile login-nav-link" style={{ padding: '6px 16px' }}>
+                                <Link href="/login" className="user-profile login-nav-link" style={{ padding: '6px 16px 6px 6px' }}>
                                     <div className="user-avatar">
                                         <div className="default-avatar" style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}>
                                             <User size={14} />
