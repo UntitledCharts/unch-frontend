@@ -235,7 +235,6 @@ export default function Dashboard() {
       if (res.ok) {
         const limits = await res.json()
         setLimits(limits);
-        console.log(limits);
       }
     } catch (e) {
       console.error("Failed to load limits", e);
