@@ -347,7 +347,7 @@ function HomeContent() {
           </div>
         </div>
       ) : (
-        <div className="search-content animate-fade-in" style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
+        <div className="search-content animate-fade-in" style={{ width: '100%', maxWidth: '1000px', margin: '120px auto 0' }}>
           <div className="searchContainer">
             <form onSubmit={handleSearch} className="search-form" style={{ width: '100%' }}>
               <div className="search-controls-grid">
