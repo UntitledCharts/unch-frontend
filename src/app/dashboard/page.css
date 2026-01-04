@@ -190,9 +190,7 @@ input[type=number] {
     color: #94a3b8;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-bottom: 12px;
     font-weight: 700;
-    padding-left: 4px;
 }
 
 /* Stat with Graph Styles (Ported from LevelCard) */
@@ -1269,4 +1267,50 @@ body {
     .vercel-card {
         animation: fade-in-up 0.4s ease-out backwards;
     }
+}
+
+
+.search-control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 150px;
+    flex: 1;
+}
+
+.search-control-group label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+.search-controls-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.search-btn {
+    background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: 15px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+    filter: brightness(1.1);
 }
