@@ -232,7 +232,11 @@ export default function Dashboard() {
   const fetchLimits = async () => {
     try {
       const res = await fetch(`${APILink}/api/limits`);
-      if (res.ok) setLimits(await res.json());
+      if (res.ok) {
+        const limits = await res.json()
+        setLimits(limits);
+        console.log(limits);
+      }
     } catch (e) {
       console.error("Failed to load limits", e);
     }
@@ -295,26 +299,26 @@ export default function Dashboard() {
   const validateLimits = (data, method = 'upload') => {
     if (!limits) return true;
 
-    if (data.title.length > limits.title) throw new Error(`Title max ${limits.title} chars.`);
-    if (data.artists.length > limits.artist) throw new Error(`Artist max ${limits.artist} chars.`);
-    if (data.author.length > limits.author) throw new Error(`Author max ${limits.author} chars.`);
-    if (data.description && data.description.length > limits.description) throw new Error(`Desc max ${limits.description} chars.`);
+    if (data.title.length > limits.text.title) throw new Error(`Title max ${limits.text.title} chars.`);
+    if (data.artists.length > limits.text.artist) throw new Error(`Artist max ${limits.text.artist} chars.`);
+    if (data.author.length > limits.text.author) throw new Error(`Author max ${limits.text.author} chars.`);
+    if (data.description && data.description.length > limits.text.description) throw new Error(`Desc max ${limits.text.description} chars.`);
 
     const rating = parseInt(data.rating);
     if (isNaN(rating) || rating < -999 || rating > 999) throw new Error("Rating must be between -999 and 999.");
 
     if (data.tags) {
-      if (data.tags.length > limits.maximum_tags) throw new Error(`Max ${limits.maximum_tags} tags.`);
+      if (data.tags.length > limits.text.tags_count) throw new Error(`Max ${limits.text.tags_count} tags.`);
       for (let t of data.tags) {
-        if (t.length > limits.per_tag) throw new Error(`Tag '${t}' exceeds ${limits.per_tag} chars.`);
+        if (t.length > limits.text.per_tag) throw new Error(`Tag '${t}' exceeds ${limits.text.per_tag} chars.`);
       }
     }
 
-    if (form.jacket && form.jacket.size > limits.jacket) throw new Error(`Jacket too large (Max ${formatBytes(limits.jacket)})`);
-    if (form.chart && form.chart.size > limits.chart) throw new Error(`Chart too large (Max ${formatBytes(limits.chart)})`);
-    if (form.bgm && form.bgm.size > limits.audio) throw new Error(`Audio too large (Max ${formatBytes(limits.audio)})`);
-    if (form.preview && form.preview.size > limits.preview) throw new Error(`Preview too large (Max ${formatBytes(limits.preview)})`);
-    if (form.background && form.background.size > limits.background) throw new Error(`Background too large (Max ${formatBytes(limits.background)})`);
+    if (form.jacket && form.jacket.size > limits.files.jacket) throw new Error(`Jacket too large (Max ${formatBytes(limits.files.jacket)})`);
+    if (form.chart && form.chart.size > limits.files.chart) throw new Error(`Chart too large (Max ${formatBytes(limits.files.chart)})`);
+    if (form.bgm && form.bgm.size > limits.files.audio) throw new Error(`Audio too large (Max ${formatBytes(limits.files.audio)})`);
+    if (form.preview && form.preview.size > limits.files.preview) throw new Error(`Preview too large (Max ${formatBytes(limits.files.preview)})`);
+    if (form.background && form.background.size > limits.files.background) throw new Error(`Background too large (Max ${formatBytes(limits.files.background)})`);
 
     return true;
   }
