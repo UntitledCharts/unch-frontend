@@ -2,11 +2,12 @@
 .dashboard-container {
     width: 100%;
     min-height: 80vh;
-    padding-top: 20px;
+    padding-top: 150px;
     display: flex;
     flex-direction: column;
     gap: 20px;
     position: relative;
+
 }
 
 /* Background Gradients (Enhanced) */
@@ -782,6 +783,7 @@ input[type=number] {
 @media (max-width: 600px) {
     .dashboard-grid {
         grid-template-columns: 1fr !important;
+        width: 100%;
         gap: 16px;
     }
 
@@ -830,7 +832,7 @@ input[type=number] {
 /* Responsive - Mobile Layout with Proper Stacking */
 @media (max-width: 900px) {
     .dashboard-container {
-        padding-top: 16px;
+        padding-top: 100px;
         gap: 16px;
     }
 
@@ -874,7 +876,7 @@ input[type=number] {
         grid-template-columns: 1fr;
         gap: 32px;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
     }
 
     /* Move sidebar to bottom (stats/comments) */
@@ -890,6 +892,7 @@ input[type=number] {
     .dashboard-grid {
         order: 1;
         grid-template-columns: 1fr;
+        width: 100%;
         gap: 20px;
     }
 
@@ -1138,6 +1141,7 @@ input[type=number] {
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
+    width: 100%;
 }
 
 /* Ensure body does not lock */

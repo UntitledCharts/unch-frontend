@@ -693,7 +693,10 @@ export default function Dashboard() {
                       {/* Middle: Info */}
                       <div className="card-info">
                         <div className="info-header">
-                          <h3 title={post.title}>{post.title}</h3>
+                          <div className="flex items-center justify-start gap-2">
+                            <h3 title={post.title}>{post.title}</h3>
+                            <span title="Rating" className="rating-badge text-xs" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>Lv. {post.rating}</span>
+                          </div>
                           <div className="action-menu-wrapper">
                             <button
                               className="icon-btn-ghost"
@@ -717,7 +720,7 @@ export default function Dashboard() {
                           <div className="footer-stats" style={{ display: 'flex', gap: '12px' }}>
                             <span title="Likes" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Heart size={12} /> {post.likeCount || 0}</span>
                             <span title="Comments" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><MessageSquare size={12} /> {post.commentsCount || 0}</span>
-                            <span title="Rating" className="rating-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>Lv. {post.rating}</span>
+
                           </div>
                           {/* Current Status Indicator */}
 
