@@ -29,7 +29,7 @@
 .main-content {
     width: 100%;
     min-height: 100vh;
-    padding-top: 100px;
+    padding-top: 0;
     box-sizing: border-box;
     position: relative;
     z-index: 1;
@@ -176,7 +176,7 @@ body.light-mode .header-lang-select {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 6px 16px;
+    padding: 6px 16px 6px 6px;
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 30px;
     border: 1px solid var(--glass-border);
@@ -529,7 +529,7 @@ body.light-mode .nav-links a.active {
     }
 
     .main-content {
-        padding-top: 80px;
+        padding-top: 0;
     }
 
     header h2 {

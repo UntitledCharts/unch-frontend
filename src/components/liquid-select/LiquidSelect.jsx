@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./LiquidSelect.css";
 
-const LiquidSelect = ({ value, onChange, options, label, icon: Icon, className }) => {
+const LiquidSelect = ({ value, onChange, options, label, icon: Icon, className, type }) => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
 
@@ -19,7 +19,7 @@ const LiquidSelect = ({ value, onChange, options, label, icon: Icon, className }
     const selectedOption = options.find(opt => opt.value === value) || options[0];
 
     return (
-        <div className={`liquid-select-wrapper ${className || ''}`} ref={containerRef}>
+        <div className={`liquid-select-wrapper ${className || ''} ${type || ''}`} ref={containerRef}>
             <div
                 className={`liquid-select-trigger ${isOpen ? 'active' : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
@@ -50,7 +50,7 @@ const LiquidSelect = ({ value, onChange, options, label, icon: Icon, className }
                                 {opt.icon && <opt.icon size={16} className="item-icon" />}
                                 <span className="item-label">{opt.label}</span>
                             </div>
-                            {opt.value === value && (
+                            {opt.value === value && type !== 'ghost' && (
                                 <div className="selected-indicator">
                                     <div className="indicator-dot" />
                                 </div>

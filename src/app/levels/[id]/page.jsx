@@ -51,8 +51,7 @@ export async function generateMetadata({ params }) {
     return { title: 'Level not found' };
   }
 
-  const ogDescription = level.description;
-  const twitterText = `Play ${level.title} now on UntitledCharts!\nLevel ${level.rating} charted by ${level.author}`;
+  const ogDescription = `${level.likes} Likes | ${level.comments} Comments | Charted by ${level.author.split('#')[0]}\n${level.description}`;
 
   return {
     title: `[${level.rating}] ${level.title}`,
@@ -66,7 +65,7 @@ export async function generateMetadata({ params }) {
     twitter: {
       card: 'summary_large_image',
       title: `[${level.rating}] ${level.title}`,
-      description: twitterText,
+      description: ogDescription,
       images: level.thumbnail ? [level.thumbnail] : [],
     },
   };

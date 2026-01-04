@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Play, Heart, Info, User, Music, Calendar, MessageSquare } from "lucide-react";
+import { Play, Heart, Info, User, Music, Calendar, MessageSquare, ArrowDown } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "../../contexts/LanguageContext";
 import "./HeroSection.css";
@@ -50,7 +50,7 @@ export default function HeroSection({ posts = [] }) {
     const bgImage = currentPost.backgroundV3Url || currentPost.backgroundUrl || currentPost.coverUrl || "/placeholder-bg.jpg";
 
     return (
-        <section className="hero-section" aria-label="Featured Charts">
+        <section className="hero-section relative" aria-label="Featured Charts">
             <div className="hero-bg-container">
                 {posts.map((post, index) => (
                     <div
@@ -79,15 +79,28 @@ export default function HeroSection({ posts = [] }) {
                         </div>
                         <h1 className="hero-title">{currentPost.title}</h1>
 
+                        {/* <div className="hero-right-col animate-slide-in-right">*/}
+                            <div className="hero-description-box">
+                                {currentPost.description && <p>{currentPost.description}</p>}
+                            </div>
+                        {/* </div>*/}
+
+                        <div className="hero-meta mb-0!">
+                            <div className="hero-meta-item">
+                                <span className="hero-label flex items-center justify-center gap-1">
+                                  <User size={16} />
+                                  {t('hero.by')}
+                                </span>
+                                <span>{currentPost.artists}</span>
+                            </div>
+                            <div className="hero-meta-item">
+                                <span className="hero-label">
+                                  {t('hero.chartedBy')}
+                                </span>
+                                <span>{currentPost.author}</span>
+                            </div>
+                        </div>
                         <div className="hero-meta">
-                            <div className="hero-meta-item">
-                                <User size={16} />
-                                <span className="truncate max-w-[150px]">{t('hero.by')}: {currentPost.artists}</span>
-                            </div>
-                            <div className="hero-meta-item">
-                                <span className="hero-label">{t('hero.chartedBy')}</span>
-                                <span className="truncate max-w-[150px]">{currentPost.author}</span>
-                            </div>
                             <div className="hero-meta-item">
                                 <Heart size={16} className="text-red-400" style={{ color: '#f87171' }} />
                                 <span>{currentPost.likeCount || 0}</span>
@@ -107,11 +120,11 @@ export default function HeroSection({ posts = [] }) {
                     </div>
                 </div>
 
-                <div className="hero-right-col animate-slide-in-right">
+                {/* <div className="hero-right-col animate-slide-in-right">
                     <div className="hero-description-box">
                         {currentPost.description && <p>{currentPost.description}</p>}
                     </div>
-                </div>
+                </div>*/}
 
                 <div className="hero-indicators">
                     {posts.map((_, index) => (
@@ -123,6 +136,10 @@ export default function HeroSection({ posts = [] }) {
                         />
                     ))}
                 </div>
+            </div>
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-9999 py-2 px-4 rounded-full flex items-center justify-center gap-2 text-sm bg-sky-200/10 select-none">
+              <ArrowDown className="size-5" />
+              <span>More</span>
             </div>
         </section>
     );

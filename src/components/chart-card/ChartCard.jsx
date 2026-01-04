@@ -9,7 +9,7 @@ export default function ChartCard({
     showPlayButton = false,
     onPlay,
     isPlaying = false,
-    audioRef 
+    audioRef
 }) {
     const { t } = useLanguage();
     const {
@@ -43,15 +43,15 @@ export default function ChartCard({
         }
     }, [isPlaying]);
 
-    
+
     const truncate = (str, len) => {
         if (!str) return "";
         return str.length > len ? str.substring(0, len) + "..." : str;
     };
 
-    
 
-    
+
+
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const date = new Date(dateStr);

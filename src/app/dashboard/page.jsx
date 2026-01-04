@@ -1,7 +1,7 @@
 "use client";
 import "./page.css";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Loader2, Globe, EyeOff, Eye, Lock, Unlock, Link as LinkIcon, MoreVertical, GitCommit, MessageSquare, BarChart2, Heart, Play, Plus, Search, X, Check, RefreshCw } from "lucide-react";
+import { Loader2, Globe, EyeOff, Eye, Lock, Unlock, Link as LinkIcon, MoreVertical, GitCommit, MessageSquare, BarChart2, Heart, Play, Plus, Search, X, Check, RefreshCw, XIcon, LockIcon, GlobeIcon, Clock, Star, Type, User, ArrowUp, ArrowDown, MoveDown, Triangle, ChevronDown } from "lucide-react";
 import PaginationControls from "../../components/pagination-controls/PaginationControls";
 import { useUser } from "../../contexts/UserContext";
 import { useRouter } from "next/navigation";
@@ -158,6 +158,8 @@ export default function Dashboard() {
     chart: null,
     preview: null,
     background: null,
+    removePreview: false,
+    removeBackground: false,
     visibility: "public"
   });
 
@@ -165,12 +167,6 @@ export default function Dashboard() {
     post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (post.author && post.author.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-
-  const totalLikes = posts.reduce((acc, curr) => acc + (curr.likeCount || 0), 0);
-  const totalComments = posts.reduce((acc, curr) => acc + (curr.commentsCount || 0), 0);
-
-  const likesHistory = [0, 0, 0, 0, 0, totalLikes * 0.5, totalLikes];
-  const commentsHistory = [0, 0, 0, 0, 0, totalComments * 0.5, totalComments];
 
   const handleMyCharts = async (page = 0) => {
     setLoading(true);
@@ -230,7 +226,10 @@ export default function Dashboard() {
   const fetchLimits = async () => {
     try {
       const res = await fetch(`${APILink}/api/limits`);
-      if (res.ok) setLimits(await res.json());
+      if (res.ok) {
+        const limits = await res.json()
+        setLimits(limits);
+      }
     } catch (e) {
       console.error("Failed to load limits", e);
     }
@@ -246,8 +245,8 @@ export default function Dashboard() {
   const openUpload = () => {
     setMode("upload");
     setForm({
-      title: "", artists: "", author: "", rating: "", description: "", tags: "",
-      jacket: null, bgm: null, chart: null, preview: null, background: null, visibility: "private"
+      title: "", artists: "", author: "", rating: "", description: "", tags: "", jacket: null, bgm: null,
+      chart: null, preview: null, background: null, visibility: "private", removePreview: false, removeBackground: false
     });
     setError(null);
     setIsOpen(true);
@@ -260,7 +259,7 @@ export default function Dashboard() {
       title: post.title, artists: post.artists, author: post.author_field, rating: String(post.rating ?? ""),
       description: post.description || "", tags: post.tags || "",
       jacket: null, bgm: null, chart: null, preview: null, background: null,
-      visibility: vis
+      visibility: vis, removePreview: false, removeBackground: false
     });
     setEditData({
       id: post.id,
@@ -293,26 +292,26 @@ export default function Dashboard() {
   const validateLimits = (data, method = 'upload') => {
     if (!limits) return true;
 
-    if (data.title.length > limits.title) throw new Error(`Title max ${limits.title} chars.`);
-    if (data.artists.length > limits.artist) throw new Error(`Artist max ${limits.artist} chars.`);
-    if (data.author.length > limits.author) throw new Error(`Author max ${limits.author} chars.`);
-    if (data.description && data.description.length > limits.description) throw new Error(`Desc max ${limits.description} chars.`);
+    if (data.title.length > limits.text.title) throw new Error(`Title max ${limits.text.title} chars.`);
+    if (data.artists.length > limits.text.artist) throw new Error(`Artist max ${limits.text.artist} chars.`);
+    if (data.author.length > limits.text.author) throw new Error(`Author max ${limits.text.author} chars.`);
+    if (data.description && data.description.length > limits.text.description) throw new Error(`Desc max ${limits.text.description} chars.`);
 
     const rating = parseInt(data.rating);
     if (isNaN(rating) || rating < -999 || rating > 999) throw new Error("Rating must be between -999 and 999.");
 
     if (data.tags) {
-      if (data.tags.length > limits.maximum_tags) throw new Error(`Max ${limits.maximum_tags} tags.`);
+      if (data.tags.length > limits.text.tags_count) throw new Error(`Max ${limits.text.tags_count} tags.`);
       for (let t of data.tags) {
-        if (t.length > limits.per_tag) throw new Error(`Tag '${t}' exceeds ${limits.per_tag} chars.`);
+        if (t.length > limits.text.per_tag) throw new Error(`Tag '${t}' exceeds ${limits.text.per_tag} chars.`);
       }
     }
 
-    if (form.jacket && form.jacket.size > limits.jacket) throw new Error(`Jacket too large (Max ${formatBytes(limits.jacket)})`);
-    if (form.chart && form.chart.size > limits.chart) throw new Error(`Chart too large (Max ${formatBytes(limits.chart)})`);
-    if (form.bgm && form.bgm.size > limits.audio) throw new Error(`Audio too large (Max ${formatBytes(limits.audio)})`);
-    if (form.preview && form.preview.size > limits.preview) throw new Error(`Preview too large (Max ${formatBytes(limits.preview)})`);
-    if (form.background && form.background.size > limits.background) throw new Error(`Background too large (Max ${formatBytes(limits.background)})`);
+    if (form.jacket && form.jacket.size > limits.files.jacket) throw new Error(`Jacket too large (Max ${formatBytes(limits.files.jacket)})`);
+    if (form.chart && form.chart.size > limits.files.chart) throw new Error(`Chart too large (Max ${formatBytes(limits.files.chart)})`);
+    if (form.bgm && form.bgm.size > limits.files.audio) throw new Error(`Audio too large (Max ${formatBytes(limits.files.audio)})`);
+    if (form.preview && form.preview.size > limits.files.preview) throw new Error(`Preview too large (Max ${formatBytes(limits.files.preview)})`);
+    if (form.background && form.background.size > limits.files.background) throw new Error(`Background too large (Max ${formatBytes(limits.files.background)})`);
 
     return true;
   }
@@ -336,7 +335,7 @@ export default function Dashboard() {
         description: form.description, status: vis,
         includes_jacket: !!form.jacket, includes_audio: !!form.bgm, includes_chart: !!form.chart,
         includes_preview: !!form.preview, includes_background: !!form.background,
-        delete_background: false, delete_preview: false
+        delete_background: !!form.removeBackground, delete_preview: !!form.removePreview
       };
 
       let parsedTags = [];
@@ -498,48 +497,92 @@ export default function Dashboard() {
     }
   };
 
+  const [staffPick, setStaffPick] = useState(false)
+  const [sortBy, setSortBy] = useState('created_at')
+  const [sortOrder, setSortOrder] = useState('desc')
+  const [minRating, setMinRating] = useState(1)
+  const [maxRating, setMaxRating] = useState(99)
+  const [descriptionIncludes, setDescriptionIncludes] = useState('')
+  const [titleIncludes, setTitleIncludes] = useState('')
+  const [artistsIncludes, setArtistsIncludes] = useState('')
+  const [tags, setTags] = useState('')
+  const [filtersExpanded, setFiltersExpanded] = useState(true)
 
-  const renderVisibilityButtons = (post) => {
-    const status = post.status?.toLowerCase() || 'public';
+  const handleSearch = (e) => {
+    e?.preventDefault()
+    setCurrentPage(0)
+    fetchSearchData()
+  }
 
-    const PublicBtn = (
-      <button
-        key="pub"
-        className="vis-btn public"
-        onClick={() => updateVisibility(post, 'public')}
-        title={t('dashboard.makePublic', 'Make Public')}
-      >
-        <Eye size={18} />
-      </button>
-    );
+  const fetchSearchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    setPosts([])
+    const token = localStorage.getItem("session");
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+    try {
+      const apiBase = APILink;
 
-    const UnlistedBtn = (
-      <button
-        key="unl"
-        className="vis-btn unlisted"
-        onClick={() => updateVisibility(post, 'unlisted')}
-        title={t('dashboard.makeUnlisted', 'Make Unlisted')}
-      >
-        <LinkIcon size={18} />
-      </button>
-    );
+      const queryParams = new URLSearchParams();
+      queryParams.append('type', 'advanced');
+      queryParams.append('page', '0');
+      queryParams.append('limit', '10');
 
-    const PrivateBtn = (
-      <button
-        key="priv"
-        className="vis-btn private"
-        onClick={() => updateVisibility(post, 'private')}
-        title={t('dashboard.makePrivate', 'Make Private')}
-      >
-        <Lock size={18} />
-      </button>
-    );
+      if (staffPick) queryParams.append('staff_pick', '1');
 
-    if (status === 'public') return [UnlistedBtn, PrivateBtn];
-    if (status === 'unlisted') return [PublicBtn, PrivateBtn];
-    if (status === 'private') return [PublicBtn, UnlistedBtn];
-    return [];
-  };
+      if (minRating) queryParams.append('min_rating', minRating);
+      if (maxRating) queryParams.append('max_rating', maxRating);
+      if (tags) queryParams.append('tags', tags);
+      if (titleIncludes) queryParams.append('title_includes', titleIncludes);
+      if (descriptionIncludes) queryParams.append('description_includes', descriptionIncludes);
+      if (artistsIncludes) queryParams.append('artists_includes', artistsIncludes);
+      if (searchQuery) queryParams.append('meta_includes', searchQuery);
+
+      queryParams.append('sort_by', sortBy);
+      queryParams.append('sort_order', sortOrder);
+      queryParams.append('status', 'ALL');
+
+      const res = await fetch(`${apiBase}/api/charts?${queryParams.toString()}`, {
+        headers: { Authorization: `${session}` },
+      });
+      console.log(res)
+      const data = await res.json();
+      const BASE = data.asset_base_url || `${APILink}`;
+      const items = Array.isArray(data?.data) ? data.data : [];
+      const normalized = items.map((item) => ({
+        id: item.id,
+        title: item.title,
+        artists: item.artists,
+        author: item.author_full,
+        author_field: item.chart_design,
+        authorId: item.author,
+        rating: item.rating,
+        description: item.description,
+        tags: item.tags,
+        coverUrl: item.jacket_file_hash ? `${BASE}/${item.author}/${item.id}/${item.jacket_file_hash}` : "",
+        likeCount: item.like_count ?? item.likes ?? 0,
+        commentsCount: item.comment_count ?? item.comments_count ?? (Array.isArray(item.comments) ? item.comments.length : item.comments) ?? 0,
+        createdAt: item.created_at,
+        status: item.status,
+        hasJacket: !!item.jacket_file_hash,
+        hasAudio: !!item.music_hash,
+        hasChart: !!item.chart_hash,
+        hasPreview: !!item.preview_hash,
+        hasBackground: !!item.background_hash
+      }));
+      setPosts(normalized);
+      setPageCount(data.pageCount || 0);
+      setTotalCount(data.data?.[0]?.total_count || 0);
+      setCurrentPage(page);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [APILink, currentPage, staffPick, searchQuery, sortBy, sortOrder, minRating, maxRating, tags, titleIncludes, descriptionIncludes, artistsIncludes, setPosts, setPageCount, setLoading, setError]);
 
   return (
     <div className="dashboard-container">
@@ -577,71 +620,132 @@ export default function Dashboard() {
           <div className="dashboard-structure">
             <aside className="dashboard-sidebar">
               <div className="sidebar-section">
-                <div className="section-header">
-                  <h3>Stats</h3>
+                <div className="flex items-center justify-center gap-1 mb-3" onClick={() => {
+                  setFiltersExpanded(p => !p)
+                }}>
+                  <div className="section-header">
+                    <h3>Filter Search</h3>
+                  </div>
+                  <div className="flex-1 py-1 px-0">
+                    <div className="h-0.5 bg-cyan-100/50 w-full" />
+                  </div>
+                  <div>
+                      <ChevronDown className={"size-5 stroke-cyan-100/50 transition-all " + (!filtersExpanded && 'rotate-180')} />
+                  </div>
                 </div>
-                <div className="stats-list">
-                  <StatWithGraph
-                    icon={Heart}
-                    label={t('dashboard.totalLikes', 'Total Likes')}
-                    value={totalLikes}
-                    color="#f87171"
-                    data={likesHistory}
-                  />
-                  <StatWithGraph
-                    icon={MessageSquare}
-                    label={t('dashboard.totalComments', 'Total Comments')}
-                    value={totalComments}
-                    color="#38bdf8"
-                    data={commentsHistory}
-                  />
-                </div>
-              </div>
-
-              <div className="sidebar-section">
-                <div className="section-header">
-                  <h3>Recent Comments</h3>
-                </div>
-                <div className="comments-card">
-                  {recentComments.length === 0 ? (
-                    <p className="text-gray-500 text-sm p-4">No recent comments</p>
-                  ) : (
-                    <div className="flex flex-col gap-3">
-                      {recentComments.slice(recentCommentsPage * 10, (recentCommentsPage + 1) * 10).map((comment, i) => (
-                        <div key={i} className="bg-white/5 p-3 rounded-lg text-sm cursor-pointer hover:bg-white/10 transition-colors" onClick={() => router.push(`/levels/${comment.chartId}`)}>
-                          <div className="flex justify-between items-start mb-1">
-                            <span className="font-bold text-blue-400 truncate max-w-[100px]">{comment.user?.name || 'User'}</span>
-                            <span className="text-xs text-gray-500">{new Date(comment.created_at).toLocaleDateString()}</span>
-                          </div>
-                          <p className="text-gray-300 line-clamp-2">{comment.content || comment.comment}</p>
-                          <div className="mt-1 text-xs text-gray-600 truncate">on {comment.chartTitle}</div>
+                  <form onSubmit={handleSearch} className="search-form overflow-hidden transition-all" style={{ width: '100%', ...(filtersExpanded ? {} : { height: 0 }) }}>
+                  <div className="search-controls-grid">
+                        <div className="search-control-group" style={{ flexDirection: 'row', alignItems: 'center', minWidth: 'auto', flex: 'none', paddingBottom: '12px', gap: '8px' }}>
+                          <input
+                            type="checkbox"
+                            id="staffPick"
+                            checked={staffPick}
+                            onChange={(e) => setStaffPick(e.target.checked)}
+                            className="accent-sky-500"
+                            style={{ width: '18px', height: '18px', margin: 0, cursor: 'pointer' }}
+                          />
+                          <label htmlFor="staffPick" style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>{t('search.staffPickOnly')}</label>
                         </div>
-                      ))}
-                    </div>
+                        <div className="search-control-group">
+                          <label>{t('search.sortBy')}</label>
+                          <LiquidSelect
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            options={[
+                              { value: "created_at", label: t('search.createdDate', 'Created Date'), icon: Clock },
+                              { value: "rating", label: "Rating", icon: Star },
+                              { value: "likes", label: "Likes", icon: Heart },
+                              { value: "abc", label: "Alphabetical", icon: Type },
+                              { value: "decaying_likes", label: "Decaying Likes", icon: User }
+                            ]}
+                          />
+                        </div>
 
-                  )}
-                  {recentComments.length > 10 && (
-                    <div className="flex justify-between items-center mt-3 pt-2 border-t border-white/10">
-                      <button
-                        className={`text-xs px-2 py-1 rounded ${recentCommentsPage === 0 ? 'text-gray-600 cursor-not-allowed' : 'text-blue-400 hover:bg-white/5'}`}
-                        disabled={recentCommentsPage === 0}
-                        onClick={() => setRecentCommentsPage(p => p - 1)}
-                      >
-                        Prev
-                      </button>
-                      <span className="text-xs text-gray-500">
-                        {recentCommentsPage + 1} / {Math.ceil(recentComments.length / 10)}
-                      </span>
-                      <button
-                        className={`text-xs px-2 py-1 rounded ${((recentCommentsPage + 1) * 10) >= recentComments.length ? 'text-gray-600 cursor-not-allowed' : 'text-blue-400 hover:bg-white/5'}`}
-                        disabled={((recentCommentsPage + 1) * 10) >= recentComments.length}
-                        onClick={() => setRecentCommentsPage(p => p + 1)}
-                      >
-                        Next
-                      </button>
-                    </div>
-                  )}
-                </div>
+                        <div className="search-control-group">
+                          <label>{t('search.order')}</label>
+                          <LiquidSelect
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                            options={[
+                              { value: "asc", label: t('search.ascending'), icon: ArrowUp },
+                              { value: "desc", label: t('search.descending'), icon: ArrowDown }
+                            ]}
+                          />
+                        </div>
+
+                        <div className="search-control-group">
+                          <label>{t('search.minRating')}</label>
+                          <input
+                            type="number"
+                            placeholder={t('search.minRatingPlaceholder')}
+                            min="1"
+                            max="99"
+                            value={minRating}
+                            onChange={(e) => setMinRating(e.target.value)}
+                            className="liquid-input"
+                          />
+                        </div>
+                        <div className="search-control-group">
+                          <label>{t('search.maxRating')}</label>
+                          <input
+                            type="number"
+                            placeholder={t('search.maxRatingPlaceholder')}
+                            min="1"
+                            max="99"
+                            value={maxRating}
+                            onChange={(e) => setMaxRating(e.target.value)}
+                            className="liquid-input"
+                          />
+                        </div>
+                        <div className="search-control-group">
+                          <label>{t('search.descriptionIncludes', 'Description Includes')}</label>
+                          <input
+                            type="text"
+                            placeholder={t('search.descriptionPlaceholder', 'Search in descriptions...')}
+                            value={descriptionIncludes}
+                            onChange={(e) => setDescriptionIncludes(e.target.value)}
+                            className="liquid-input"
+                          />
+                        </div>
+                        <div className="search-control-group">
+                          <label>{t('search.titleIncludes')}</label>
+                          <input
+                            type="text"
+                            placeholder="Search in titles..."
+                            value={titleIncludes}
+                            onChange={(e) => setTitleIncludes(e.target.value)}
+                            className="liquid-input"
+                          />
+                        </div>
+                        <div className="search-control-group">
+                          <label>{t('search.artistsIncludes')}</label>
+                          <input
+                            type="text"
+                            placeholder="Search in artists..."
+                            value={artistsIncludes}
+                            onChange={(e) => setArtistsIncludes(e.target.value)}
+                            className="liquid-input"
+                          />
+                        </div>
+                        <div className="search-control-group">
+                          <label>{t('search.tags')}</label>
+                          <input
+                            type="text"
+                            placeholder="Comma-separated tags"
+                            value={tags}
+                            onChange={(e) => setTags(e.target.value)}
+                            className="liquid-input"
+                          />
+                        </div>
+
+                    <button
+                      type="submit"
+                      className="search-btn"
+                    >
+                      {t('search.search')}
+                    </button>
+                  </div>
+                </form>
               </div>
             </aside>
 
@@ -688,7 +792,10 @@ export default function Dashboard() {
                       {/* Middle: Info */}
                       <div className="card-info">
                         <div className="info-header">
-                          <h3 title={post.title}>{post.title}</h3>
+                          <div className="flex items-center justify-start gap-2">
+                            <h3 title={post.title}>{post.title}</h3>
+                            <span title="Rating" className="rating-badge text-xs" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>Lv. {post.rating}</span>
+                          </div>
                           <div className="action-menu-wrapper">
                             <button
                               className="icon-btn-ghost"
@@ -712,19 +819,25 @@ export default function Dashboard() {
                           <div className="footer-stats" style={{ display: 'flex', gap: '12px' }}>
                             <span title="Likes" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Heart size={12} /> {post.likeCount || 0}</span>
                             <span title="Comments" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><MessageSquare size={12} /> {post.commentsCount || 0}</span>
-                            <span title="Rating" className="rating-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>Lv. {post.rating}</span>
+
                           </div>
                           {/* Current Status Indicator */}
-                          <span className={`status-text ${post.status?.toLowerCase()}`} style={{ marginLeft: '12px', fontSize: '0.75rem', textTransform: 'uppercase', fontWeight: 700 }}>
+
+                          <LiquidSelect
+                            value={post.status}
+                            type='ghost'
+                            className={`status-text ${post.status?.toLowerCase()}`}
+                            options={['UNLISTED', 'PRIVATE', 'PUBLIC'].map(x => ({ value: x, label: x }))}
+                            onChange={(e) => updateVisibility(post, e.target.value)}
+                          />
+
+                          {/* <span className={`status-text ${post.status?.toLowerCase()}`} style={{ marginLeft: '12px', fontSize: '0.75rem', textTransform: 'uppercase', fontWeight: 700 }}>
                             {post.status}
-                          </span>
+                          </span>*/}
                         </div>
                       </div>
 
-                      {/* Right: Actions */}
-                      <div className="card-actions-right">
-                        {renderVisibilityButtons(post)}
-                      </div>
+
                     </div>
                   ))}
                 </div>
