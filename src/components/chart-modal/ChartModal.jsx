@@ -145,7 +145,7 @@ export default function ChartModal({
   if (!isOpen || !mounted) return null;
 
   return createPortal(
-    <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="modal-overlay">
       <div className="edit-container">
         <div className="modal-header">
           <strong>
