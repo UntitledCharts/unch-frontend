@@ -14,37 +14,35 @@ export function UserProvider({ children }) {
   const [sessionReady, setSessionReady] = useState(false);
 
   const checkAuthStatus = async () => {
-    // Only check auth status on client side
     if (!isClient) return;
-    
+
     setLoading(true);
     const sessionValue = localStorage.getItem("session");
     const expiry = localStorage.getItem("expiry");
-    
-    // Check if session is expired
-    if (sessionValue && expiry) {
-      const now = new Date().getTime();
-      const expiryTime = parseInt(expiry, 10);
-      
-      console.log('Session check:', { now, expiryTime, expired: now >= expiryTime });
-      
-      if (isNaN(expiryTime) || now >= expiryTime) {
-        // Session expired, clear localStorage
-        console.log('Session expired, clearing data');
-        localStorage.removeItem("session");
-        localStorage.removeItem("expiry");
-        setIsLoggedIn(false);
-        setSonolusUser(null);
-        setSession(null);
-        setLoading(false);
-        return;
-      }
+
+    let expiryTime = parseInt(expiry, 10);
+
+    // Heuristic to detect if expiry is in seconds (Unix timestamp) or milliseconds
+    // 100000000000 is ~ year 1973 in ms, or year 5138 in seconds.
+    // So if it's less than this, it's almost certainly seconds.
+    if (expiryTime < 100000000000) {
+      expiryTime *= 1000;
     }
-    
+
+    if (isNaN(expiryTime) || expiryTime < Date.now()) {
+      localStorage.removeItem("session");
+      localStorage.removeItem("expiry");
+      setIsLoggedIn(false);
+      setSonolusUser(null);
+      setSession(null);
+      setLoading(false);
+      return;
+    }
+
     if (sessionValue) {
       setIsLoggedIn(true);
       setSession(sessionValue);
-      
+
       try {
         const me = await fetch(`${APILink}/api/accounts/session/account/`, {
           headers: {
@@ -52,11 +50,8 @@ export function UserProvider({ children }) {
           }
         });
 
-        // Check if the API call failed due to expired session
         if (!me.ok) {
-          console.log('API call failed, session might be expired:', me.status);
           if (me.status === 401 || me.status === 403) {
-            // Session is invalid, clear everything
             localStorage.removeItem("session");
             localStorage.removeItem("expiry");
             setIsLoggedIn(false);
@@ -65,30 +60,21 @@ export function UserProvider({ children }) {
             setLoading(false);
             return;
           }
-          // For other HTTP errors, don't clear localStorage
-          // Just log the error and continue
-          console.log('API call failed with status:', me.status);
         } else {
-          // API call succeeded, process the response
           const meData = await me.json();
-          console.log(meData);
           setSonolusUser(meData);
         }
 
       } catch (error) {
-        console.log('Error fetching user data:', error);
-        // If there's a network error, don't clear the session
-        // The user might just be offline
-        // Keep the user logged in with their existing session
       }
     } else {
       setIsLoggedIn(false);
       setSonolusUser(null);
       setSession(null);
     }
-    
+
     setLoading(false);
-    setSessionReady(true); // Session evaluation is complete
+    setSessionReady(true);
   };
 
   const handleLogout = () => {
@@ -97,8 +83,7 @@ export function UserProvider({ children }) {
     setIsLoggedIn(false);
     setSonolusUser(null);
     setSession(null);
-    setSessionReady(true); // Session is now in a known state (logged out)
-    // Dispatch event to notify other components
+    setSessionReady(true);
     window.dispatchEvent(new CustomEvent('authChange'));
   };
 
@@ -106,64 +91,44 @@ export function UserProvider({ children }) {
     checkAuthStatus();
   };
 
-  // Function to check if session is still valid
   const isSessionValid = () => {
-    // Only check session validity on client side
     if (!isClient) return false;
-    
+
     const sessionValue = localStorage.getItem("session");
     const expiry = localStorage.getItem("expiry");
-    
+
     if (!sessionValue || !expiry) {
       return false;
     }
-    
-    const now = new Date().getTime();
-    const expiryTime = parseInt(expiry, 10);
-    
-    return !isNaN(expiryTime) && now < expiryTime;
+
+    return !!sessionValue;
   };
 
-  // Function to clear expired session
   const clearExpiredSession = () => {
-    console.log('Clearing expired session');
     localStorage.removeItem("session");
     localStorage.removeItem("expiry");
     setIsLoggedIn(false);
     setSonolusUser(null);
     setSession(null);
-    setSessionReady(true); // Session is now in a known state (logged out)
-    // Dispatch event to notify other components
+    setSessionReady(true);
     window.dispatchEvent(new CustomEvent('authChange'));
   };
 
   useEffect(() => {
-    // Set client flag to true after component mounts
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    // Only run auth checks after client-side mounting
     if (!isClient) return;
-    
+
     checkAuthStatus();
-    
-    // Set up periodic session check (every 5 minutes)
-    const sessionCheckInterval = setInterval(() => {
-      if (isLoggedIn && !isSessionValid()) {
-        clearExpiredSession();
-      }
-    }, 5 * 60 * 1000); // 5 minutes
-    
-    // Listen for storage changes (e.g., when user logs in/out in another tab)
+
     window.addEventListener('storage', checkAuthStatus);
-    
-    // Listen for custom auth events (same tab changes)
+
     const handleAuthChange = () => checkAuthStatus();
     window.addEventListener('authChange', handleAuthChange);
-    
+
     return () => {
-      clearInterval(sessionCheckInterval);
       window.removeEventListener('storage', checkAuthStatus);
       window.removeEventListener('authChange', handleAuthChange);
     };

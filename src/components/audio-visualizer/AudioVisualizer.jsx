@@ -7,12 +7,12 @@ export default function AudioVisualizer({ audioRef, isPlaying }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (!audioRef?.current || !canvasRef.current) return;
+    const audio = audioRef?.current || (audioRef instanceof HTMLAudioElement ? audioRef : null);
+    if (!audio || !canvasRef.current) return;
 
-    const audio = audioRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
+
     let audioContext;
     let analyser;
     let dataArray;
@@ -23,14 +23,14 @@ export default function AudioVisualizer({ audioRef, isPlaying }) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
         source = audioContext.createMediaElementSource(audio);
-        
+
         source.connect(analyser);
         analyser.connect(audioContext.destination);
-        
+
         analyser.fftSize = 256;
         const bufferLength = analyser.frequencyBinCount;
         dataArray = new Uint8Array(bufferLength);
-        
+
         setIsVisible(true);
         draw();
       } catch (error) {
@@ -46,31 +46,31 @@ export default function AudioVisualizer({ audioRef, isPlaying }) {
       }
 
       analyser.getByteFrequencyData(dataArray);
-      
+
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-      
+
       ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
+
       const barWidth = (canvas.width / dataArray.length) * 2.5;
       let barHeight;
       let x = 0;
-      
+
       for (let i = 0; i < dataArray.length; i++) {
         barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
-        
+
         const gradient = ctx.createLinearGradient(0, canvas.height, 0, canvas.height - barHeight);
         gradient.addColorStop(0, '#4A90E2');
         gradient.addColorStop(0.5, '#7B68EE');
         gradient.addColorStop(1, '#FF6B6B');
-        
+
         ctx.fillStyle = gradient;
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        
+
         x += barWidth + 1;
       }
-      
+
       animationRef.current = requestAnimationFrame(draw);
     };
 

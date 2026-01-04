@@ -103,7 +103,7 @@ export default function AudioControls({ bgmUrl, onPlay, onStop, isPlaying, isAct
       setIsLoading(true);
       onPlay();
       
-      // Actually play the audio
+      
       if (audioElementRef.current) {
         try {
           await audioElementRef.current.play();
@@ -117,7 +117,7 @@ export default function AudioControls({ bgmUrl, onPlay, onStop, isPlaying, isAct
         }
       }
       
-      // Clear loading state after 5 seconds if still loading
+      
       loadingTimeoutRef.current = setTimeout(() => {
         setIsLoading(false);
         loadingTimeoutRef.current = null;

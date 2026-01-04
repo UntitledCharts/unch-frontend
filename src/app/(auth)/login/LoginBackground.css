@@ -1,0 +1,148 @@
+.login-background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background-color: #0f172a;
+
+}
+
+
+.login-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.95) 100%);
+    z-index: 2;
+    backdrop-filter: blur(3px);
+
+}
+
+
+.login-bg-placeholder {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+
+.masonry-marquee-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 200%;
+    height: 200%;
+    gap: 30px;
+    transform: rotate(-10deg) translate(-25%, -25%);
+    position: absolute;
+    z-index: 1;
+}
+
+.marquee-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 300px;
+    flex-shrink: 0;
+}
+
+
+@keyframes scrollUp {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+@keyframes scrollDown {
+    0% {
+        transform: translateY(-50%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.column-up {
+    animation: scrollUp linear infinite;
+}
+
+.column-down {
+    animation: scrollDown linear infinite;
+}
+
+
+.bg-chart-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    width: 300px;
+    min-width: 300px;
+    height: 300px;
+    min-height: 300px;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    display: block;
+}
+
+.bg-chart-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+}
+
+@media (max-width: 768px) {
+    .login-background-container {
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    .masonry-marquee-wrapper {
+        width: 400%;
+        height: 300%;
+        gap: 20px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-10deg);
+    }
+
+    .marquee-column {
+        width: 300px;
+        gap: 16px;
+        flex-shrink: 0;
+    }
+
+    .bg-chart-card {
+        border-radius: 12px;
+        opacity: 0.85;
+        width: 300px !important;
+        height: 300px !important;
+        min-width: 300px !important;
+        min-height: 300px !important;
+        flex-shrink: 0;
+        display: block;
+    }
+
+    .login-background-overlay {
+        background: radial-gradient(circle at center, rgba(15, 23, 42, 0.3) 0%, rgba(15, 23, 42, 0.9) 100%);
+    }
+}

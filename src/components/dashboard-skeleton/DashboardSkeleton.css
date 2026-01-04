@@ -1,0 +1,58 @@
+.skeleton-card {
+    pointer-events: none;
+    user-select: none;
+}
+
+.skeleton-bg {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.pulse {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}
+
+.skeleton-line {
+    border-radius: 4px;
+    height: 1em;
+    margin-bottom: 8px;
+}
+
+.title-line {
+    height: 20px;
+    width: 70%;
+    margin-bottom: 12px;
+}
+
+.artist-line {
+    height: 14px;
+    width: 50%;
+}
+
+.date-line {
+    height: 14px;
+    width: 30%;
+}
+
+.skeleton-badge {
+    height: 24px;
+    border-radius: 6px;
+}
+
+/* Light mode overrides */
+body.light-mode .skeleton-bg {
+    background: rgba(0, 0, 0, 0.05);
+}

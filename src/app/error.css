@@ -1,0 +1,87 @@
+.error-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    padding: 20px;
+}
+
+.error-content {
+    text-align: center;
+    max-width: 500px;
+}
+
+.error-gif-container {
+    margin-bottom: 30px;
+}
+
+.error-gif {
+    max-width: 200px;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.error-title {
+    font-size: 2rem;
+    color: white;
+    margin: 20px 0 10px;
+}
+
+.error-message {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.error-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.error-button {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.error-button.retry {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+    color: white;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+}
+
+.error-button.retry:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(239, 68, 68, 0.4);
+}
+
+.error-button.home {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.error-button.home:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .error-title {
+        font-size: 1.5rem;
+    }
+
+    .error-gif {
+        max-width: 150px;
+    }
+}

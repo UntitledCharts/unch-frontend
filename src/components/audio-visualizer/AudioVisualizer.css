@@ -1,10 +1,11 @@
-/* Audio Visualizer */
+
 .audio-visualizer {
-    margin-top: 8px;
+    margin-top: 12px;
     border-radius: 8px;
     overflow: hidden;
-    background-color: hsl(200, 0%, 95%);
-    border: 1px solid hsl(200, 0%, 85%);
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(4px);
 }
 
 .audio-visualizer canvas {

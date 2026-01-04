@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -p 3001",
     "build": "next build --turbopack",
-    "start": "next start",
+    "start": "next start -p 3001",
     "serve": "npx serve@latest out"
   },
   "dependencies": {
@@ -13,7 +13,8 @@
     "lucide-react": "^0.561.0",
     "next": "15.5.9",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "wavesurfer.js": "^7.12.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",

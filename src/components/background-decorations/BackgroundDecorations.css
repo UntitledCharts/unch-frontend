@@ -1,0 +1,172 @@
+/* Background Decorations (Project Sekai Style) */
+.bg-decorations-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+/* Light mode specifics */
+body.light-mode .bg-shape {
+    opacity: 0.6;
+}
+
+body.light-mode .bg-text {
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(15, 23, 42, 0.1);
+}
+
+/* Dark mode specifics */
+body:not(.light-mode) .bg-shape {
+    opacity: 0.4;
+}
+
+body:not(.light-mode) .bg-text {
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.1);
+}
+
+.bg-shape {
+    position: absolute;
+    /* Removed global blur to make shapes distinct */
+    transition: opacity 0.5s ease;
+    will-change: transform;
+    mix-blend-mode: overlay;
+    /* Better blending for that energetic look */
+}
+
+.bg-large-circle {
+    width: 300px;
+    height: 300px;
+    border: 3px solid #b3fffd;
+    background: transparent;
+    border-radius: 50%;
+    top: -50px;
+    left: -50px;
+}
+
+body:not(.light-mode) .bg-large-circle {
+    border-color: #38bdf8;
+}
+
+.bg-large-triangle {
+    width: 0;
+    height: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-bottom: 170px solid rgba(227, 230, 255, 0.8);
+    top: 20%;
+    left: 10%;
+}
+
+body:not(.light-mode) .bg-large-triangle {
+    border-bottom-color: rgba(99, 102, 241, 0.3);
+}
+
+.bg-common-circle {
+    border: 2px solid rgba(179, 255, 253, 0.6);
+    background: transparent;
+    border-radius: 50%;
+}
+
+body:not(.light-mode) .bg-common-circle {
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+.bg-common-square {
+    background: rgba(253, 229, 245, 0.6);
+}
+
+body:not(.light-mode) .bg-common-square {
+    background: rgba(192, 132, 252, 0.4);
+}
+
+.bg-common-triangle {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 26px solid rgba(227, 230, 255, 0.7);
+}
+
+body:not(.light-mode) .bg-common-triangle {
+    border-bottom-color: rgba(99, 102, 241, 0.4);
+}
+
+.bg-common-cross {
+    background: transparent;
+}
+
+.bg-common-cross::before,
+.bg-common-cross::after {
+    content: '';
+    position: absolute;
+    background: rgba(179, 255, 253, 0.6);
+    width: 100%;
+    height: 20%;
+    top: 40%;
+    left: 0;
+}
+
+.bg-common-cross::after {
+    transform: rotate(90deg);
+}
+
+body:not(.light-mode) .bg-common-cross::before,
+body:not(.light-mode) .bg-common-cross::after {
+    background: rgba(56, 189, 248, 0.4);
+}
+
+.bg-grid-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(15, 23, 42, 0.1) 2px, transparent 2px);
+    background-size: 40px 40px;
+    opacity: 0.6;
+}
+
+body:not(.light-mode) .bg-grid-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px);
+}
+
+/* Background Text Styles */
+.bg-text-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10vh 5vw;
+}
+
+.bg-text {
+    font-size: 10vw;
+    font-weight: 900;
+    white-space: nowrap;
+    letter-spacing: 0.5em;
+    user-select: none;
+    pointer-events: none;
+    font-family: var(--font-geist-mono), monospace;
+    will-change: transform;
+}
+
+.bg-text-2 {
+    align-self: flex-end;
+}
+
+@media (max-width: 768px) {
+    .bg-text {
+        font-size: 80px;
+        opacity: 0.1;
+        /* Reduce opacity slightly to not overwhelm small screen */
+    }
+}

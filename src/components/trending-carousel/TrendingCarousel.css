@@ -1,0 +1,123 @@
+.carousel-section {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.carousel-container {
+    position: relative;
+}
+
+
+.carousel-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    padding: 10px 4px;
+
+    scrollbar-width: none;
+
+    -ms-overflow-style: none;
+
+}
+
+.carousel-scroll::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    display: none;
+
+    background: transparent;
+}
+
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+
+    color: var(--foreground);
+    cursor: pointer;
+
+    transition: all var(--transition-base);
+    opacity: 1;
+}
+
+.carousel-arrow:hover {
+    background: var(--background-elevated);
+    border-color: var(--glass-border-hover);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-arrow.hidden {
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: default;
+}
+
+.carousel-arrow-left {
+    left: -24px;
+}
+
+.carousel-arrow-right {
+    right: -24px;
+}
+
+
+.carousel-skeleton {
+    width: 200px;
+    min-width: 200px;
+    height: 300px;
+    background: var(--glass-bg);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--glass-border);
+}
+
+
+@media (max-width: 768px) {
+    .carousel-section {
+        padding: 0 16px;
+    }
+
+    .carousel-arrow {
+        display: none;
+    }
+
+    .carousel-scroll {
+        gap: 12px;
+        padding: 4px 0 12px;
+        margin: -4px 0 -12px;
+    }
+
+    .carousel-skeleton {
+        width: 160px;
+        min-width: 160px;
+        height: 260px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .carousel-arrow-left {
+        left: -32px;
+    }
+
+    .carousel-arrow-right {
+        right: -32px;
+    }
+}

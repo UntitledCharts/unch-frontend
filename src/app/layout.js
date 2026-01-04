@@ -1,132 +1,51 @@
-"use client";
-import { Geist, Geist_Mono, Kanit } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./layout.css";
-import NavLinks from "./NavLinks";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import Head from "next/head";
-import { UserProvider, useUser } from "../contexts/UserContext";
-
+import ClientLayout from "./ClientLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
-
-function HeaderContent() {
-  const { isLoggedIn, sonolusUser, handleLogout } = useUser();
-  const [showDropdown, setShowDropdown] = useState(false);
-
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (showDropdown && !event.target.closest('.user-profile-container')) {
-        setShowDropdown(false);
-      }
-    };
-
-    if (showDropdown) {
-      document.addEventListener('click', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [showDropdown]);
-
-  return (
-    <header>
-      <div className="left">
-        <Link href="/">
-        <img src="/636a8f1e76b38cb1b9eb0a3d88d7df6f.png" alt="UntitledCharts Logo" />
-        <h2>UntitledCharts</h2>
-        </Link>
-      </div>
-      <NavLinks user={sonolusUser} />
-      <div className="right">
-        {isLoggedIn && sonolusUser ? (
-          <div className="user-profile-container">
-            <div 
-              className="user-profile"
-              onClick={() => setShowDropdown(!showDropdown)}
-            >
-              <div className="user-avatar">
-                  <div 
-                    className="default-avatar"
-                    style={{
-                      backgroundColor: "#000020ff",
-                      color: "#ffffffff"
-                    }}
-                  >
-                    {sonolusUser.sonolus_username.charAt(0).toUpperCase()}
-                  </div>
-              </div>
-              <span className="user-name">{sonolusUser.sonolus_username}</span>
-              <span className="dropdown-arrow">▼</span>
-            </div>
-            {showDropdown && (
-              <div className="user-dropdown">
-                <button 
-                  className="dropdown-item logout-btn"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <a href="/login">
-            <button>Login</button>
-          </a>
-        )}
-      </div>
-    </header>
-  );
-}
+export const metadata = {
+  metadataBase: new URL('https://unch.untitledcharts.com'),
+  title: 'UntitledCharts',
+  description: 'The Community Platform for Sonolus',
+  openGraph: {
+    title: 'UntitledCharts',
+    description: 'The Community Platform for Sonolus',
+    url: 'https://unch.untitledcharts.com',
+    siteName: 'UntitledCharts',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'UntitledCharts',
+    description: 'The Community Platform for Sonolus',
+    images: ['/opengraph-image.png'],
+  },
+};
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <Head>
-        <title>Untitled Charts</title>
-        <meta name="description" content="UntitledCharts Sonolus Server" />
-      </Head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <UserProvider>
-          <HeaderContent />
-          <main className="main-content">
-            {children}
-          </main>
-          <footer>
-            <div className="footer-left"></div>
-            <div className="footer-center">
-            <span>Connect using the server link "https://untitledcharts.com"</span>
-            </div>
-            <div className="footer-right">
-            <ul>
-              <li>
-                <p>Follow Us</p>
-                <a href="https://www.youtube.com/@UntitledCharts" target="_blank" rel="noopener noreferrer">Youtube</a>
-                 <a href="https://www.tiktok.com/@untitledcharts" target="_blank" rel="noopener noreferrer">TikTok</a>
-                  <a href="https://discord.gg/mH3xWPPdEY" target="_blank" rel="noopener noreferrer">Discord</a>
-              </li>
-            </ul>
-            </div>
-          </footer>
-        </UserProvider>
-      </body>
+    <html lang="en" suppressHydrationWarning>
+      <ClientLayout variableClasses={`${geistSans.variable} ${geistMono.variable}`}>
+        {children}
+      </ClientLayout>
     </html>
   );
 }

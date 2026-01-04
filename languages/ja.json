@@ -1,0 +1,157 @@
+{
+    "nav": {
+        "home": "ホーム",
+        "levels": "レベル",
+        "dashboard": "ダッシュボード",
+        "login": "ログイン",
+        "logout": "ログアウト",
+        "profile": "プロフィール"
+    },
+    "home": {
+        "newCharts": "新しい譜面",
+        "trendingCharts": "トレンドの譜面",
+        "viewAll": "すべて表示",
+        "exploreAll": "すべてのレベルを探索",
+        "staffPicks": "スタッフのお勧め"
+    },
+    "hero": {
+        "viewChart": "譜面を見る",
+        "viewDetails": "詳細を見る",
+        "playNow": "今すぐプレイ",
+        "by": "作成者",
+        "chartedBy": "作成者"
+    },
+    "search": {
+        "title": "レベル",
+        "searchType": "検索タイプ",
+        "random": "ランダム",
+        "quick": "クイック",
+        "advanced": "詳細",
+        "keywords": "キーワード",
+        "keywordsPlaceholder": "検索...",
+        "sortBy": "並べ替え",
+        "order": "順序",
+        "ascending": "昇順",
+        "descending": "降順",
+        "createdDate": "作成日",
+        "rating": "評価",
+        "likes": "いいね",
+        "trending": "トレンド",
+        "alphabetical": "アルファベット順",
+        "publishedDate": "公開日",
+        "minRating": "最小評価",
+        "minRatingPlaceholder": "最小",
+        "maxRating": "最大評価",
+        "maxRatingPlaceholder": "最大",
+        "minLikes": "最小いいね",
+        "minLikesPlaceholder": "最小",
+        "maxLikes": "最大いいね",
+        "maxLikesPlaceholder": "最大",
+        "titleIncludes": "タイトルに含む",
+        "titleIncludesPlaceholder": "タイトルで検索...",
+        "artistsIncludes": "アーティストに含む",
+        "artistsIncludesPlaceholder": "アーティストで検索...",
+        "tags": "タグ",
+        "tagsPlaceholder": "カンマ区切り",
+        "staffPickOnly": "スタッフのお勧めのみ",
+        "search": "検索",
+        "showingCharts": "{{count}} 譜面を表示中",
+        "page": "ページ",
+        "of": "の",
+        "previous": "前へ",
+        "next": "次へ",
+        "noResults": "結果が見つかりません",
+        "loadingCharts": "譜面を読み込み中...",
+        "descriptionIncludes": "説明に含む",
+        "descriptionPlaceholder": "説明で検索...",
+        "newest": "最新",
+        "songBy": "曲作成者"
+    },
+    "levelDetail": {
+        "back": "戻る",
+        "by": "作成者",
+        "chartedBy": "作成者",
+        "level": "Lv.",
+        "openViaSonolus": "Sonolusで開く",
+        "share": "シェア",
+        "statistics": "統計",
+        "likes": "いいね",
+        "comments": "コメント",
+        "leaderboardsNotAvailable": "コメントは近日公開予定！",
+        "linkCopied": "リンクがコピーされました！",
+        "failedToCopy": "コピーに失敗しました",
+        "embedCopied": "埋め込みコードがコピーされました！",
+        "poweredBy": "提供元",
+        "last7Days": "過去7日間"
+    },
+    "viewAll": {
+        "filterPlaceholder": "譜面をフィルタ...",
+        "noResults": "一致する譜面は見つかりません",
+        "loadMore": "もっと読み込む",
+        "remaining": "残り"
+    },
+    "footer": {
+        "followUs": "フォローする",
+        "brand": "UntitledCharts",
+        "openInSonolus": "Sonolusで開く"
+    },
+    "login": {
+        "title": "ログイン",
+        "loginVia": "ログイン方法",
+        "openSonolusApp": "アプリでログインリンクを開く",
+        "scanQRCode": "QRコードをスキャン",
+        "waitingForAuth": "認証レスポンスを待っています... このページを閉じないでください！",
+        "authSuccess": "認証に成功しました！",
+        "authFailed": "認証に失敗しました"
+    },
+    "error": {
+        "pageNotFound": "ページが見つかりません",
+        "pageNotFoundMessage": "探しているページは存在しないか、移動した可能性があります。",
+        "somethingWentWrong": "問題が発生しました",
+        "errorMessage": "予期しないエラーが発生しました。もう一度お試しください。",
+        "tryAgain": "もう一度試す",
+        "goHome": "ホームに戻る"
+    },
+    "common": {
+        "brandName": "UntitledCharts",
+        "loading": "読み込み中...",
+        "error": "エラーが発生しました",
+        "noResults": "結果が見つかりません",
+        "noImage": "画像なし",
+        "unknownArtist": "不明なアーティスト",
+        "unknown": "不明"
+    },
+    "card": {
+        "level": "Lv."
+    },
+    "dashboard": {
+        "title": "ダッシュボード",
+        "create": "作成",
+        "uploadNew": "新しい譜面をアップロード",
+        "myCharts": "私の譜面",
+        "edit": "編集",
+        "delete": "削除",
+        "visibility": "公開設定",
+        "status": "状態",
+        "public": "公開",
+        "private": "非公開",
+        "unlisted": "リスト未掲載",
+        "confirmDelete": "本当にこの譜面を削除しますか？",
+        "cancel": "キャンセル",
+        "save": "保存",
+        "loading": "譜面を読み込み中...",
+        "noCharts": "譜面が見つかりません",
+        "createFirst": "最初の譜面を作成して始めましょう！"
+    },
+    "header": {
+        "language": "言語",
+        "theme": "テーマ",
+        "light": "ライト",
+        "dark": "ダーク"
+    },
+    "background": {
+        "untitled": "UNTITLED",
+        "charts": "CHARTS",
+        "community": "コミュニティ"
+    }
+}
