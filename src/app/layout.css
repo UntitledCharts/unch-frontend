@@ -29,7 +29,7 @@
 .main-content {
     width: 100%;
     min-height: 100vh;
-    padding-top: 100px;
+    padding-top: 0;
     box-sizing: border-box;
     position: relative;
     z-index: 1;
@@ -529,7 +529,7 @@ body.light-mode .nav-links a.active {
     }
 
     .main-content {
-        padding-top: 80px;
+        padding-top: 0;
     }
 
     header h2 {

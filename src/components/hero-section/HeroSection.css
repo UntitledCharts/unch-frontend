@@ -3,14 +3,21 @@
     width: 100%;
     max-width: 1400px;
     margin: 0 auto 40px;
-    height: 400px;
+    height: 500px;
+    padding-top: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     color: white;
-    border-radius: 24px;
+    /*border-radius: 24px;*/
     box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .hero-section {
+    padding-top: 80px;
+  }
 }
 
 .hero-bg-container {
