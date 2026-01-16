@@ -51,7 +51,7 @@ export function UserProvider({ children }) {
         });
 
         if (!me.ok) {
-          if (me.status === 401 || me.status === 403) {
+          if (me.status === 401) {
             localStorage.removeItem("session");
             localStorage.removeItem("expiry");
             setIsLoggedIn(false);
