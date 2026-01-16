@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SONOLUS_SERVER_URL || 'https://untitledcharts.com';
+const siteUrl = process.env.NEXT_PUBLIC_DOMAIN || process.env.NEXT_PUBLIC_SONOLUS_SERVER_URL || 'https://untitledcharts.com';
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
