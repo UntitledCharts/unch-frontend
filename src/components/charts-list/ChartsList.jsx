@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Pencil, Trash2, Globe, Lock, Link as LinkIcon, Heart, Calendar, RefreshCw, Loader2, MessageSquare } from "lucide-react";
 import AudioControls from "../audio-control/AudioControls";
 import AudioVisualizer from "../audio-visualizer/AudioVisualizer";
+import LoadingImage from "../loading-image/LoadingImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import "./ChartsList.css";
 import { formatRelativeTime } from "@/utils/dateUtils";
@@ -87,7 +88,7 @@ const MemoizedChartItem = memo(function ChartItem({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
+          <LoadingImage
             className="dashboard-img"
             src={post.coverUrl}
             alt={post.title}

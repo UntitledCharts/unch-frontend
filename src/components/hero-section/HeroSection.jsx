@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Play, Heart, Info, User, Music, Calendar, MessageSquare, ArrowDown } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "../../contexts/LanguageContext";
+import LoadingImage from "../loading-image/LoadingImage";
 import "./HeroSection.css";
 
 export default function HeroSection({ posts = [] }) {
@@ -65,7 +66,7 @@ export default function HeroSection({ posts = [] }) {
             <div className="hero-content-wrapper">
                 <div className="hero-left-col animate-slide-in-left">
                     <div className="hero-jacket-container">
-                        <img
+                        <LoadingImage
                             src={currentPost.coverUrl}
                             alt={currentPost.title}
                             className="hero-jacket"
@@ -80,22 +81,22 @@ export default function HeroSection({ posts = [] }) {
                         <h1 className="hero-title">{currentPost.title}</h1>
 
                         {/* <div className="hero-right-col animate-slide-in-right">*/}
-                            <div className="hero-description-box">
-                                {currentPost.description && <p>{currentPost.description}</p>}
-                            </div>
+                        <div className="hero-description-box">
+                            {currentPost.description && <p>{currentPost.description}</p>}
+                        </div>
                         {/* </div>*/}
 
                         <div className="hero-meta mb-0!">
                             <div className="hero-meta-item">
                                 <span className="hero-label flex items-center justify-center gap-1">
-                                  <User size={16} />
-                                  {t('hero.by')}
+                                    <User size={16} />
+                                    {t('hero.by')}
                                 </span>
                                 <span>{currentPost.artists}</span>
                             </div>
                             <div className="hero-meta-item">
                                 <span className="hero-label">
-                                  {t('hero.chartedBy')}
+                                    {t('hero.chartedBy')}
                                 </span>
                                 <span>{currentPost.author}</span>
                             </div>
@@ -138,8 +139,8 @@ export default function HeroSection({ posts = [] }) {
                 </div>
             </div>
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-9999 py-2 px-4 rounded-full flex items-center justify-center gap-2 text-sm bg-sky-200/10 select-none">
-              <ArrowDown className="size-5" />
-              <span>More</span>
+                <ArrowDown className="size-5" />
+                <span>More</span>
             </div>
         </section>
     );

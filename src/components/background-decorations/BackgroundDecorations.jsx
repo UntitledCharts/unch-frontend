@@ -14,7 +14,8 @@ export default function BackgroundDecorations() {
 
     useEffect(() => {
         setMounted(true);
-        const newShapes = Array.from({ length: 40 }).map((_, i) => ({
+        // Reduced from 40 to 15 shapes for better performance
+        const newShapes = Array.from({ length: 15 }).map((_, i) => ({
             id: i,
             type: ['circle', 'triangle', 'square', 'cross'][Math.floor(Math.random() * 4)],
             size: Math.random() * 30 + 10 + 'px',
@@ -32,10 +33,18 @@ export default function BackgroundDecorations() {
         if (!mounted) return;
 
         let rafId;
+        let ticking = false;
+
         const handleScroll = () => {
-            const scrollY = window.scrollY;
-            if (containerRef.current) {
-                containerRef.current.style.setProperty('--scroll-y', `${scrollY}px`);
+            if (!ticking) {
+                rafId = requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    if (containerRef.current) {
+                        containerRef.current.style.setProperty('--scroll-y', `${scrollY}px`);
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
         };
 

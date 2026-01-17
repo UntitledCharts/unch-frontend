@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import "./HomepageChartCard.css";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { formatRelativeTime } from "../../utils/dateUtils";
+import LoadingImage from "../loading-image/LoadingImage";
 
 export default function HomepageChartCard({
     chart,
@@ -105,7 +106,7 @@ export default function HomepageChartCard({
                 <div className="card-image-wrapper">
                     {coverUrl ? (
                         <div className="disc-wrapper">
-                            <img src={coverUrl} alt={title} className="card-cover" loading="lazy" />
+                            <LoadingImage src={coverUrl} alt={title} className="card-cover" loading="lazy" />
                             <div className="disc-center-hole"></div>
                         </div>
                     ) : (

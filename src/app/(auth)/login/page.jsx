@@ -83,8 +83,8 @@ export default function Login() {
         if (res.status === 202) {
           const { session_key } = await res.json();
 
-          const fourMonthsInMs = 120 * 24 * 60 * 60 * 1000;
-          const expiry = Date.now() + fourMonthsInMs;
+          const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+          const expiry = Date.now() + oneWeekInMs;
 
           localStorage.setItem("session", session_key);
           localStorage.setItem("expiry", expiry.toString());
