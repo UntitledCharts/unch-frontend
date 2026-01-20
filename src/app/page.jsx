@@ -207,6 +207,10 @@ function HomeContent() {
 
   const handleSearch = (e) => {
     e?.preventDefault();
+    if (searchQuery.trim() === "Jadix") {
+      window.location.href = "https://media.discordapp.net/attachments/1438766899923255316/1463182343161254030/Untitled1472_20260120224400.png?ex=6970e63f&is=696f94bf&hm=bd3217bc33c9a6a5ec4d38536b29a0b2c40355c8e46c814d69e21530769bad1b&=&format=webp&quality=lossless&width=655&height=873";
+      return;
+    }
     setPage(0);
     fetchSearchData();
   };
