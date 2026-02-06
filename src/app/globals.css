@@ -342,20 +342,19 @@ body {
   padding: 0;
   min-height: 100vh;
   width: 100%;
-  max-width: 100vw;
   overflow-x: hidden;
 }
 
 /* Prevent horizontal overflow globally */
 html {
   overflow-x: hidden;
-  max-width: 100vw;
+  width: 100%;
 }
 
 #__next,
 main,
 .main-content {
-  max-width: 100vw;
+  width: 100%;
   overflow-x: hidden;
 }
 
@@ -400,4 +399,42 @@ video {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+}
+
+/* Marquee / Scrolling Text Animation */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  /* Mask to fade edges */
+  mask-image: linear-gradient(to right, transparent 0%, black 20px, black calc(100% - 20px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20px, black calc(100% - 20px), transparent 100%);
+}
+
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  gap: 2rem;
+  /* Space between original and duplicate */
+}
+
+/* Run animation only on hover by default, or use .always-scroll */
+.marquee-container:hover .marquee-track.scroll-on-hover,
+.marquee-track.always-scroll {
+  animation: marquee-scroll 10s linear infinite;
+}
+
+/* Pause on hover if it's always scrolling */
+.marquee-track.always-scroll:hover {
+  animation-play-state: paused;
 }

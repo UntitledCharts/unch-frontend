@@ -325,7 +325,7 @@ export default function UserProfile({ params }) {
                             <div className="section-header">
                                 <h2>
                                     <Music size={20} />
-                                    {t('userProfile.charts', 'Charts')}
+                                    {t('userProfile.charts', 'Popular Charts')}
                                 </h2>
                                 {hasCharts && <span className="count">{charts.length}</span>}
                             </div>
@@ -454,7 +454,7 @@ export default function UserProfile({ params }) {
                             <div className="sidebar-section">
                                 <h3>
                                     <BarChart3 size={18} />
-                                    {t('userProfile.stats', 'Chart Statistics')}
+                                    {t('userProfile.stats', 'Popular Charts Statistics')}
                                 </h3>
 
                                 <div className="stats-list">

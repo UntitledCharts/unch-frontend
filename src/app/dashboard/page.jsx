@@ -952,8 +952,8 @@ export default function Dashboard() {
 
                         <div className="card-info">
                           <div className="info-header">
-                            <div className="flex items-center justify-start gap-2">
-                              <h3 title={post.title}><FormattedText text={post.title} /></h3>
+                            <div className="flex items-center justify-start gap-2 min-w-0">
+                              <h3 title={post.title} className="truncate"><FormattedText text={post.title} /></h3>
                               <span title="Rating" className="rating-badge text-xs" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                                 Lv. {post.rating}
                               </span>

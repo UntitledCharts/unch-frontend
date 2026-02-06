@@ -439,6 +439,28 @@ function HomeContent() {
                 Reiyunlover
               </p>
             </div>
+            <div style={{
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: '16px',
+              padding: '16px',
+              border: '1px solid rgba(255,255,255,0.1)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+              flex: '1 1 300px',
+              maxWidth: '400px'
+            }}>
+              <img
+                src="/Untitled1498_20260206013808.webp"
+                alt="New Jadix Image"
+                style={{
+                  width: '100%',
+                  borderRadius: '12px',
+                  display: 'block'
+                }}
+              />
+              <p style={{ color: '#fff', textAlign: 'center', marginTop: '12px', marginBottom: 0, fontSize: '0.9rem' }}>
+                Jadix saying "Welcome Home, Master"
+              </p>
+            </div>
           </div>
 
           <div style={{

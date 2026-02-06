@@ -433,7 +433,19 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
           </div>
 
           <div className="level-info">
-            <h1 className="level-title">{level.title}</h1>
+            {/* Title with Marquee support if text is long */}
+            <div className="level-title-wrapper" style={{ overflow: 'hidden', marginBottom: '16px' }}>
+              {(level.title && level.title.length > 25) ? (
+                <div className="marquee-container" style={{ width: '100%' }}>
+                  <div className="marquee-track always-scroll" style={{ animationDuration: `${Math.max(10, level.title.length * 0.2)}s` }}>
+                    <h1 className="level-title" style={{ margin: 0, padding: 0, whiteSpace: 'nowrap' }}>{level.title}</h1>
+                    <h1 className="level-title" style={{ margin: 0, padding: 0, whiteSpace: 'nowrap' }} aria-hidden="true">{level.title}</h1>
+                  </div>
+                </div>
+              ) : (
+                <h1 className="level-title">{level.title}</h1>
+              )}
+            </div>
 
             <div className="level-credits">
               <div className="level-credit-item">

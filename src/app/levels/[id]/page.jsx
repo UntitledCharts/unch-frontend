@@ -55,7 +55,7 @@ export async function generateMetadata({ params }) {
     return { title: 'Level not found' };
   }
 
-  const authorName = level.author ? level.author.split('#')[0] : 'Unknown';
+  const authorName = level.author || 'Unknown';
 
   // Format date for footer
   const formatDate = (dateStr) => {
@@ -73,34 +73,36 @@ export async function generateMetadata({ params }) {
   const publishedDate = formatDate(level.createdAt);
 
   // Build structured description exactly as user requested
-  // {description}
-  // Comments: X | Likes: Y
-  const statsLine = `💬 Comments: ${level.comments} | ❤️ Likes: ${level.likes}`;
+  // Only Description
+  // Footer: UntitledCharts • Date (This is handled by Discord automatically if we provide site_name and published_time properly, or we format it into the description if we have to, but user requested footer)
+
+  // NOTE: Discord uses 'og:site_name' for the top text usually. User wants "UntitledCharts • Date" as FOOTER. 
+  // Discord footer text is hard to control via standard OG. However, 'theme-color' handles the color.
+  // We will set siteName to 'Untitled Charts' and let Discord handle the rest, or appended to description if needed?
+  // User said: "UntitledCharts • 2/5/26, 4:50 PM should've been the footer... rather than making it the header"
+  // If we remove it from siteName, it won't be in header.
+
   // Strip emojis from description for metadata (remove :emoji:)
   const rawDescription = level.description || '';
   const cleanDescription = rawDescription.replace(/:[a-zA-Z0-9_]+:/g, '').trim();
-  const descriptionText = cleanDescription.slice(0, 300);
-
-  const embedDescription = [
-    descriptionText,
-    '',
-    statsLine
-  ].filter(line => line !== undefined).join('\n');
+  const descriptionText = cleanDescription.slice(0, 300) || 'No description provided.';
 
   return {
     title: `[Lv. ${level.rating}] ${level.title} - ${level.artists}`,
-    description: embedDescription,
+    description: descriptionText,
     openGraph: {
       title: `${level.title}`,
-      description: embedDescription,
-      siteName: `UntitledCharts • ${publishedDate}`,
-      type: 'music.song',
+      description: descriptionText,
+      siteName: `Untitled Charts`,
+      type: 'article', // 'article' allows publishedTime
+      publishedTime: level.createdAt,
+      authors: [authorName],
     },
     twitter: {
       card: 'summary_large_image',
       title: `[Lv. ${level.rating}] ${level.title}`,
-      description: embedDescription,
-      creator: `@${authorName}`,
+      description: descriptionText,
+      creator: `@${authorName}`, // Note: this might need valid twitter handle, but usually just displays text
     },
     other: {
       'theme-color': '#38bdf8',

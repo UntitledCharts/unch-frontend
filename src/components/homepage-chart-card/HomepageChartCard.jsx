@@ -164,8 +164,17 @@ export default function HomepageChartCard({
             </div>
 
             <div className="card-content">
-                <div className="card-title-wrapper">
-                    <h3 className="card-title" title={title}>{title}</h3>
+                <div className="card-title-wrapper" style={{ overflow: 'hidden' }}>
+                    {(title && title.length > 20) ? (
+                        <div className="marquee-container" style={{ width: '100%' }}>
+                            <div className="marquee-track always-scroll" style={{ animationDuration: `${Math.max(8, title.length * 0.25)}s` }}>
+                                <h3 className="card-title" title={title}>{title}</h3>
+                                <h3 className="card-title" title={title} aria-hidden="true">{title}</h3>
+                            </div>
+                        </div>
+                    ) : (
+                        <h3 className="card-title" title={title}>{title}</h3>
+                    )}
                 </div>
 
 

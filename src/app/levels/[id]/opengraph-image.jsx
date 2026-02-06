@@ -414,7 +414,7 @@ export default async function Image({ params }) {
 
                         {/* Charter */}
                         <div style={{ fontSize: 24, color: '#94a3b8', display: 'flex', alignItems: 'center', flexWrap: 'wrap', marginBottom: 28 }}>
-                            Charted by {renderTextWithEmojis((levelData.author_full || levelData.author || 'Unknown').split('#')[0].slice(0, 20), 24)}
+                            Charted by {renderTextWithEmojis((levelData.author_full || levelData.author || 'Unknown').slice(0, 30), 24)}
                         </div>
 
                         {/* Description */}
