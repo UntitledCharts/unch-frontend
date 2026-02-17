@@ -31,7 +31,9 @@ import {
     ShieldCheck,
     UserX,
     Eye,
-    EyeOff
+    EyeOff,
+    Pencil,
+    Clock
 } from "lucide-react";
 import "./page.css";
 import { useUser } from "../../../contexts/UserContext";
@@ -59,8 +61,6 @@ export default function UserProfile({ params }) {
 
     const [userStats, setUserStats] = useState({});
     const stats = userStats || {};
-    console.log('[Debug] UserStats:', userStats);
-    console.log('[Debug] Stats Title:', t('userProfile.stats'));
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [showAdminMenu, setShowAdminMenu] = useState(false);
     const [activeChartMenu, setActiveChartMenu] = useState(null);

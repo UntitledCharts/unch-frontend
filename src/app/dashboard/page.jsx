@@ -124,6 +124,7 @@ export default function Dashboard() {
   const [titleIncludes, setTitleIncludes] = useState("");
   const [artistsIncludes, setArtistsIncludes] = useState("");
   const [tags, setTags] = useState("");
+  const [filtersExpanded, setFiltersExpanded] = useState(true);
 
   const sonolusHandleIs = searchParams.get('sonolus_handle_is');
 
@@ -208,6 +209,7 @@ export default function Dashboard() {
   });
 
   const filteredPosts = posts;
+  const shouldShowPagination = () => pageCount > 1;
 
   const fetchCharts = useCallback(async () => {
     setLoading(true);
@@ -226,8 +228,6 @@ export default function Dashboard() {
       queryParams.append("limit", "10");
       queryParams.append("status", "ALL");
 
-      queryParams.append("status", "ALL");
-
       if (sonolusHandleIs) queryParams.append("sonolus_handle_is", sonolusHandleIs);
       if (staffPick) queryParams.append("staff_pick", "1");
       if (minRating) queryParams.append("min_rating", minRating);
@@ -240,7 +240,6 @@ export default function Dashboard() {
 
       queryParams.append("sort_by", sortBy);
       queryParams.append("sort_order", sortOrder);
-      queryParams.append("limit", "10");
 
       const res = await fetch(`${apiBase}/api/charts?${queryParams.toString()}`, {
         headers: { Authorization: `${session}` },
