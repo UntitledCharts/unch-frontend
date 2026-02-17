@@ -1,6 +1,6 @@
 "use client";
 import "./page.css";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import {
   Heart,
   MessageSquare,
@@ -87,7 +87,7 @@ const StatWithGraph = memo(({ icon: Icon, label, value, color, data }) => {
 });
 StatWithGraph.displayName = "StatWithGraph";
 
-export default function Dashboard() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useLanguage();
@@ -1182,5 +1182,13 @@ export default function Dashboard() {
         />
       </div>
     </div >
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={null}>
+      <DashboardContent />
+    </Suspense>
   );
 }
