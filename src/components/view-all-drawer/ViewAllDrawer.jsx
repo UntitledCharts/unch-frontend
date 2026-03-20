@@ -4,6 +4,7 @@ import { X, Search } from "lucide-react";
 import HomepageChartCard from "../homepage-chart-card/HomepageChartCard";
 import "./ViewAllDrawer.css";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { createPortal } from "react-dom";
 
 export default function ViewAllDrawer({
     isOpen,
@@ -46,8 +47,13 @@ export default function ViewAllDrawer({
         };
     }, [isOpen]);
 
-    const handleClose = () => {
-        setIsClosing(true);
+    const handleClose = (fromDrag = false) => {
+        if (!fromDrag) {
+            setIsClosing(true);
+        } else {
+            setDragY(typeof window !== 'undefined' ? window.innerHeight : 1000);
+            setIsClosing(true); // Signal closing but heavily rely on dragY transition
+        }
         setTimeout(() => {
             setIsClosing(false);
             onClose();
@@ -79,7 +85,7 @@ export default function ViewAllDrawer({
         if (!isDragging) return;
         setIsDragging(false);
         if (dragY > 150) {
-            handleClose();
+            handleClose(true);
         } else {
             setDragY(0);
         }
@@ -131,6 +137,7 @@ export default function ViewAllDrawer({
     };
 
     if (!isOpen && !isClosing) return null;
+    if (typeof document === 'undefined') return null;
 
     const filteredCharts = charts.filter(c => {
         const q = searchQuery.toLowerCase();
@@ -142,7 +149,7 @@ export default function ViewAllDrawer({
         return title.includes(q) || author.includes(q) || artists.includes(q) || tags.includes(q);
     });
 
-    return (
+    return createPortal(
         <div
             className={`drawer-backdrop ${isClosing ? "fade-out" : "fade-in"}`}
             onClick={handleBackdropClick}
@@ -153,11 +160,13 @@ export default function ViewAllDrawer({
             onTouchEnd={handleDragEnd}
         >
             <div
-                className={`drawer-container ${isClosing ? "slide-down" : "slide-up"}`}
+                className={`drawer-container ${(isClosing && dragY === 0) ? "slide-down" : "slide-up"}`}
                 ref={drawerRef}
                 style={{
                     transform: dragY > 0 ? `translateY(${dragY}px)` : '',
-                    transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                    transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                    bottom: 0,
+                    position: 'absolute'
                 }}
             >
                 <div className="drawer-header">
@@ -225,12 +234,12 @@ export default function ViewAllDrawer({
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                {loadingMore ? t('loading') : t('viewAll.loadMore')} ({filteredCharts.length} loaded)
+                                {loadingMore ? t('loading') : t('viewAll.loadMore')} ({filteredCharts.length} {t('viewAll.loaded', 'loaded')})
                             </button>
                         </div>
                     )}
                 </div>
             </div>
         </div>
-    );
+    , document.body);
 }

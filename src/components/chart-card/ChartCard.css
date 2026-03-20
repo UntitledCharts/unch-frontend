@@ -122,6 +122,8 @@
     font-size: var(--text-xs);
     font-weight: 600;
     font-family: var(--font-mono);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .chart-card-likes {
@@ -196,14 +198,17 @@
     }
 
     .chart-card-meta {
-        margin-top: 4px;
+        margin-top: auto;
         justify-content: flex-start;
         gap: 12px;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+        overflow: visible;
+        min-height: 28px;
     }
 
     .chart-card-footer {
         display: none;
-
     }
 
     .chart-card-overlay {

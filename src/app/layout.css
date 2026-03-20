@@ -32,7 +32,7 @@
     padding-top: 0;
     box-sizing: border-box;
     position: relative;
-    z-index: 1;
+    z-index: 200;
 }
 
 
@@ -217,12 +217,12 @@ body.light-mode .header-lang-select {
     opacity: 0.5;
 }
 
-/* Redesigned User Profile Trigger (Button) */
+
 .user-profile.redesigned-trigger {
     height: 40px;
-    /* Force compact height */
+    
     padding: 0 6px 0 6px;
-    /* Reduced padding */
+    
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
@@ -233,7 +233,7 @@ body.light-mode .header-lang-select {
     transition: all 0.2s ease;
     width: auto;
     max-width: 220px;
-    /* Limit width */
+    
     background-size: cover;
     background-position: center;
 }
@@ -245,7 +245,7 @@ body.light-mode .header-lang-select {
 
 .user-profile.redesigned-trigger .user-avatar {
     width: 28px;
-    /* Slightly larger than original 24px but fitting */
+    
     height: 28px;
     flex-shrink: 0;
     border: 2px solid rgba(255, 255, 255, 0.8);
@@ -275,16 +275,16 @@ body.light-mode .header-lang-select {
     font-size: 0.7rem;
 }
 
-/* Trigger Overlay */
+
 .trigger-overlay {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
-    /* Darken banner for text readability */
+    
     z-index: 1;
 }
 
-/* Reverted Dropdown Style */
+
 .user-dropdown {
     position: absolute;
     top: 100%;
@@ -703,7 +703,7 @@ body.light-mode .nav-links a.active {
     transform-origin: top center;
 }
 
-/* Enhanced Mobile Header that expands */
+
 .mobile-menu-expanded-header {
     background: transparent;
     padding: 20px 24px;
@@ -766,7 +766,7 @@ body.light-mode .nav-links a.active {
     overflow-y: auto;
 }
 
-/* Staggered Nav Link Animations */
+
 .mobile-menu .nav-links a:nth-child(1) {
     animation: staggerSlideIn 0.4s ease 0.1s forwards;
     opacity: 0;
@@ -799,7 +799,7 @@ body.light-mode .nav-links a.active {
     }
 }
 
-/* Close button with rotation animation */
+
 .mobile-close-btn-enhanced {
     background: rgba(255, 255, 255, 0.1);
     border: none;
@@ -1067,6 +1067,7 @@ footer {
 .footer-center {
     width: 33%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -1169,7 +1170,7 @@ body.light-mode .lang-select option {
     }
 }
 
-/* Background Decorations (Project Sekai Style) */
+
 .bg-decorations-container {
     position: fixed;
     top: 0;
@@ -1182,7 +1183,7 @@ body.light-mode .lang-select option {
     transition: opacity 1s ease;
 }
 
-/* Light mode specifics */
+
 body.light-mode .bg-shape {
     opacity: 0.15;
 }
@@ -1192,7 +1193,7 @@ body.light-mode .bg-text {
     -webkit-text-stroke: 1px rgba(15, 23, 42, 0.05);
 }
 
-/* Dark mode specifics */
+
 body:not(.light-mode) .bg-shape {
     opacity: 0.1;
 }
@@ -1292,7 +1293,7 @@ body:not(.light-mode) .bg-grid-pattern {
         linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 }
 
-/* Background Text Styles */
+
 .bg-text-container {
     position: absolute;
     inset: 0;
@@ -1331,9 +1332,9 @@ body:not(.light-mode) .bg-grid-pattern {
 @media (max-width: 768px) {
     .bg-text {
         font-size: 80px;
-        /* Force large size on mobile to match PC feel */
+        
         opacity: 0.1;
-        /* Reduce opacity slightly to not overwhelm small screen */
+        
     }
 }
 
@@ -1438,7 +1439,7 @@ body:not(.light-mode) .bg-grid-pattern {
     background: linear-gradient(to top, var(--background), var(--glass-bg));
     border-top: 1px solid var(--glass-border);
     overflow: visible;
-    z-index: 10;
+    z-index: 1;
 }
 
 .footer-miku {
@@ -1608,10 +1609,10 @@ body:not(.light-mode) .bg-grid-pattern {
     }
 }
 
-/* Level Page Styling Overrides */
+
 .is-level-page .site-header {
     background: rgba(15, 23, 42, 0.4);
-    /* More transparent header on level pages */
+    
     backdrop-filter: blur(8px);
     border-color: rgba(255, 255, 255, 0.05);
 }
@@ -1625,7 +1626,7 @@ body.light-mode.is-level-page .site-header {
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* Light Mode Mobile Menu Overrides */
+
 body.light-mode .mobile-menu {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(25px);

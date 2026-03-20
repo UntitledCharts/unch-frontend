@@ -31,9 +31,9 @@ export default function EmojiSuggestion({
         const cursorPosition = textareaRef.current.selectionStart;
         const textBeforeCursor = value.substring(0, cursorPosition);
 
-        // Check for :code pattern not preceded by http/https
-        // Regex for finding the last colon that isn't part of a protocol
-        // Negative lookbehind is supported in modern JS, but for safety lets check simpler
+        
+        
+        
 
         const lastColonIndex = textBeforeCursor.lastIndexOf(':');
 
@@ -42,7 +42,7 @@ export default function EmojiSuggestion({
             return;
         }
 
-        // Check if it's a URL protocol
+        
         const protocolCheck = textBeforeCursor.substring(Math.max(0, lastColonIndex - 5), lastColonIndex);
         if (protocolCheck.match(/https?$/)) {
             setIsOpen(false);
@@ -51,7 +51,7 @@ export default function EmojiSuggestion({
 
         const query = textBeforeCursor.substring(lastColonIndex + 1);
 
-        // If there's a space, we assume the code is done or invalid
+        
         if (query.includes(' ') || query.includes('\n')) {
             setIsOpen(false);
             return;
@@ -66,9 +66,9 @@ export default function EmojiSuggestion({
             setIsOpen(true);
             setSelectedIndex(0);
 
-            // Calculate position
-            // This is a bit tricky for a plain textarea without a library like textarea-caret
-            // We'll try a rough approximation or use a hidden div mirror
+            
+            
+            
             const { top, left } = getCaretCoordinates(textareaRef.current, cursorPosition);
             const rect = textareaRef.current.getBoundingClientRect();
 
@@ -83,7 +83,7 @@ export default function EmojiSuggestion({
 
     }, [value, textareaRef, setIsOpen]);
 
-    // Handle keyboard navigation
+    
     useEffect(() => {
         if (!isOpen) return;
 
@@ -118,8 +118,8 @@ export default function EmojiSuggestion({
         onSelect(newText);
         setIsOpen(false);
 
-        // Reset cursor position needs to happen after render, usually handled by parent
-        // but we can try to help
+        
+        
         setTimeout(() => {
             if (textareaRef.current) {
                 const newCursorPos = lastColon + emoji.char.length + 1;
@@ -150,6 +150,7 @@ export default function EmojiSuggestion({
                 zIndex: 99999,
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
             }}
+            className="custom-scrollbar"
         >
             {filteredEmojis.map((emoji, index) => (
                 <li
@@ -185,25 +186,25 @@ export default function EmojiSuggestion({
     );
 }
 
-// Utility to get caret coordinates
-// Ideally this would be a separate library, but implementing a minimal version here
+
+
 function getCaretCoordinates(element, position) {
     const div = document.createElement('div');
     const style = window.getComputedStyle(element);
 
-    // Copy styles
+    
     for (const prop of ['direction', 'boxSizing', 'width', 'height', 'overflowX', 'overflowY', 'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'fontStyle', 'fontVariant', 'fontWeight', 'fontStretch', 'fontSize', 'fontSizeAdjust', 'lineHeight', 'fontFamily', 'textAlign', 'textTransform', 'textIndent', 'textDecoration', 'letterSpacing', 'wordSpacing']) {
         div.style[prop] = style[prop];
     }
 
     div.textContent = element.value.substring(0, position);
 
-    // Create a span for the caret
+    
     const span = document.createElement('span');
     span.textContent = element.value.substring(position) || '.';
     div.appendChild(span);
 
-    // Render off-screen
+    
     div.style.position = 'absolute';
     div.style.visibility = 'hidden';
     div.style.left = '-9999px';

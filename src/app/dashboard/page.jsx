@@ -1045,7 +1045,7 @@ function DashboardContent() {
                               </span>
                             </div>
 
-                            {/* Status + PUBLIC schedule popover */}
+                            {}
                             <div
                               style={{ position: "relative", display: "inline-flex", alignItems: "center" }}
                               ref={scheduleMenuPostId === post.id ? scheduleAnchorRef : null}
@@ -1073,7 +1073,7 @@ function DashboardContent() {
                                 >
                                   <div className="text-xs opacity-75">{t("dashboard.publicOptions", "Public options")}</div>
 
-                                  {/* Public now -> existing visibility route */}
+                                  {}
                                   <button
                                     className="icon-btn-ghost"
                                     onClick={async () => {
@@ -1113,7 +1113,7 @@ function DashboardContent() {
                                     </div>
                                   </div>
 
-                                  {/* Remove schedule */}
+                                  {}
                                   {scheduledEpoch && (
                                     <button
                                       className="icon-btn-ghost text-red"
@@ -1126,7 +1126,7 @@ function DashboardContent() {
                                     </button>
                                   )}
 
-                                  {/* Display existing schedule */}
+                                  {}
                                   {scheduledLabel && (
                                     <div className="text-xs opacity-75">
                                       {t("dashboard.scheduledFor", "Scheduled for")}: {scheduledLabel}

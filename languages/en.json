@@ -10,7 +10,7 @@
   "userProfile": {
     "back": "Back",
     "charts": "Popular Charts",
-    "noCharts": "This User hasn't made any charts yet :<",
+    "noCharts": "This user hasn't made any charts yet :<",
     "stats": "Statistics",
     "totalCharts": "Charts",
     "charts_singular": "{1} Chart",
@@ -25,7 +25,17 @@
     "admin": "Admin",
     "mod": "Mod",
     "moderator": "Moderator",
-    "administrator": "Administrator"
+    "administrator": "Administrator",
+    "chartsLiked": "Charts Liked",
+    "commentsMade": "Comments Made",
+    "adminActions": "Staff Actions",
+    "banUser": "Ban User",
+    "unbanUser": "Unban User",
+    "makeMod": "Make Moderator",
+    "unmodUser": "Remove Moderator",
+    "makeAdmin": "Make Admin",
+    "unadminUser": "Remove Admin",
+    "deleteAccountData": "Delete Account Data"
   },
   "home": {
     "newCharts": "New Charts",
@@ -115,6 +125,11 @@
     "like": "Like",
     "likes_singular": "{1} Like",
     "likes_plural": "{1} Likes",
+    "leaderboard": "Leaderboard",
+    "loadingLeaderboard": "Loading Leaderboard...",
+    "loadingComments": "Loading comments...",
+    "noComments": "No comments yet",
+    "noRecords": "No records found",
     "comments": "Comments",
     "comment": "Comment",
     "comments_singular": "{1} Comment",
@@ -129,7 +144,13 @@
     "days": "Days",
     "hours": "Hours",
     "mins": "Mins",
-    "secs": "Secs"
+    "secs": "Secs",
+    "makePrivate": "Make Private",
+    "makePublic": "Make Public",
+    "makeStaffPick": "Make Staff Pick",
+    "removeStaffPick": "Remove Staff Pick",
+    "editConstant": "Edit Difficulty Constant",
+    "deleteChart": "Delete Chart"
   },
   "viewAll": {
     "filterPlaceholder": "Filter charts...",
@@ -166,7 +187,9 @@
     "noResults": "No results found",
     "noImage": "No Image",
     "unknownArtist": "Unknown Artist",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "next": "Next",
+    "prev": "Previous"
   },
   "card": {
     "level": "Lv. {1}"
@@ -265,5 +288,69 @@
     "reminder4": "Cover images should be square (max {size}).",
     "selected": "Selected: {name}",
     "current": "Current: {name}"
-  }
+  },
+  "dmca": {
+    "backToHome": "Back to Home",
+    "title": "DMCA Takedown Process",
+    "subtitle": "Follow these steps to submit a DMCA request via our Discord server.",
+    "step1Title": "Join our Discord Server",
+    "step1Desc": "First, you need to join the official UntitledCharts Discord server where our moderation team handles requests.",
+    "joinDiscord": "Join Discord",
+    "step2Title": "Create a Ticket",
+    "step2Desc": "Navigate to the <strong>#tickets</strong> channel and create a new support ticket.",
+    "step3Title": "Submit Your Request",
+    "step3Desc": "Once your ticket is open, fill out the details explaining your DMCA request. Please make sure to include:",
+    "step3Item1": "Links to the copyrighted material on UntitledCharts.",
+    "step3Item2": "Proof of original ownership or authorization to act on behalf of the owner.",
+    "step3Item3": "A clear statement detailing the infringement."
+  },
+  "uploadPolicy": {
+    "back": "Back",
+    "title": "Upload Policy",
+    "subtitle": "Please read the following rules before uploading your charts.",
+    "rulesTitle": "Rules",
+    "rule1": "No slurs, racism, politics, heavily inappropriate things, advertising, etc.",
+    "rule2": "No super-low quality shitposts (we allow some shitposts)",
+    "rule3": "No public Arcaea or Taiko no Tatsujin songs",
+    "rule4": "Do not abuse our services for the sake of abusing them",
+    "rule5": "No official charts with minor modifications (All Flicks or All Traces are allowed occasionally only)",
+    "rule6": "Use some common sense please",
+    "rule7": "No incomplete charts",
+    "relaxedNote": "Rules 2, 3, 5, and 7 can be <strong>ignored if Unlisted</strong>.",
+    "fileSizeLimits": "File Size Limits",
+    "fileSizeDesc": "If your charts are larger than the upload limit, you can <strong>request support to help</strong>! We don't want to limit actual charts; so we will help you upload it!",
+    "shitpostWarning": "Shitposts are not allowed for this exception. Please reconsider your life choices if you're uploading shitposts larger than the file limits.",
+    "supportedFileTypes": "Supported File Types",
+    "fileTypesNote": "<strong>Note:</strong> Extreme extended features can only be found in LevelData! You can open .usc in the editor to continue working.",
+    "openEditor": "Open Next Sekai Editor"
+  },
+  "emojis": {
+    "title": "Emojis",
+    "subtitle": "Click on any emoji to copy its command",
+    "disclaimer": "* These emojis can be used anywhere (comments, descriptions) and will work on the website, but will not appear in Sonolus.",
+    "searchPlaceholder": "Search emojis...",
+    "loading": "Loading emojis...",
+    "noResults": "No emojis found matching your search",
+    "noEmojis": "No emojis available",
+    "total": "Total: {count} emojis"
+  },
+  "countdown": {
+    "loading": "Loading...",
+    "home": "Home",
+    "backToChart": "Back to Chart",
+    "premieres": "Premieres {date}",
+    "countdownLabel": "Countdown",
+    "getReady": "GET READY!",
+    "almostThere": "Almost there...",
+    "days": "Days",
+    "hours": "Hours",
+    "mins": "Mins",
+    "secs": "Secs",
+    "footerMsg": "The chart will be available when the countdown ends"
+  },
+  "embed": {
+    "likes": "Likes",
+    "comments": "Comments"
+  },
+  "loading": "Loading..."
 }

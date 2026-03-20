@@ -28,10 +28,10 @@
 }
 
 .status-text .liquid-select-trigger {
-  font-size: 0.75rem;
-  font-weight: bold;
+    font-size: 0.75rem;
+    font-weight: bold;
 
-  color: inherit;
+    color: inherit;
 }
 
 .trigger-content {
@@ -83,7 +83,7 @@
 }
 
 .ghost .liquid-select-dropdown {
-  right: -16px;
+    right: -16px;
 
 }
 
@@ -126,10 +126,11 @@
 }
 
 .ghost .liquid-select-item {
-  padding: 6px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;;
+    padding: 6px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    ;
 }
 
 .liquid-select-item.selected {
@@ -170,4 +171,21 @@ body.light-mode .liquid-select-item {
 
 body.light-mode .liquid-select-item:hover {
     background: rgba(15, 23, 42, 0.06);
+}
+
+
+.leaderboard-filter.liquid-select-wrapper {
+    width: auto;
+    z-index: 9999 !important;
+}
+
+.leaderboard-filter .liquid-select-trigger {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+}
+
+.leaderboard-filter .liquid-select-dropdown {
+    min-width: 220px;
+    right: 0;
+    left: auto;
 }

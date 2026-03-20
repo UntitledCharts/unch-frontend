@@ -6,20 +6,20 @@ import './error.css';
 export default function Error({ error, reset }) {
     const { t } = useLanguage();
 
-    // Filter out chunk/module errors - show nothing for these
+    
     const isChunkError = error?.message?.includes('chunk') ||
         error?.message?.includes('module') ||
         error?.message?.includes('Loading') ||
         error?.digest?.includes('NEXT_');
 
-    // Check for 404/private chart errors
+    
     const is404 = error?.message?.includes('not found') ||
         error?.message?.includes('404') ||
         error?.message?.includes('private') ||
         error?.message?.includes('Private');
 
     if (isChunkError) {
-        // Silently retry for chunk errors
+        
         setTimeout(() => reset(), 1000);
         return null;
     }

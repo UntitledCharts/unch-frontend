@@ -4,11 +4,13 @@ import { useEffect, useState, useRef, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Home, ArrowLeft, Clock, Calendar } from "lucide-react";
+import { useLanguage } from "../../../../contexts/LanguageContext";
 import "./countdown.css";
 
 export default function CountdownPage({ params }) {
     const { id } = use(params);
     const router = useRouter();
+    const { t } = useLanguage();
     const [level, setLevel] = useState(null);
     const [loading, setLoading] = useState(true);
     const [countdown, setCountdown] = useState(null);
@@ -17,7 +19,7 @@ export default function CountdownPage({ params }) {
     const [confettiPieces, setConfettiPieces] = useState([]);
     const jacketImgRef = useRef(null);
 
-    // Fetch level data
+    
     useEffect(() => {
         const fetchLevel = async () => {
             try {
@@ -26,7 +28,7 @@ export default function CountdownPage({ params }) {
                     const data = await response.json();
                     setLevel(data);
 
-                    // Redirect if already released
+                    
                     if (data.status !== 'scheduled' || !data.scheduled_publish) {
                         router.replace(`/levels/${id}`);
                         return;
@@ -44,7 +46,7 @@ export default function CountdownPage({ params }) {
         fetchLevel();
     }, [id, router]);
 
-    // Countdown timer
+    
     useEffect(() => {
         if (!level?.scheduled_publish) return;
 
@@ -75,7 +77,7 @@ export default function CountdownPage({ params }) {
         return () => clearInterval(interval);
     }, [level, id, router]);
 
-    // Extract dominant color from jacket
+    
     useEffect(() => {
         if (!level?.thumbnail || !jacketImgRef.current) return;
 
@@ -129,7 +131,7 @@ export default function CountdownPage({ params }) {
             <div className="countdown-page">
                 <div className="countdown-loading">
                     <div className="loading-spinner"></div>
-                    <p>Loading...</p>
+                    <p>{t('countdown.loading')}</p>
                 </div>
             </div>
         );
@@ -144,19 +146,19 @@ export default function CountdownPage({ params }) {
 
     return (
         <main className="countdown-page">
-            {/* Navigation */}
+            {}
             <nav className="countdown-nav">
                 <Link href="/" className="nav-btn home-btn">
                     <Home size={18} />
-                    <span>Home</span>
+                    <span>{t('countdown.home')}</span>
                 </Link>
                 <Link href={`/levels/${id}`} className="nav-btn back-btn">
                     <ArrowLeft size={18} />
-                    <span>Back to Chart</span>
+                    <span>{t('countdown.backToChart')}</span>
                 </Link>
             </nav>
 
-            {/* Confetti */}
+            {}
             {showConfetti && confettiPieces.map(piece => (
                 <div
                     key={piece.id}
@@ -172,7 +174,7 @@ export default function CountdownPage({ params }) {
                 />
             ))}
 
-            {/* Background */}
+            {}
             <div
                 className="countdown-bg"
                 style={{
@@ -183,9 +185,9 @@ export default function CountdownPage({ params }) {
                 <div className="countdown-bg-overlay"></div>
             </div>
 
-            {/* Content */}
+            {}
             <div className="countdown-content">
-                {/* Jacket */}
+                {}
                 <div className="countdown-jacket-wrapper">
                     <img
                         ref={jacketImgRef}
@@ -196,22 +198,22 @@ export default function CountdownPage({ params }) {
                     <div className="countdown-jacket-glow" style={{ background: dominantColor }}></div>
                 </div>
 
-                {/* Info */}
+                {}
                 <div className="countdown-info">
                     <h1 className="countdown-title">{level.title}</h1>
                     <p className="countdown-artist">{level.artists}</p>
 
                     <div className="countdown-schedule">
                         <Calendar size={16} />
-                        <span>Premieres {formatDate(level.scheduled_publish)}</span>
+                        <span>{t('countdown.premieres').replace('{date}', formatDate(level.scheduled_publish))}</span>
                     </div>
                 </div>
 
-                {/* Timer */}
+                {}
                 <div className="countdown-timer-section">
                     <div className="timer-label">
                         <Clock size={18} />
-                        <span>Countdown</span>
+                        <span>{t('countdown.countdownLabel')}</span>
                     </div>
 
                     {isFinalCountdown ? (
@@ -220,7 +222,7 @@ export default function CountdownPage({ params }) {
                                 {countdown.seconds}
                             </div>
                             <p className={`final-message ${isCritical ? 'critical' : ''}`}>
-                                {isCritical ? "🚀 GET READY!" : "Almost there..."}
+                                {isCritical ? `🚀 ${t('countdown.getReady')}` : t('countdown.almostThere')}
                             </p>
                         </div>
                     ) : (
@@ -228,30 +230,30 @@ export default function CountdownPage({ params }) {
                             {countdown.days > 0 && (
                                 <div className="timer-unit">
                                     <span className="timer-value">{countdown.days}</span>
-                                    <span className="timer-label-text">Days</span>
+                                    <span className="timer-label-text">{t('countdown.days')}</span>
                                 </div>
                             )}
                             {(countdown.days > 0 || countdown.hours > 0) && (
                                 <div className="timer-unit">
                                     <span className="timer-value">{countdown.hours.toString().padStart(2, '0')}</span>
-                                    <span className="timer-label-text">Hours</span>
+                                    <span className="timer-label-text">{t('countdown.hours')}</span>
                                 </div>
                             )}
                             <div className="timer-unit">
                                 <span className="timer-value">{countdown.minutes.toString().padStart(2, '0')}</span>
-                                <span className="timer-label-text">Mins</span>
+                                <span className="timer-label-text">{t('countdown.mins')}</span>
                             </div>
                             <div className={`timer-unit ${countdown.seconds <= 10 ? 'pulse' : ''}`}>
                                 <span className="timer-value">{countdown.seconds.toString().padStart(2, '0')}</span>
-                                <span className="timer-label-text">Secs</span>
+                                <span className="timer-label-text">{t('countdown.secs')}</span>
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* Footer message */}
+                {}
                 <p className="countdown-footer-msg">
-                    The chart will be available when the countdown ends
+                    {t('countdown.footerMsg')}
                 </p>
             </div>
         </main>

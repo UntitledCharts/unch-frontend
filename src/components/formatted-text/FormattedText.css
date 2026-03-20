@@ -1,4 +1,4 @@
-/* Inline emote styling */
+
 .inline-emote {
     height: 1.5em;
     width: auto;
@@ -8,13 +8,13 @@
     cursor: pointer;
 }
 
-/* Emoji wrapper for tooltip positioning */
+
 .emoji-wrapper {
     position: relative;
     display: inline-block;
 }
 
-/* Discord-style tooltip */
+
 .emoji-tooltip {
     position: absolute;
     bottom: calc(100% + 8px);
@@ -37,7 +37,7 @@
     min-width: max-content;
 }
 
-/* Tooltip arrow */
+
 .emoji-tooltip::after {
     content: '';
     position: absolute;
@@ -48,13 +48,13 @@
     border-top-color: rgba(15, 23, 42, 0.95);
 }
 
-/* Show tooltip on hover */
+
 .emoji-wrapper:hover .emoji-tooltip {
     opacity: 1;
     visibility: visible;
 }
 
-/* Tooltip emoji image */
+
 .emoji-tooltip-image {
     width: 32px;
     height: 32px;
@@ -62,7 +62,7 @@
     border-radius: 4px;
 }
 
-/* Tooltip name styling */
+
 .emoji-tooltip-name {
     font-size: 14px;
     color: #94a3b8;

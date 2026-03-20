@@ -61,7 +61,7 @@ export function LanguageProvider({ children }) {
     };
 
 
-    // For a robust fallback, we should ideally have English translations loaded
+    
     const [enTranslations, setEnTranslations] = useState({});
 
     useEffect(() => {
@@ -74,10 +74,10 @@ export function LanguageProvider({ children }) {
     }, [language]);
 
     const t = (key, params = {}) => {
-        let defaultValue = key; // Default return is key
+        let defaultValue = key; 
         let actualParams = params;
 
-        // Support optional default value as 2nd argument
+        
         if (typeof params === 'string') {
             defaultValue = params;
             actualParams = {};
@@ -89,7 +89,7 @@ export function LanguageProvider({ children }) {
             value = value?.[k];
         }
 
-        // Fallback to English if not found
+        
         if (value === undefined && language !== 'en') {
             let enValue = enTranslations;
             for (const k of keys) {

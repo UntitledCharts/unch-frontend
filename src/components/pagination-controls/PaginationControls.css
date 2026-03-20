@@ -90,7 +90,7 @@
     white-space: nowrap;
 }
 
-/* Light Mode Overrides */
+
 body.light-mode .pagination-card {
     background: rgba(255, 255, 255, 0.7);
     border-color: rgba(15, 23, 42, 0.1);

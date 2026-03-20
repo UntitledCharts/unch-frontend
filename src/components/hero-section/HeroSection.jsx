@@ -4,6 +4,7 @@ import { Play, Heart, Info, User, Music, Calendar, MessageSquare, ArrowDown } fr
 import Link from "next/link";
 import { useLanguage } from "../../contexts/LanguageContext";
 import LoadingImage from "../loading-image/LoadingImage";
+import MarqueeText from "../marquee-text/MarqueeText";
 import "./HeroSection.css";
 
 export default function HeroSection({ posts = [] }) {
@@ -37,7 +38,7 @@ export default function HeroSection({ posts = [] }) {
         fetchCounts();
     }, [posts]);
 
-    // Auto-scroll carousel
+    
     useEffect(() => {
         if (posts.length <= 1) return;
         const interval = setInterval(() => {
@@ -49,28 +50,44 @@ export default function HeroSection({ posts = [] }) {
     if (!posts || posts.length === 0) return null;
 
     const currentPost = posts[currentIndex];
-    const bgImage = currentPost.backgroundV3Url || currentPost.backgroundUrl || currentPost.coverUrl || "/placeholder-bg.jpg";
+
+    const getValidUrl = (url) => {
+        if (!url) return "/def.webp";
+        
+        
+        return url;
+    };
 
     return (
         <section className="hero-section relative" aria-label="Featured Charts">
             <div className="hero-bg-container">
-                {posts.map((post, index) => (
-                    <div
-                        key={post.id}
-                        className={`hero-bg-slide ${index === currentIndex ? "active" : ""}`}
-                        style={{ backgroundImage: `url(${post.backgroundV3Url || post.backgroundUrl || post.coverUrl})` }}
-                    />
-                ))}
+                {posts.map((post, index) => {
+                    const imgUrl = getValidUrl(post.backgroundV3Url || post.backgroundUrl || post.coverUrl);
+                    return (
+                        <img
+                            key={post.id}
+                            src={imgUrl}
+                            alt="Background"
+                            className={`hero-bg-slide ${index === currentIndex ? "active" : ""}`}
+                            loading={index === 0 ? "eager" : "lazy"}
+                            fetchPriority={index === 0 ? "high" : "auto"}
+                            onError={(e) => { e.target.src = "/def.webp"; }}
+                        />
+                    );
+                })}
                 <div className="hero-overlay"></div>
             </div>
 
             <div className="hero-content-wrapper">
                 <div className="hero-left-col animate-slide-in-left">
                     <div className="hero-jacket-container">
-                        <LoadingImage
-                            src={currentPost.coverUrl}
+                        <img
+                            src={getValidUrl(currentPost.coverUrl)}
                             alt={currentPost.title}
                             className="hero-jacket"
+                            loading="eager"
+                            fetchPriority="high"
+                            onError={(e) => { e.target.src = "/def.webp"; }}
                         />
                     </div>
 
@@ -79,13 +96,17 @@ export default function HeroSection({ posts = [] }) {
                             <Music size={14} />
                             <span>{t('home.staffPicks')}</span>
                         </div>
-                        <h1 className="hero-title">{currentPost.title}</h1>
+                        <div style={{ width: '100%', overflow: 'hidden' }}>
+                            <h1 className="hero-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', margin: 0 }}>
+                                {currentPost.title}
+                            </h1>
+                        </div>
 
-                        {/* <div className="hero-right-col animate-slide-in-right">*/}
+                        {}
                         <div className="hero-description-box">
                             {currentPost.description && <p>{currentPost.description}</p>}
                         </div>
-                        {/* </div>*/}
+                        {}
 
                         <div className="hero-meta mb-0!">
                             <div className="hero-meta-item">
@@ -122,11 +143,7 @@ export default function HeroSection({ posts = [] }) {
                     </div>
                 </div>
 
-                {/* <div className="hero-right-col animate-slide-in-right">
-                    <div className="hero-description-box">
-                        {currentPost.description && <p>{currentPost.description}</p>}
-                    </div>
-                </div>*/}
+                {}
 
                 <div className="hero-indicators">
                     {posts.map((_, index) => (

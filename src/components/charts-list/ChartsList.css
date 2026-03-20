@@ -55,7 +55,7 @@
 
 .songlist .dashboard-li:hover .dashboard-bg-layer {
     filter: brightness(0.55);
-    /* Removed scale transform for performance */
+    
 }
 
 .dashboard-content-layer {
@@ -451,7 +451,7 @@ body.light-mode .stats-combined {
     }
 
     .song-info {
-        /*flex-direction: column !important;*/
+        
         flex: 1;
         padding: 12px 14px !important;
         gap: 8px !important;
@@ -535,7 +535,7 @@ body.light-mode .stats-combined {
     }
 
     .chart-metadata {
-        /*flex-direction: row !important;*/
+        
         flex-wrap: wrap !important;
         overflow: visible;
         gap: 6px !important;
@@ -575,7 +575,7 @@ body.light-mode .stats-combined {
     }
 }
 
-/* Light Mode Overrides */
+
 body.light-mode .dashboard-content-layer {
     background: rgba(255, 255, 255, 0.7);
 }

@@ -7,7 +7,7 @@ const UserContext = createContext();
 const APILink = process.env.NEXT_PUBLIC_API_URL;
 
 export function UserProvider({ children }) {
-  const router = useRouter(); // Added router
+  const router = useRouter(); 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [sonolusUser, setSonolusUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,17 +44,17 @@ export function UserProvider({ children }) {
 
     let expiryTime = parseInt(expiry, 10);
 
-    // Heuristic to detect if expiry is in seconds (Unix timestamp) or milliseconds
-    // 100000000000 is ~ year 1973 in ms, or year 5138 in seconds.
-    // So if it's less than this, it's almost certainly seconds.
+    
+    
+    
     if (expiryTime < 100000000000) {
       expiryTime *= 1000;
     }
 
     if (isNaN(expiryTime) || expiryTime < Date.now()) {
-      clearExpiredSession(false); // Don't redirect immediately on load, let components handle it or just show logged out state? 
-      // Actually, if I'm on a protected page, the page redirects. If I'm on public page, I shouldn't be redirected.
-      // So false is correct here.
+      clearExpiredSession(false); 
+      
+      
       setLoading(false);
       return;
     }
@@ -79,14 +79,14 @@ export function UserProvider({ children }) {
             } catch (e) {
               errorMsg = await me.text().catch(() => "Unauthorized");
             }
-            clearExpiredSession(true, errorMsg); // Redirect on 401 with error
+            clearExpiredSession(true, errorMsg); 
             setLoading(false);
             return;
           }
         } else {
           const meData = await me.json();
 
-          // Normalize admin/mod fields so both naming conventions are available
+          
           const normalizeRoles = (user) => ({
             ...user,
             isAdmin: !!(user.isAdmin || user.admin),
@@ -97,7 +97,7 @@ export function UserProvider({ children }) {
 
           setSonolusUser(normalizeRoles(meData));
 
-          // Fetch full account data (banner_hash, profile_hash, asset_base_url)
+          
           if (meData.sonolus_id) {
             try {
               const profileRes = await fetch(`${APILink}/api/accounts/${meData.sonolus_id}`);
@@ -109,7 +109,7 @@ export function UserProvider({ children }) {
                 }
               }
             } catch (e) {
-              // Full profile fetch failed, banner/pfp won't show in header
+              
             }
           }
         }

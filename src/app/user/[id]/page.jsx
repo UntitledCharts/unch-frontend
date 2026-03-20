@@ -4,6 +4,7 @@ import { useState, useEffect, use, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
+import AdminPanel from "@/components/admin-actions/AdminPanel";
 import {
     Heart,
     Play,
@@ -37,6 +38,7 @@ import {
 } from "lucide-react";
 import "./page.css";
 import { useUser } from "../../../contexts/UserContext";
+import MarqueeText from "@/components/marquee-text/MarqueeText";
 import EditProfileModal from "../../../components/profile/EditProfileModal";
 
 
@@ -67,21 +69,21 @@ export default function UserProfile({ params }) {
     const adminMenuRef = useRef(null);
     const { sonolusUser, session } = useUser();
 
-    // Fetch account data from API
+    
     const fetchAccount = useCallback(async () => {
         try {
             let data = null;
             const apiBase = process.env.NEXT_PUBLIC_API_URL;
             const headers = { 'Cache-Control': 'no-cache, no-store' };
 
-            // Step 1: Try decoding as a Handle first
+            
             try {
                 const handleRes = await fetch(`${apiBase}/api/accounts/handle/${id}/?t=${Date.now()}`, { headers, cache: 'no-store' });
                 if (handleRes.ok) {
                     const handleData = await handleRes.json();
                     const sonolusId = handleData.sonolus_id;
 
-                    // Step 2: If we got a Sonolus ID, fetch the full profile using it
+                    
                     if (sonolusId) {
                         const profileRes = await fetch(`${apiBase}/api/accounts/${sonolusId}?t=${Date.now()}`, { headers, cache: 'no-store' });
                         if (profileRes.ok) {
@@ -93,7 +95,7 @@ export default function UserProfile({ params }) {
                 console.log("Handle lookup failed or not a handle", e);
             }
 
-            // Step 3: If handle lookup didn't yield data, try fetching as a raw Sonolus ID
+            
             if (!data) {
                 try {
                     const directRes = await fetch(`${apiBase}/api/accounts/${id}?t=${Date.now()}`, { headers, cache: 'no-store' });
@@ -113,7 +115,7 @@ export default function UserProfile({ params }) {
             setCharts(data.charts || []);
             setAssetBaseUrl(data.asset_base_url || "");
 
-            // Redirect to handle if visiting by Sonolus ID and handle exists
+            
             if (data.account.sonolus_handle && id !== data.account.sonolus_handle.toString()) {
                 router.replace(`/user/${data.account.sonolus_handle}`);
             }
@@ -151,7 +153,7 @@ export default function UserProfile({ params }) {
         fetchStats();
     }, [account?.sonolus_id]);
 
-    // Fetch comment counts for charts
+    
     useEffect(() => {
         if (!charts || charts.length === 0) return;
 
@@ -179,60 +181,26 @@ export default function UserProfile({ params }) {
 
 
 
-    const handleBan = async () => {
-        if (!confirm("Are you sure you want to BAN this user? This cannot be easily undone via UI.")) return;
+
+
+    const handleStaffAction = async (actionName) => {
+        if (!confirm(`Are you sure you want to ${actionName} this user?`)) return;
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts/${account.sonolus_id}/ban`, {
+            const res = await fetch('/api/staff-action', {
                 method: 'POST',
-                headers: { 'Authorization': session }
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: actionName, targetId: account.sonolus_id })
             });
             if (res.ok) {
-                alert("User banned");
-                router.push('/');
-            } else {
-                alert("Failed to ban user");
-            }
-        } catch (e) {
-            console.error(e);
-            alert("Error banning user");
-        }
-    };
-
-    const handleDeleteAccount = async () => {
-        if (!confirm("Are you sure you want to DELETE this user? ALL DATA WILL BE LOST.")) return;
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts/${account.sonolus_id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': session }
-            });
-            if (res.ok) {
-                alert("User deleted");
-                router.push('/');
-            } else {
-                alert("Failed to delete user");
-            }
-        } catch (e) {
-            console.error(e);
-            alert("Error deleting user");
-        }
-    };
-
-    const handleUnban = async () => {
-        if (!confirm("Are you sure you want to UNBAN this user?")) return;
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts/${account.sonolus_id}/ban`, {
-                method: 'DELETE',
-                headers: { 'Authorization': session }
-            });
-            if (res.ok) {
-                alert("User unbanned");
+                alert(`User has been updated (${actionName})`);
                 window.location.reload();
             } else {
-                alert("Failed to unban user");
+                const data = await res.json().catch(() => ({}));
+                alert(`Failed: ${data.error || 'Unknown error'}`);
             }
         } catch (e) {
             console.error(e);
-            alert("Error unbanning user");
+            alert('Error running staff action');
         }
     };
 
@@ -260,7 +228,7 @@ export default function UserProfile({ params }) {
         try {
             const cleanId = chartId.replace('UnCh-', '');
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanId}/visibility`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 'Authorization': session, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
             });
@@ -282,10 +250,10 @@ export default function UserProfile({ params }) {
         return num?.toString() || '0';
     };
 
-    // Calculate stats from charts (fallback or supplemental)
+    
 
 
-    // Get chart thumbnail URL
+    
     const getChartThumbnail = (chart) => {
         if (chart.thumbnail) return chart.thumbnail;
         if (chart.cover?.url) return chart.cover.url;
@@ -298,7 +266,7 @@ export default function UserProfile({ params }) {
         return "/placeholder.png";
     };
 
-    // Get chart music URL
+    
     const getChartMusicUrl = (chart) => {
         if (assetBaseUrl && chart.author && chart.id) {
             const musicHash = chart.music_hash || chart.music_file_hash || (chart.bgm && chart.bgm.hash);
@@ -339,7 +307,7 @@ export default function UserProfile({ params }) {
         }
     };
 
-    // Cleanup audio on unmount
+    
     useEffect(() => {
         return () => {
             if (audioRef.current) {
@@ -348,7 +316,7 @@ export default function UserProfile({ params }) {
         };
     }, []);
 
-    // Close admin menu on outside click
+    
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (adminMenuRef.current && !adminMenuRef.current.contains(e.target)) {
@@ -363,9 +331,9 @@ export default function UserProfile({ params }) {
 
     const hasCharts = charts.length > 0;
 
-    // Custom Profile Logic
+    
 
-    // Pagination Logic
+    
     const totalPages = Math.ceil(charts.length / ITEMS_PER_PAGE);
     const displayedCharts = charts.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
@@ -375,8 +343,8 @@ export default function UserProfile({ params }) {
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage);
-            // Optional: Scroll to top of charts list
-            // document.querySelector('.section-header')?.scrollIntoView({ behavior: 'smooth' });
+            
+            
         }
     };
 
@@ -386,7 +354,7 @@ export default function UserProfile({ params }) {
                 <div className="profile-container">
                     <div className="profile-loading">
                         <div className="loading-spinner"></div>
-                        <p>Loading profile...</p>
+                        <p>{t('userProfile.loading', 'Loading profile...')}</p>
                     </div>
                 </div>
             </main>
@@ -399,9 +367,9 @@ export default function UserProfile({ params }) {
                 <div className="profile-container">
                     <div className="profile-error">
                         <AlertCircle size={48} />
-                        <h2>User Not Found</h2>
-                        <p>{error || "This user profile doesn't exist."}</p>
-                        <Link href="/" className="back-home-btn">Back to Home</Link>
+                        <h2>{t('userProfile.notFound', 'User Not Found')}</h2>
+                        <p>{error || t('userProfile.doesNotExist', "This user profile doesn't exist.")}</p>
+                        <Link href="/" className="back-home-btn">{t('userProfile.backHome', 'Back to Home')}</Link>
                     </div>
                 </div>
             </main>
@@ -410,7 +378,7 @@ export default function UserProfile({ params }) {
 
     return (
         <main className="profile-page">
-            {/* Custom Background Blur if Banner exists */}
+            {}
             <div
                 className="profile-bg-blur"
                 style={{
@@ -429,18 +397,18 @@ export default function UserProfile({ params }) {
                 }}
             />
             <div className="profile-container" style={{ position: 'relative', zIndex: 1 }}>
-                {/* Back Button */}
+                {}
                 <button className="back-btn" onClick={handleBack}>
                     <ArrowLeft size={18} />
                     <span>{t('userProfile.back', 'Back')}</span>
                 </button>
 
                 <div className="profile-layout">
-                    {/* Main Content */}
+                    {}
                     <div className="profile-main">
-                        {/* Profile Card */}
+                        {}
                         <div className="profile-card">
-                            {/* Cover */}
+                            {}
                             <div className="profile-cover">
                                 <img
                                     src={
@@ -454,7 +422,7 @@ export default function UserProfile({ params }) {
                                 <div className="cover-overlay"></div>
                             </div>
 
-                            {/* Profile Header */}
+                            {}
                             <div className="profile-header">
                                 <div className="avatar-wrapper">
                                     <img
@@ -478,11 +446,15 @@ export default function UserProfile({ params }) {
                                 </div>
 
                                 <div className="profile-info">
-                                    <div className="name-line" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                                        <h1><FormattedText text={account.sonolus_username} /></h1>
-                                        {account.owner && <span className="role owner">{t('userProfile.owner', 'Owner')}</span>}
-                                        {account.admin && <span className="role admin">{t('userProfile.admin', 'Admin')}</span>}
-                                        {account.mod && <span className="role mod">{t('userProfile.mod', 'Mod')}</span>}
+                                    <div className="name-line" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', maxWidth: '100%', overflow: 'hidden' }}>
+                                        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                                            <MarqueeText textComponent="h1" text={account.sonolus_username || account.id} maxLength={20} style={{ margin: 0 }}>
+                                                <FormattedText text={account.sonolus_username || account.id} />
+                                            </MarqueeText>
+                                        </div>
+                                        {account.owner && <span className="role owner" style={{ flexShrink: 0 }}>{t('userProfile.owner', 'Owner')}</span>}
+                                        {account.admin && <span className="role admin" style={{ flexShrink: 0 }}>{t('userProfile.admin', 'Admin')}</span>}
+                                        {account.mod && <span className="role mod" style={{ flexShrink: 0 }}>{t('userProfile.mod', 'Mod')}</span>}
                                     </div>
                                     <p className="handle">#{account.sonolus_handle}</p>
 
@@ -492,6 +464,7 @@ export default function UserProfile({ params }) {
                                         </div>
                                     )}
 
+                                    {}
 
 
                                     <div className="profile-actions" style={{ marginTop: '16px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -501,92 +474,15 @@ export default function UserProfile({ params }) {
                                                 className="btn-edit-profile"
                                                 style={{ padding: '8px 16px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
                                             >
-                                                Edit Profile
+                                                {t('userProfile.editProfile', 'Edit Profile')}
                                             </button>
                                         )}
 
-                                        {sonolusUser && sonolusUser.sonolus_id !== account.sonolus_id && (sonolusUser.isAdmin || sonolusUser.isMod) && (
-                                            <div style={{ position: 'relative' }} ref={adminMenuRef}>
-                                                <button
-                                                    onClick={() => setShowAdminMenu(!showAdminMenu)}
-                                                    className="action-btn icon-only"
-                                                    style={{
-                                                        padding: '8px',
-                                                        background: 'rgba(255,255,255,0.08)',
-                                                        border: '1px solid rgba(255,255,255,0.15)',
-                                                        borderRadius: '50px',
-                                                        color: 'white',
-                                                        cursor: 'pointer',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        width: '36px',
-                                                        height: '36px',
-                                                        transition: 'all 0.2s ease'
-                                                    }}
-                                                >
-                                                    <MoreVertical size={16} />
-                                                </button>
-                                                {showAdminMenu && (
-                                                    <div className="profile-admin-dropdown" style={{
-                                                        position: 'absolute',
-                                                        top: 'calc(100% + 8px)',
-                                                        right: 0,
-                                                        background: '#1e293b',
-                                                        border: '1px solid rgba(255,255,255,0.12)',
-                                                        borderRadius: '12px',
-                                                        padding: '6px',
-                                                        zIndex: 1000,
-                                                        minWidth: '200px',
-                                                        boxShadow: '0 10px 40px rgba(0,0,0,0.6)',
-                                                        animation: 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                                                        backdropFilter: 'blur(12px)'
-                                                    }}>
-                                                        {sonolusUser.isAdmin && (
-                                                            <>
-                                                                <div style={{ padding: '6px 12px', fontSize: '0.7rem', color: '#64748b', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t('userProfile.adminActions', 'Admin Actions')}</div>
-                                                                {(account.is_banned || (account.metrics && account.metrics.is_banned)) ? (
-                                                                    <button
-                                                                        onClick={() => { setShowAdminMenu(false); handleUnban(); }}
-                                                                        className="profile-dropdown-item"
-                                                                        style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '8px 12px', background: 'transparent', border: 'none', color: '#86efac', cursor: 'pointer', borderRadius: '8px', fontSize: '0.85rem', transition: 'background 0.15s' }}
-                                                                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(34, 197, 94, 0.15)'}
-                                                                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                                                    >
-                                                                        <ShieldCheck size={15} /> {t('userProfile.unbanUser', 'Unban User')}
-                                                                    </button>
-                                                                ) : (
-                                                                    <button
-                                                                        onClick={() => { setShowAdminMenu(false); handleBan(); }}
-                                                                        className="profile-dropdown-item"
-                                                                        style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '8px 12px', background: 'transparent', border: 'none', color: '#fbbf24', cursor: 'pointer', borderRadius: '8px', fontSize: '0.85rem', transition: 'background 0.15s' }}
-                                                                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(251, 191, 36, 0.1)'}
-                                                                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                                                    >
-                                                                        <Ban size={15} /> {t('userProfile.banUser', 'Ban User')}
-                                                                    </button>
-                                                                )}
-                                                                <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '4px 8px' }}></div>
-                                                                <button
-                                                                    onClick={() => { setShowAdminMenu(false); handleDeleteAccount(); }}
-                                                                    className="profile-dropdown-item"
-                                                                    style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '8px 12px', background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', borderRadius: '8px', fontSize: '0.85rem', transition: 'background 0.15s' }}
-                                                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(248, 113, 113, 0.1)'}
-                                                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                                                >
-                                                                    <UserX size={15} /> {t('userProfile.deleteAccountData', 'Delete Account Data')}
-                                                                </button>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Badges */}
+                            {}
                             {(account.owner || account.admin || account.mod) && (
                                 <div className="badges-section">
                                     {account.owner && (
@@ -611,12 +507,11 @@ export default function UserProfile({ params }) {
                             )}
                         </div>
 
-                        {/* Charts Section */}
+                        {}
                         <div className="section">
                             <div className="section-header">
                                 <h2>
-                                    <Music size={20} />
-                                    {t('userProfile.charts', 'Charts')}
+                                    <Music size={20} /> {t('userProfile.charts', 'Charts')}
                                 </h2>
                                 {hasCharts && <span className="count">{charts.length}</span>}
                                 {hasCharts && (
@@ -670,7 +565,7 @@ export default function UserProfile({ params }) {
                                                 className="chart-card"
                                                 style={{ position: 'relative' }}
                                             >
-                                                {/* Cover Art */}
+                                                {}
                                                 <div className="chart-cover">
                                                     <img src={getChartThumbnail(chart)} alt={chart.title} />
 
@@ -684,7 +579,7 @@ export default function UserProfile({ params }) {
                                                     )}
                                                 </div>
 
-                                                {/* Chart Info */}
+                                                {}
                                                 <div className="chart-info">
                                                     <h3 className="chart-title">{chart.title}</h3>
                                                     <p className="chart-artist"><FormattedText text={chart.artists} /></p>
@@ -701,12 +596,12 @@ export default function UserProfile({ params }) {
                                                     </div>
                                                 </div>
 
-                                                {/* Level Badge */}
+                                                {}
                                                 <div className="chart-level">
                                                     <span className="level-badge">Lv. {chart.rating || "?"}</span>
                                                 </div>
 
-                                                {/* Mod/Admin Chart Actions */}
+                                                {}
                                                 {sonolusUser && (sonolusUser.sonolus_id === account.sonolus_id || sonolusUser.isMod || sonolusUser.isAdmin) && (
                                                     <div
                                                         className="chart-actions-overlay"
@@ -755,7 +650,7 @@ export default function UserProfile({ params }) {
                                                                     backdropFilter: 'blur(12px)'
                                                                 }}
                                                             >
-                                                                {/* Edit - Owner Only */}
+                                                                {}
                                                                 {sonolusUser.sonolus_id === account.sonolus_id && (
                                                                     <button
                                                                         onClick={() => { setActiveChartMenu(null); router.push(`/levels/${chart.name || `UnCh-${chart.id}`}/edit`); }}
@@ -768,7 +663,7 @@ export default function UserProfile({ params }) {
                                                                     </button>
                                                                 )}
 
-                                                                {/* Delete - Owner, Admin, Mod */}
+                                                                {}
                                                                 {(sonolusUser.sonolus_id === account.sonolus_id || sonolusUser.isAdmin || (sonolusUser.isMod && account.sonolus_id !== sonolusUser.sonolus_id)) && (
                                                                     <button
                                                                         onClick={() => { setActiveChartMenu(null); handleDeleteChart(chartKey); }}
@@ -781,34 +676,7 @@ export default function UserProfile({ params }) {
                                                                     </button>
                                                                 )}
 
-                                                                {/* Admin/Mod Zone */}
-                                                                {(sonolusUser.isAdmin || (sonolusUser.isMod && account.sonolus_id !== sonolusUser.sonolus_id)) && (
-                                                                    <>
-                                                                        <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', margin: '4px 8px' }}></div>
-                                                                        <div style={{ padding: '4px 8px', fontSize: '0.65rem', color: '#64748b', fontWeight: 'bold', textTransform: 'uppercase' }}>Admin Actions</div>
 
-                                                                        {sonolusUser.isAdmin && (
-                                                                            <>
-                                                                                <button
-                                                                                    onClick={() => { setActiveChartMenu(null); handleBan(); }}
-                                                                                    style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '6px 10px', background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', borderRadius: '6px', fontSize: '0.85rem' }}
-                                                                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(248, 113, 113, 0.1)'}
-                                                                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                                                                >
-                                                                                    <Ban size={14} /> Ban User
-                                                                                </button>
-                                                                                <button
-                                                                                    onClick={() => { setActiveChartMenu(null); handleDeleteAccount(); }}
-                                                                                    style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '6px 10px', background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', borderRadius: '6px', fontSize: '0.85rem' }}
-                                                                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
-                                                                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                                                                >
-                                                                                    <UserX size={14} /> Delete Account
-                                                                                </button>
-                                                                            </>
-                                                                        )}
-                                                                    </>
-                                                                )}
                                                             </div>
                                                         )}
                                                     </div>
@@ -820,7 +688,7 @@ export default function UserProfile({ params }) {
                                 </div>
                             )}
 
-                            {/* Pagination Controls */}
+                            {}
                             {totalPages > 1 && (
                                 <div className="pagination-controls" style={{
                                     display: 'flex',
@@ -879,7 +747,7 @@ export default function UserProfile({ params }) {
                         </div>
                     </div>
 
-                    {/* Sidebar Stats - Always show */}
+                    {}
                     <aside className="profile-sidebar">
                         <div className="sidebar-section">
                             <h3>
@@ -918,8 +786,50 @@ export default function UserProfile({ params }) {
                                         </span>
                                     </div>
                                 </div>
+                                <div className="stat-item">
+                                    <div className="stat-icon green">
+                                        <Heart size={18} />
+                                    </div>
+                                    <div className="stat-data">
+                                        <span className="stat-value">
+                                            {t('userProfile.chartsLiked', 'Charts Liked')}: {stats.liked_charts_count || 0}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="stat-item">
+                                    <div className="stat-icon yellow">
+                                        <MessageSquare size={18} />
+                                    </div>
+                                    <div className="stat-data">
+                                        <span className="stat-value">
+                                            {t('userProfile.commentsMade', 'Comments Made')}: {stats.comments_count || 0}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        <AdminPanel
+                            className="sidebar-section"
+                            targetType="user"
+                            targetData={{
+                                isBanned: account.banned,
+                                isMod: account.mod,
+                                isAdmin: account.admin
+                            }}
+                            currentUser={sonolusUser}
+                            onAction={(action) => {
+                                if (action === 'makeMod') {
+                                    handleStaffAction('mod');
+                                } else if (action === 'unmod') {
+                                    handleStaffAction('unmod');
+                                } else if (action === 'makeAdmin') {
+                                    handleStaffAction('admin');
+                                } else if (action === 'unadmin') {
+                                    handleStaffAction('unadmin');
+                                }
+                            }}
+                        />
                     </aside>
                 </div>
             </div >

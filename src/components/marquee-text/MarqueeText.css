@@ -1,0 +1,33 @@
+.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.marquee-track {
+    display: inline-flex;
+    white-space: nowrap;
+    width: max-content;
+    animation: marquee-scroll linear infinite;
+    will-change: transform;
+}
+
+.marquee-content {
+    display: inline-block;
+    align-items: center;
+    flex-shrink: 0;
+    padding-right: 3rem;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+@keyframes marquee-scroll {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-50%, 0, 0);
+    }
+}

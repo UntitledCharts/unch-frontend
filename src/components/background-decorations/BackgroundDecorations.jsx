@@ -14,7 +14,7 @@ export default function BackgroundDecorations() {
 
     useEffect(() => {
         setMounted(true);
-        // Reduced from 40 to 15 shapes for better performance
+        
         const newShapes = Array.from({ length: 15 }).map((_, i) => ({
             id: i,
             type: ['circle', 'triangle', 'square', 'cross'][Math.floor(Math.random() * 4)],
@@ -71,14 +71,14 @@ export default function BackgroundDecorations() {
                         position: 'absolute',
                         animationDelay: shape.delay,
                         animationDuration: shape.duration,
-                        transform: `translateY(calc(var(--scroll-y, 0px) * ${shape.parallaxSpeed})) rotate(${shape.rotation})`
+                        transform: `translateY(calc(var(--scroll-y, 0px) * ${shape.parallaxSpeed})) rotate(calc(${shape.rotation} + var(--scroll-y, 0px) * 0.15deg))`
                     }}
                 />
             ))}
 
             <div
                 className="bg-shape bg-large-circle"
-                style={{ transform: `translateY(calc(var(--scroll-y, 0px) * 0.15))` }}
+                style={{ transform: `translateY(calc(var(--scroll-y, 0px) * 0.15)) rotate(calc(var(--scroll-y, 0px) * 0.05deg))` }}
             ></div>
             <div
                 className="bg-shape bg-large-triangle"

@@ -17,11 +17,11 @@ export async function GET(request) {
 
         const buffer = await response.arrayBuffer();
 
-        // Detect image type from first bytes
+        
         const bytes = new Uint8Array(buffer);
         let contentType = 'image/png';
 
-        // Check magic bytes for image type
+        
         if (bytes[0] === 0xFF && bytes[1] === 0xD8) {
             contentType = 'image/jpeg';
         } else if (bytes[0] === 0x89 && bytes[1] === 0x50) {

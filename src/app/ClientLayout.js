@@ -25,7 +25,7 @@ function HeaderContent() {
         setTimeout(() => {
             setMobileMenuOpen(false);
             setIsClosing(false);
-        }, 300); // Match animation duration
+        }, 300); 
     };
 
     useEffect(() => {
@@ -100,7 +100,7 @@ function HeaderContent() {
                                     onClick={() => setShowDropdown(!showDropdown)}
                                     style={{
                                         backgroundImage: `url(${sonolusUser.banner_hash && assetBaseUrl
-                                            ? `${assetBaseUrl}/${sonolusUser.sonolus_id}/banner/${sonolusUser.banner_hash}`
+                                            ? `${assetBaseUrl}/${sonolusUser.sonolus_id}/banner/${sonolusUser.banner_hash}_webp`
                                             : '/def.webp'})`,
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
@@ -112,7 +112,7 @@ function HeaderContent() {
                                     <div className="user-avatar" style={{ zIndex: 2, position: 'relative' }}>
                                         <img
                                             src={sonolusUser.profile_hash && assetBaseUrl
-                                                ? `${assetBaseUrl}/${sonolusUser.sonolus_id}/profile/${sonolusUser.profile_hash}`
+                                                ? `${assetBaseUrl}/${sonolusUser.sonolus_id}/profile/${sonolusUser.profile_hash}_webp`
                                                 : "/defpfp.webp"
                                             }
                                             alt="Avatar"
@@ -175,7 +175,7 @@ function HeaderContent() {
 
             {(mobileMenuOpen || isClosing) && (
                 <div className={`mobile-menu ${isClosing ? 'animate-slide-up-out' : 'animate-slide-down'}`}>
-                    {/* Enhanced Expandable Header */}
+                    {}
                     <div className="mobile-menu-expanded-header">
                         <Link href="/" onClick={handleMobileMenuClose} className="mobile-logo">
                             <img src="/636a8f1e76b38cb1b9eb0a3d88d7df6f.png" alt="UntitledCharts" />
@@ -190,7 +190,7 @@ function HeaderContent() {
                         </button>
                     </div>
 
-                    {/* Body Content with staggered animations */}
+                    {}
                     <div className="mobile-menu-body">
                         <Suspense fallback={null}>
                             <NavLinks user={sonolusUser} t={t} onNavClick={handleMobileMenuClose} isMobile={true} />
@@ -211,23 +211,56 @@ function HeaderContent() {
 
                         <div className="mobile-menu-auth">
                             {isLoggedIn && sonolusUser ? (
-                                <div className="mobile-user-profile">
-                                    <div className="user-info">
-                                        <div className="user-avatar small">
-                                            {sonolusUser.sonolus_username.charAt(0).toUpperCase()}
+                                <div className="mobile-user-profile" style={{
+                                    backgroundImage: `url(${sonolusUser.banner_hash && assetBaseUrl
+                                        ? `${assetBaseUrl}/${sonolusUser.sonolus_id}/banner/${sonolusUser.banner_hash}_webp`
+                                        : '/def.webp'})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    position: 'relative',
+                                    padding: '20px',
+                                    borderRadius: '16px',
+                                    overflow: 'hidden',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '16px',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    marginBottom: '20px'
+                                }}>
+                                    <div style={{
+                                        position: 'absolute',
+                                        inset: 0,
+                                        background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8))',
+                                        zIndex: 1
+                                    }} />
+
+                                    <div className="user-info" style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <div className="user-avatar" style={{ width: '48px', height: '48px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.2)', overflow: 'hidden', background: '#000' }}>
+                                            <img
+                                                src={sonolusUser.profile_hash && assetBaseUrl
+                                                    ? `${assetBaseUrl}/${sonolusUser.sonolus_id}/profile/${sonolusUser.profile_hash}_webp`
+                                                    : "/defpfp.webp"
+                                                }
+                                                alt="Avatar"
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                onError={(e) => { e.target.src = "/defpfp.webp"; }}
+                                            />
                                         </div>
-                                        <span>{sonolusUser.sonolus_username}</span>
+                                        <span style={{ fontWeight: '700', fontSize: '1.1rem', color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                                            {sonolusUser.sonolus_username}
+                                        </span>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '8px' }}>
+
+                                    <div style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '8px' }}>
                                         <Link
                                             href={`/user/${sonolusUser.sonolus_handle || sonolusUser.sonolus_id}`}
                                             className="mobile-logout-btn"
-                                            style={{ background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', textDecoration: 'none' }}
+                                            style={{ flex: 1, background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', textDecoration: 'none', justifyContent: 'center', border: '1px solid rgba(56, 189, 248, 0.3)', display: 'flex', alignItems: 'center', padding: '10px', borderRadius: '8px', fontWeight: '600' }}
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
                                             {t('nav.profile', 'Profile')}
                                         </Link>
-                                        <button onClick={handleLogout} className="mobile-logout-btn">
+                                        <button onClick={handleLogout} className="mobile-logout-btn" style={{ flex: 1, justifyContent: 'center', background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'center', padding: '10px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>
                                             {t('nav.logout')}
                                         </button>
                                     </div>
@@ -305,6 +338,11 @@ function FooterContent() {
                             }))}
                         />
                     </div>
+                    <div className="footer-links" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                        <Link href="/DMCA" className="footer-link" style={{ color: 'var(--foreground-muted)', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: 'all 0.2s' }}>
+                            DMCA & Copyright
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="footer-right">
@@ -327,8 +365,8 @@ function FooterContent() {
                         </a>
                     </div>
                 </div>
-            </div >
-        </footer >
+            </div>
+        </footer>
     );
 }
 
@@ -342,10 +380,14 @@ function RootLayoutInner({ children }) {
             <BackgroundDecorations />
             <HeaderContent />
             {isLevelPage ? (
-                children
-            ) : (
-                <main className="main-content">
+                <div key={pathname} className="animate-page-enter">
                     {children}
+                </div>
+            ) : (
+                <main className="main-content" style={{ flex: 1 }}>
+                    <div key={pathname} className="animate-page-enter" style={{ minHeight: 'inherit' }}>
+                        {children}
+                    </div>
                 </main>
             )}
             <FooterContent />

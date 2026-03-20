@@ -1,4 +1,4 @@
-/* Background Decorations (Project Sekai Style) */
+
 .bg-decorations-container {
     position: fixed;
     top: 0;
@@ -11,7 +11,7 @@
     transition: opacity 1s ease;
 }
 
-/* Light mode specifics */
+
 body.light-mode .bg-shape {
     opacity: 0.6;
 }
@@ -21,7 +21,7 @@ body.light-mode .bg-text {
     -webkit-text-stroke: 2px rgba(15, 23, 42, 0.1);
 }
 
-/* Dark mode specifics */
+
 body:not(.light-mode) .bg-shape {
     opacity: 0.4;
 }
@@ -33,10 +33,10 @@ body:not(.light-mode) .bg-text {
 
 .bg-shape {
     position: absolute;
-    /* Removed global blur to make shapes distinct */
+    
     transition: opacity 0.5s ease;
     mix-blend-mode: overlay;
-    /* Better blending for that energetic look */
+    
 }
 
 .bg-large-circle {
@@ -128,16 +128,15 @@ body:not(.light-mode) .bg-common-cross::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(rgba(15, 23, 42, 0.1) 2px, transparent 2px);
-    background-size: 40px 40px;
-    opacity: 0.6;
+    background-image: radial-gradient(rgba(15, 23, 42, 0.12) 2px, transparent 2px);
+    background-size: 30px 30px;
 }
 
 body:not(.light-mode) .bg-grid-pattern {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 2px, transparent 2px);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 2px, transparent 2px);
 }
 
-/* Background Text Styles */
+
 .bg-text-container {
     position: absolute;
     inset: 0;

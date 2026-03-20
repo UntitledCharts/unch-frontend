@@ -28,19 +28,40 @@ export default function WaveformPlayer({ audioRef, isPlaying }) {
 
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const ctx = new AudioContext();
-                const analyser = ctx.createAnalyser();
-                analyser.fftSize = 256;
 
-                if (!sourceRef.current) {
-                    const source = ctx.createMediaElementSource(audio);
+                let ctx;
+                let source;
+
+                
+                if (audio._waveformSource && audio._waveformSource.context && audio._waveformSource.context.state !== 'closed') {
+                    source = audio._waveformSource;
+                    ctx = source.context;
+                } else {
+                    ctx = new AudioContext();
+                    source = ctx.createMediaElementSource(audio);
+                    audio._waveformSource = source;
+                }
+
+                
+                let analyser;
+                if (audio._waveformAnalyser && audio._waveformAnalyser.context === ctx) {
+                    analyser = audio._waveformAnalyser;
+                } else {
+                    analyser = ctx.createAnalyser();
+                    analyser.fftSize = 256;
+
+                    
+                    try { source.disconnect(); } catch (e) {  }
+
+                    
                     source.connect(analyser);
                     analyser.connect(ctx.destination);
-                    sourceRef.current = source;
+                    audio._waveformAnalyser = analyser;
                 }
 
                 audioContextRef.current = ctx;
                 analyserRef.current = analyser;
+                sourceRef.current = source;
             } catch (e) {
                 console.warn("Web Audio API init failed:", e);
             }
@@ -102,14 +123,14 @@ export default function WaveformPlayer({ audioRef, isPlaying }) {
         };
 
         const handlePause = () => {
-            // We don't cancel animation frame here to allow "drop down"
+            
         };
 
         audio.addEventListener('play', handlePlay);
         audio.addEventListener('pause', handlePause);
         audio.addEventListener('ended', handlePause);
 
-        // Start drawing immediately
+        
         draw();
 
         return () => {
@@ -117,6 +138,12 @@ export default function WaveformPlayer({ audioRef, isPlaying }) {
             audio.removeEventListener('play', handlePlay);
             audio.removeEventListener('pause', handlePause);
             audio.removeEventListener('ended', handlePause);
+            if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+                audioContextRef.current.close().catch(console.warn);
+            }
+            
+            audio._waveformSource = null;
+            audio._waveformAnalyser = null;
         };
     }, [audioRef]);
 

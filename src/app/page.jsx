@@ -170,14 +170,18 @@ function HomeContent() {
         queryParams.append('sort_order', sortOrder);
       } else if (searchType === 'advanced') {
         if (titleIncludes) queryParams.append('title_includes', titleIncludes);
+        else if (searchQuery) queryParams.append('title_includes', searchQuery);
         if (descriptionIncludes) queryParams.append('description_includes', descriptionIncludes);
         if (artistsIncludes) queryParams.append('artists_includes', artistsIncludes);
         if (minRating) queryParams.append('minR', minRating);
         if (maxRating) queryParams.append('maxR', maxRating);
-        if (tags.length > 0) queryParams.append('tags', tags.join(','));
+        if (typeof tags === 'string' && tags.trim()) queryParams.append('tags', tags.trim());
+        else if (Array.isArray(tags) && tags.length > 0) queryParams.append('tags', tags.join(','));
         if (minLikes) queryParams.append('minL', minLikes);
         if (maxLikes) queryParams.append('maxL', maxLikes);
-        if (likedBy) queryParams.append('liked_by', likedBy);
+        if (likedBy) queryParams.append('liked_by', '1');
+        queryParams.append('sort_by', sortBy);
+        queryParams.append('sort_order', sortOrder);
       }
 
       const res = await fetch(`${apiBase}/api/charts?${queryParams.toString()}`);
@@ -185,7 +189,7 @@ function HomeContent() {
       const base = json.asset_base_url || "";
 
       const rawData = (json.data || []).map(item => mapChartData(item, base));
-      // Deduplicate posts by ID
+      
       const uniquePosts = Array.from(new Map(rawData.map(item => [item.id, item])).values());
 
       setPosts(uniquePosts);
@@ -484,7 +488,7 @@ function HomeContent() {
             maxWidth: '900px',
             marginTop: '10px'
           }}>
-            {/* ReiyuN Note */}
+            {}
             <div style={{
               background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(56, 189, 248, 0.15) 100%)',
               border: '1px solid rgba(168, 85, 247, 0.3)',
@@ -507,7 +511,7 @@ function HomeContent() {
               </p>
             </div>
 
-            {/* Jadix Note */}
+            {}
             <div style={{
               background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(249, 115, 22, 0.15) 100%)',
               border: '1px solid rgba(239, 68, 68, 0.3)',
@@ -665,7 +669,7 @@ function HomeContent() {
                       <label>{t('search.titleIncludes')}</label>
                       <input
                         type="text"
-                        placeholder="Search in titles..."
+                        placeholder={t('search.titlePlaceholder', 'Search in titles...')}
                         value={titleIncludes}
                         onChange={(e) => setTitleIncludes(e.target.value)}
                         className="liquid-input"
@@ -675,7 +679,7 @@ function HomeContent() {
                       <label>{t('search.artistsIncludes')}</label>
                       <input
                         type="text"
-                        placeholder="Search in artists..."
+                        placeholder={t('search.artistsPlaceholder', 'Search in artists...')}
                         value={artistsIncludes}
                         onChange={(e) => setArtistsIncludes(e.target.value)}
                         className="liquid-input"
@@ -685,7 +689,7 @@ function HomeContent() {
                       <label>{t('search.tags')}</label>
                       <input
                         type="text"
-                        placeholder="Comma-separated tags"
+                        placeholder={t('search.tagsPlaceholder', 'Comma-separated tags')}
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
                         className="liquid-input"
@@ -695,7 +699,7 @@ function HomeContent() {
                       <label>{t('search.authorHandle', 'Author Handle')}</label>
                       <input
                         type="text"
-                        placeholder="e.g. 78302"
+                        placeholder={t('search.authorHandlePlaceholder', 'e.g. 78302')}
                         value={sonolusHandleIs}
                         onChange={(e) => setSonolusHandleIs(e.target.value)}
                         className="liquid-input"
@@ -710,7 +714,7 @@ function HomeContent() {
                         className="accent-sky-500"
                         style={{ width: '18px', height: '18px', margin: 0, cursor: 'pointer' }}
                       />
-                      <label htmlFor="likedByMe" style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>Liked by me</label>
+                      <label htmlFor="likedByMe" style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>{t('search.likedByMe', 'Liked by me')}</label>
                     </div>
                   </>
                 )}

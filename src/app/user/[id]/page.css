@@ -6,9 +6,10 @@
 .profile-container {
     max-width: 1100px;
     margin: 0 auto;
+    width: 100%;
 }
 
-/* Loading & Error */
+
 .profile-loading,
 .profile-error {
     display: flex;
@@ -53,7 +54,7 @@
     font-size: 0.9rem;
 }
 
-/* Back Button */
+
 .back-btn {
     display: inline-flex;
     align-items: center;
@@ -75,10 +76,10 @@
     color: white;
 }
 
-/* Profile Layout */
+
 .profile-layout {
     display: grid;
-    grid-template-columns: 1fr 240px;
+    grid-template-columns: 1fr 280px;
     gap: 24px;
 }
 
@@ -88,12 +89,12 @@
     margin: 0 auto;
 }
 
-/* Profile Main */
+
 .profile-main {
     min-width: 0;
 }
 
-/* Profile Card */
+
 .profile-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -123,7 +124,7 @@
     background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
 }
 
-/* Profile Header */
+
 .profile-header {
     display: flex;
     align-items: center;
@@ -175,7 +176,7 @@
     color: white;
 }
 
-/* Profile Info */
+
 .profile-info {
     flex: 1;
     min-width: 0;
@@ -226,7 +227,7 @@
     font-family: 'Consolas', 'Monaco', monospace;
 }
 
-/* Badges Section */
+
 .badges-section {
     display: flex;
     gap: 10px;
@@ -262,7 +263,7 @@
     color: #a855f7;
 }
 
-/* Section */
+
 .section {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -286,7 +287,7 @@
     font-weight: 600;
     color: white;
     margin: 0;
-    /* Ensure icon alignment */
+    
     line-height: 1;
 }
 
@@ -303,7 +304,7 @@
     color: #66ccff;
 }
 
-/* Empty State */
+
 .empty-state {
     text-align: center;
     padding: 60px 24px;
@@ -320,14 +321,14 @@
     font-size: 1rem;
 }
 
-/* Chart List */
+
 .chart-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-/* Chart Card */
+
 .chart-card {
     display: flex;
     align-items: center;
@@ -339,7 +340,7 @@
     text-decoration: none;
     transition: all 0.2s;
     position: relative;
-    /* Ensure children anchor to card */
+    
 }
 
 .chart-card:hover {
@@ -348,7 +349,7 @@
     transform: translateY(-2px);
 }
 
-/* Chart Cover */
+
 .chart-cover {
     width: 80px;
     height: 80px;
@@ -365,7 +366,7 @@
     object-fit: cover;
 }
 
-/* Play Button */
+
 .play-btn {
     position: absolute;
     top: 50%;
@@ -419,7 +420,7 @@
     }
 }
 
-/* Chart Level */
+
 .chart-level {
     flex-shrink: 0;
     display: flex;
@@ -435,10 +436,10 @@
     font-weight: 700;
     color: #66ccff;
     position: static !important;
-    /* Prevent rogue absolute positioning */
+    
 }
 
-/* Chart Info */
+
 .chart-info {
     flex: 1;
     min-width: 0;
@@ -480,7 +481,7 @@
     opacity: 0.6;
 }
 
-/* Sidebar */
+
 .profile-sidebar {
     min-width: 0;
 }
@@ -560,9 +561,10 @@
 }
 
 .stat-value {
-    font-size: 1.1rem;
+    font-size: 0.95rem; /* Down from 1.1rem to fit longer text */
     font-weight: 700;
     color: white;
+    word-break: break-word;
 }
 
 .stat-label {
@@ -585,8 +587,6 @@
 }
 
 
-
-/* Responsive */
 @media (max-width: 900px) {
     .profile-layout {
         grid-template-columns: 1fr;
@@ -597,12 +597,15 @@
     }
 
     .profile-sidebar {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
 
     .stats-list {
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
     }
 
     .stat-item {
@@ -636,26 +639,19 @@
         font-size: 1.25rem;
     }
 
-    .profile-sidebar {
-        grid-template-columns: 1fr;
-    }
-
     .stats-list {
-        flex-direction: row;
-        /* Force row on mobile */
-        flex-wrap: wrap;
+        display: flex;
+        flex-direction: column;
         gap: 12px;
     }
 
     .stat-item {
-        flex: 1;
         flex-direction: row;
-        /* Icon | Value */
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         text-align: left;
-        padding: 10px;
-        min-width: 100px;
+        padding: 12px;
+        min-width: 0;
     }
 
     .chart-cover {
@@ -664,7 +660,7 @@
     }
 }
 
-/* Light Mode */
+
 body.light-mode .profile-card,
 body.light-mode .section,
 body.light-mode .sidebar-section {

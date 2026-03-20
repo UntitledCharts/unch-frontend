@@ -61,7 +61,7 @@ export default function AudioVisualizer({ audioRef, isPlaying, dominantColor }) 
       for (let i = 0; i < dataArray.length; i++) {
         barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
 
-        // Dynamic colors based on dominantColor prop
+        
         let colorBase, colorMid, colorTop;
         if (dominantColor) {
           const hsl = rgbToHsl(dominantColor.r, dominantColor.g, dominantColor.b);
@@ -79,7 +79,7 @@ export default function AudioVisualizer({ audioRef, isPlaying, dominantColor }) 
         gradient.addColorStop(0.5, colorMid);
         gradient.addColorStop(1, colorTop);
 
-        // Add glow effect for high bars
+        
         if (barHeight > canvas.height * 0.4) {
           ctx.shadowBlur = 15;
           ctx.shadowColor = colorMid;
@@ -94,7 +94,7 @@ export default function AudioVisualizer({ audioRef, isPlaying, dominantColor }) 
         x += barWidth + 1;
       }
 
-      // Reset shadow for next frame
+      
       ctx.shadowBlur = 0;
 
       animationRef.current = requestAnimationFrame(draw);

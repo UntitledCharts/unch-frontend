@@ -1,8 +1,4 @@
-/**
- * Extract dominant color from an image URL using canvas
- * @param {string} imageUrl - URL of the image
- * @returns {Promise<{r: number, g: number, b: number}>} - RGB values
- */
+
 export async function extractDominantColor(imageUrl) {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -12,7 +8,7 @@ export async function extractDominantColor(imageUrl) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            // Sample a small area for performance
+            
             const sampleSize = 50;
             canvas.width = sampleSize;
             canvas.height = sampleSize;
@@ -25,9 +21,9 @@ export async function extractDominantColor(imageUrl) {
 
                 let r = 0, g = 0, b = 0, count = 0;
 
-                // Sample every 4th pixel for performance
+                
                 for (let i = 0; i < data.length; i += 16) {
-                    // Skip very dark or very light pixels
+                    
                     const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
                     if (brightness > 30 && brightness < 225) {
                         r += data[i];
@@ -44,11 +40,11 @@ export async function extractDominantColor(imageUrl) {
                         b: Math.round(b / count)
                     });
                 } else {
-                    // Fallback to a default color
+                    
                     resolve({ r: 99, g: 102, b: 241 });
                 }
             } catch (e) {
-                // CORS or other error, return default
+                
                 resolve({ r: 99, g: 102, b: 241 });
             }
         };
@@ -61,9 +57,7 @@ export async function extractDominantColor(imageUrl) {
     });
 }
 
-/**
- * Convert RGB to HSL
- */
+
 export function rgbToHsl(r, g, b) {
     r /= 255;
     g /= 255;
@@ -93,13 +87,11 @@ export function rgbToHsl(r, g, b) {
     };
 }
 
-/**
- * Generate aura gradient colors from dominant color
- */
+
 export function generateAuraColors(rgb) {
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
 
-    // Create vibrant variations
+    
     const primary = `hsla(${hsl.h}, ${Math.min(hsl.s + 20, 100)}%, ${Math.min(hsl.l + 10, 60)}%, 0.6)`;
     const secondary = `hsla(${(hsl.h + 30) % 360}, ${Math.min(hsl.s + 10, 90)}%, ${Math.min(hsl.l + 5, 55)}%, 0.4)`;
     const tertiary = `hsla(${(hsl.h - 30 + 360) % 360}, ${Math.min(hsl.s, 80)}%, ${Math.min(hsl.l + 15, 65)}%, 0.3)`;

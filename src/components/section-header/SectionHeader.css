@@ -18,7 +18,7 @@
 }
 
 .section-title {
-    font-size: var(--text-2xl);
+    font-size: 28px;
     font-weight: 700;
     color: var(--foreground);
     margin: 0;
@@ -32,7 +32,7 @@
     background: rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-full);
     color: var(--foreground-muted);
-    font-size: var(--text-xs);
+    font-size: 12px;
     font-weight: 500;
 }
 
@@ -41,7 +41,7 @@
     align-items: center;
     gap: 4px;
     color: var(--primary-accent-light);
-    font-size: var(--text-sm);
+    font-size: 14px;
     font-weight: 500;
     text-decoration: none;
     transition: all var(--transition-base);
@@ -67,7 +67,7 @@
     }
 
     .section-title {
-        font-size: var(--text-xl);
+        font-size: 24px;
     }
 
     .section-icon {
@@ -79,7 +79,7 @@
     }
 }
 
-/* Light Mode Overrides */
+
 body.light-mode .section-count {
     background: rgba(15, 23, 42, 0.05);
     color: #64748b;

@@ -1,4 +1,4 @@
-/* Login Page Layout */
+
 .login-page {
     min-height: 100vh;
     display: flex;
@@ -16,7 +16,7 @@
     z-index: 10;
 }
 
-/* Professional Login Box */
+
 .login-box {
     width: 100%;
     max-width: 400px;
@@ -30,19 +30,19 @@
     flex-direction: column;
     gap: 32px;
     position: relative;
-    /* For Miku positioning context */
+    
 }
 
-/* Miku Positioning */
+
 .mascot-wrapper {
     position: absolute;
     top: -100px;
-    /* Sit on top */
+    
     right: 20px;
     pointer-events: none;
     z-index: -1;
-    /* Behind box if needed, or above depending on transparency */
-    /* If we want her SITTING ON the box, we can adjust top */
+    
+    
 }
 
 .login-mascot {
@@ -99,15 +99,15 @@
     }
 }
 
-/* Primary Button - "Old" Black Style */
+
 .login-btn-primary {
     width: 100%;
     background: #000;
-    /* Black background */
+    
     color: #fff;
-    /* White text */
+    
     border: 1px solid rgba(255, 255, 255, 0.2);
-    /* Subtle white border */
+    
     padding: 14px;
     border-radius: 8px;
     font-weight: 600;
@@ -129,10 +129,10 @@
     height: 20px;
     width: auto;
     filter: brightness(200%);
-    /* Make sure icon pops if dark */
+    
 }
 
-/* Responsive */
+
 @media (max-width: 600px) {
     .login-box {
         padding: 24px;

@@ -3,13 +3,13 @@ import { customProfiles } from "../../../data/customProfiles";
 export async function generateMetadata({ params }) {
     const { id } = await params;
 
-    // Fetch account data
+    
     let account = null;
     try {
         const apiBase = process.env.NEXT_PUBLIC_API_URL;
         let data = null;
 
-        // 1. Try fetching by Handle
+        
         try {
             const handleRes = await fetch(`${apiBase}/api/accounts/handle/${id}/`);
             if (handleRes.ok) {
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
             }
         } catch (e) { }
 
-        // 2. Fallback to direct ID fetch
+        
         if (!data) {
             const res = await fetch(`${apiBase}/api/accounts/${id}`);
             if (res.ok) {
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }) {
 
     const customProfile = customProfiles[account.id] || customProfiles[account.sonolus_id] || customProfiles[id];
 
-    // Default Title and Description
+    
     const title = `${account.sonolus_username || "User"} on UntitledCharts`;
     const description = customProfile?.bio || `Check out ${account.sonolus_username || "User"}'s charts on UntitledCharts!`;
 

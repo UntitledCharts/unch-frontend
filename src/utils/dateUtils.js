@@ -1,9 +1,9 @@
 export function formatRelativeTime(date, t) {
     if (!date) return "";
 
-    // Safety check if t is not provided
+    
     const translate = t || ((key, params) => {
-        // Fallback for English if t is missing
+        
         const map = {
             'time.year_singular': '{1} year ago', 'time.year_plural': '{1} years ago',
             'time.month_singular': '{1} month ago', 'time.month_plural': '{1} months ago',

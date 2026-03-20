@@ -22,7 +22,7 @@ const DashboardChartItem = memo(
     sonolusUser,
     openEdit,
     handleDelete,
-    updateVisibility, // updateVisibility(post, status) OR updateVisibility(post, status, { publish_time })
+    updateVisibility, 
     isActive,
     onToggleMenu,
   }) => {
@@ -35,13 +35,13 @@ const DashboardChartItem = memo(
       ? t("dashboard.published", "Published")
       : t("dashboard.uploaded", "Uploaded");
 
-    // ---- Schedule popover state
+    
     const [scheduleOpen, setScheduleOpen] = useState(false);
-    const [dtLocal, setDtLocal] = useState(""); // "YYYY-MM-DDTHH:mm"
+    const [dtLocal, setDtLocal] = useState(""); 
     const anchorRef = useRef(null);
 
-    // ---- Scheduled publish (support a couple shapes)
-    // Prefer epoch seconds on the object, but allow ISO string too
+    
+    
     const scheduledEpochSeconds = useMemo(() => {
       const v = post.scheduledPublish ?? post.scheduled_publish ?? post.scheduledPublishAt ?? null;
 
@@ -65,7 +65,7 @@ const DashboardChartItem = memo(
       setDtLocal("");
     };
 
-    // Close popover when clicking outside
+    
     useEffect(() => {
       if (!scheduleOpen) return;
 
@@ -79,15 +79,15 @@ const DashboardChartItem = memo(
       return () => document.removeEventListener("mousedown", onDocMouseDown);
     }, [scheduleOpen]);
 
-    // datetime-local -> epoch seconds (local time)
+    
     const dtLocalToEpochSeconds = (value) => {
-      const d = new Date(value); // treated as local time
+      const d = new Date(value); 
       const ms = d.getTime();
       if (Number.isNaN(ms)) return null;
       return Math.floor(ms / 1000);
     };
 
-    // Fill picker with current schedule when opening
+    
     const openScheduleMenu = () => {
       if (scheduledEpochSeconds) {
         const d = new Date(scheduledEpochSeconds * 1000);
@@ -102,24 +102,24 @@ const DashboardChartItem = memo(
       setScheduleOpen(true);
     };
 
-    // ---- Actions
-    // ✅ Public now uses EXISTING visibility route
+    
+    
     const publishNow = async () => {
       await updateVisibility(post, "PUBLIC");
       closeSchedule();
     };
 
-    // ✅ Schedule uses /visibility/schedule-public via updateVisibility 3rd arg
+    
     const confirmSchedule = async () => {
       const epoch = dtLocalToEpochSeconds(dtLocal);
       if (!epoch) return;
 
-      // status arg is ignored by schedule route; pass current to keep signature consistent
+      
       await updateVisibility(post, post.status, { publish_time: epoch });
       closeSchedule();
     };
 
-    // ✅ Unschedule uses /visibility/schedule-public via updateVisibility 3rd arg
+    
     const removeSchedule = async () => {
       await updateVisibility(post, post.status, { publish_time: null });
       closeSchedule();
@@ -139,13 +139,13 @@ const DashboardChartItem = memo(
 
     return (
       <div className="chart-card-redesigned">
-        {/* Background Layer */}
+        {}
         <div
           className="card-bg"
           style={{ backgroundImage: `url(${post.coverUrl || "/placeholder.png"})` }}
         />
 
-        {/* Left: Thumbnail */}
+        {}
         <div
           className="card-thumb cursor-pointer"
           onClick={() => router.push(`/levels/UnCh-${post.id}`)}
@@ -159,7 +159,7 @@ const DashboardChartItem = memo(
           )}
         </div>
 
-        {/* Middle: Info */}
+        {}
         <div className="card-info">
           <div className="info-header">
             <div className="flex items-center justify-start gap-2">
@@ -226,7 +226,7 @@ const DashboardChartItem = memo(
             </span>
           </div>
 
-          {/* Optional: show schedule info */}
+          {}
           {scheduledLabel && (
             <div className="text-xs opacity-75" style={{ marginTop: "6px" }}>
               <Clock size={12} style={{ display: "inline", marginRight: "4px" }} />
@@ -235,7 +235,7 @@ const DashboardChartItem = memo(
           )}
         </div>
 
-        {/* Right: Status selector + schedule popover */}
+        {}
         {sonolusUser && sonolusUser.sonolus_id === post.authorId && (
           <div
             style={{ marginLeft: "auto", paddingLeft: "12px", position: "relative" }}
@@ -275,12 +275,12 @@ const DashboardChartItem = memo(
                   {t("dashboard.publicOptions", "Public options")}
                 </div>
 
-                {/* ✅ Public now (existing visibility route) */}
+                {}
                 <button className="icon-btn-ghost" onClick={publishNow}>
                   {t("dashboard.publicNow", "Public Now")}
                 </button>
 
-                {/* Schedule */}
+                {}
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <div className="text-xs opacity-75">
                     {t("dashboard.schedulePublish", "Publish Schedule")}
@@ -307,7 +307,7 @@ const DashboardChartItem = memo(
                   </div>
                 </div>
 
-                {/* ✅ Remove scheduled publish in same menu */}
+                {}
                 {scheduledEpochSeconds && (
                   <button className="icon-btn-ghost text-red" onClick={removeSchedule}>
                     {t("dashboard.removeSchedule", "Remove scheduled publish")}

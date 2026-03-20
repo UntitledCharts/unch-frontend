@@ -214,31 +214,11 @@ const MemoizedChartItem = memo(function ChartItem({
                     <MoreVertical size={16} />
                   </button>
                   {showMenu && (
-                    <div className="dropdown-menu" style={{
-                      position: 'absolute',
-                      top: '100%',
-                      right: 0,
-                      marginTop: '4px',
-                      background: '#1e293b',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '8px',
-                      padding: '4px',
-                      zIndex: 9999,
-                      minWidth: '160px',
-                      boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-                      animation: 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                      backdropFilter: 'blur(12px)'
-                    }}>
+                    <div className="glass-dropdown-menu">
                       {canEditChart && (
                         <button
-                          className="dropdown-item"
+                          className="glass-dropdown-item"
                           onClick={() => { setShowMenu(false); onEdit(post); }}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '6px 10px',
-                            background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', borderRadius: '6px', fontSize: '0.85rem'
-                          }}
-                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                         >
                           <Pencil size={14} /> {t('common.edit', 'Edit')}
                         </button>
@@ -246,52 +226,14 @@ const MemoizedChartItem = memo(function ChartItem({
 
                       {canDeleteChart && (
                         <button
-                          className="dropdown-item"
+                          className="glass-dropdown-item danger"
                           onClick={() => { setShowMenu(false); onDelete(post); }}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '6px 10px',
-                            background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', borderRadius: '6px', fontSize: '0.85rem'
-                          }}
-                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
-                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                         >
-                          <Trash2 size={14} /> {t('common.delete', 'Delete')}
+                          <Trash2 size={14} /> {t('common.delete', 'Delete Chart')}
                         </button>
                       )}
 
-                      {(isAdmin || (isMod && post.authorId !== sonolusUser.sonolus_id)) && (
-                        <>
-                          <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '4px 0' }}></div>
-                          <div style={{ padding: '4px 8px', fontSize: '0.65rem', color: '#64748b', fontWeight: 'bold' }}>ADMIN</div>
 
-                          {isAdmin && (
-                            <>
-                              <button
-                                onClick={() => { setShowMenu(false); handleBanUser(); }}
-                                style={{
-                                  display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '6px 10px',
-                                  background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', borderRadius: '6px', fontSize: '0.85rem'
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(248, 113, 113, 0.1)'}
-                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                              >
-                                <Ban size={14} /> Ban User
-                              </button>
-                              <button
-                                onClick={() => { setShowMenu(false); handleDeleteAccount(); }}
-                                style={{
-                                  display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '6px 10px',
-                                  background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', borderRadius: '6px', fontSize: '0.85rem'
-                                }}
-                                onMouseEnter={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
-                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                              >
-                                <UserX size={14} /> Delete Account
-                              </button>
-                            </>
-                          )}
-                        </>
-                      )}
                     </div>
                   )}
                 </div>
@@ -310,7 +252,7 @@ const MemoizedChartItem = memo(function ChartItem({
               <div className="metadata-stats-group">
                 <span className="metadata-item stats-combined">
                   {post.rating !== undefined && (
-                    <span className="lv-part">{t('card.level', { 1: post.rating })}</span>
+                    <span className="lv-part">{t('card.level', { 1: parseFloat(Number(post.rating).toFixed(2)) })}</span>
                   )}
                   {post.likeCount !== undefined && (
                     <span className="likes-part">

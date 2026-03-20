@@ -1,0 +1,217 @@
+.dmca-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 80px;
+    box-sizing: border-box;
+}
+
+.dmca-bg-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.dmca-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+    padding: 0 20px;
+}
+
+.dmca-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.icon-container {
+    width: 64px;
+    height: 64px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ef4444;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.2);
+}
+
+.dmca-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+}
+
+.dmca-subtitle {
+    font-size: 1.1rem;
+    color: var(--foreground-muted);
+}
+
+.tutorial-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.step-card {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    gap: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.step-number {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+}
+
+.step-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.step-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 12px 0;
+}
+
+.step-content p {
+    color: var(--foreground-muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0 0 20px 0;
+}
+
+.discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #5865F2;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.discord-btn:hover {
+    background: #4752C4;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
+}
+
+.gif-container {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    margin-top: 24px;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.guide-gif {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.info-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    color: var(--foreground-subtle);
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-list li {
+    line-height: 1.5;
+}
+
+.icon-box {
+    width: 48px;
+    height: 48px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #38bdf8;
+}
+
+.mt-4 {
+    margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+    .step-card {
+        flex-direction: column;
+        padding: 30px 20px;
+        gap: 20px;
+    }
+
+    .dmca-title {
+        font-size: 2rem;
+    }
+}
+
+body.light-mode .dmca-bg-blur {
+    background: linear-gradient(135deg, rgba(241, 245, 249, 0.6) 0%, rgba(226, 232, 240, 0.8) 100%);
+}
+
+body.light-mode .dmca-title,
+body.light-mode .step-content h2 {
+    color: #0f172a;
+}
+
+body.light-mode .step-card {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(148, 163, 184, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .step-card:hover {
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+body.light-mode .back-btn {
+    color: #0f172a !important;
+}

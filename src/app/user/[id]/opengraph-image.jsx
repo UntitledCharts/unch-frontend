@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { fontDBBase64, fontEBBase64 } from '../../../data/fonts';
 import { customProfiles } from '../../../data/customProfiles';
 
 export const runtime = 'edge';
@@ -18,7 +19,7 @@ export default async function Image({ params }) {
     let charts = [];
     let assetBaseUrl = null;
 
-    // Fetch logo
+    
     try {
         const logoUrl = new URL('../../../../public/636a8f1e76b38cb1b9eb0a3d88d7df6f.png', import.meta.url);
         const logoRes = await fetch(logoUrl);
@@ -27,11 +28,11 @@ export default async function Image({ params }) {
         console.error("OG Logo fetch failed", e);
     }
 
-    // Fetch account data
+    
     try {
         let data = null;
 
-        // 1. Try fetching by Handle
+        
         try {
             const handleRes = await fetch(`${apiUrl}/api/accounts/handle/${id}/`);
             if (handleRes.ok) {
@@ -45,7 +46,7 @@ export default async function Image({ params }) {
             }
         } catch (e) { }
 
-        // 2. Fallback to direct ID fetch
+        
         if (!data) {
             const res = await fetch(`${apiUrl}/api/accounts/${id}`);
             if (res.ok) {
@@ -60,10 +61,18 @@ export default async function Image({ params }) {
         }
     } catch (e) { }
 
-    // Use NEXT_PUBLIC_APP_URL for local public assets
+    const fonts = [];
+    try {
+        const fontDBBuffer = Uint8Array.from(atob(fontDBBase64), c => c.charCodeAt(0)).buffer;
+        const fontEBBuffer = Uint8Array.from(atob(fontEBBase64), c => c.charCodeAt(0)).buffer;
+        fonts.push({ name: 'Rodin', data: fontDBBuffer, weight: 400, style: 'normal' });
+        fonts.push({ name: 'Rodin', data: fontEBBuffer, weight: 700, style: 'normal' });
+    } catch (e) { console.error('Failed to load fonts:', e); }
+
+    
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
 
-    // Resolve PFP URL
+    
     let pfpUrl = DEFAULT_PFP;
     if (accountData?.profile_hash && assetBaseUrl) {
         pfpUrl = `${assetBaseUrl}/${accountData.sonolus_id}/profile/${accountData.profile_hash}`;
@@ -74,7 +83,7 @@ export default async function Image({ params }) {
         }
     }
 
-    // Resolve Banner URL
+    
     let bannerUrl = null;
     if (accountData?.banner_hash && assetBaseUrl) {
         bannerUrl = `${assetBaseUrl}/${accountData.sonolus_id}/banner/${accountData.banner_hash}`;
@@ -85,7 +94,7 @@ export default async function Image({ params }) {
         }
     }
 
-    // Calculate stats
+    
     const totalCharts = charts.length;
     const totalLikes = charts.reduce((sum, c) => sum + (c.likes || c.like_count || 0), 0);
 
@@ -104,11 +113,11 @@ export default async function Image({ params }) {
                     display: 'flex',
                     flexDirection: 'column',
                     background: '#0f172a',
-                    // Removed padding here so absolute background can cover full edge-to-edge
+                    
                     position: 'relative',
                 }}
             >
-                {/* Background (Banner or Gradient) */}
+                {}
                 {bannerUrl ? (
                     <img
                         src={bannerUrl}
@@ -139,7 +148,7 @@ export default async function Image({ params }) {
                     />
                 )}
 
-                {/* Overlay for contrast if banner is used */}
+                {}
                 {bannerUrl && (
                     <div style={{
                         position: 'absolute',
@@ -151,7 +160,7 @@ export default async function Image({ params }) {
                     }} />
                 )}
 
-                {/* Content Container with Padding */}
+                {}
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -160,7 +169,7 @@ export default async function Image({ params }) {
                     padding: '60px',
                     position: 'relative',
                 }}>
-                    {/* Logo */}
+                    {}
                     {logoData && (
                         <div style={{ position: 'absolute', top: 40, right: 50, display: 'flex', alignItems: 'center', gap: 12 }}>
                             <img
@@ -175,9 +184,9 @@ export default async function Image({ params }) {
                         </div>
                     )}
 
-                    {/* Main content */}
+                    {}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 40, marginTop: 40, flex: 1, position: 'relative' }}>
-                        {/* PFP */}
+                        {}
                         <div
                             style={{
                                 width: 200,
@@ -198,7 +207,7 @@ export default async function Image({ params }) {
                             )}
                         </div>
 
-                        {/* Info */}
+                        {}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                                 <span style={{ fontSize: 52, fontWeight: 700, color: 'white' }}>
@@ -220,7 +229,7 @@ export default async function Image({ params }) {
                                 #{accountData?.sonolus_handle || '000000'}
                             </span>
 
-                            {/* Stats */}
+                            {}
                             <div style={{ display: 'flex', gap: 40, marginTop: 20 }}>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                                     <span style={{ fontSize: 36, fontWeight: 700, color: 'white' }}>{totalCharts}</span>
@@ -234,7 +243,7 @@ export default async function Image({ params }) {
                         </div>
                     </div>
 
-                    {/* Footer */}
+                    {}
                     <div style={{ display: 'flex', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 18, position: 'relative' }}>
                         untitledcharts.com/user/{id?.substring(0, 12)}...
                     </div>
@@ -242,7 +251,7 @@ export default async function Image({ params }) {
             </div>
         ),
         {
-            ...size,
+            ...size, fonts
         }
     );
 }

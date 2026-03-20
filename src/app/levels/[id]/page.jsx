@@ -41,7 +41,7 @@ async function fetchLevel(rawId) {
     backgroundUrl: buildAssetUrl(data.background_file_hash || (data.background && data.background.hash)),
     backgroundV3Url: buildAssetUrl(data.background_v3_file_hash || (data.backgroundV3 && data.backgroundV3.hash)),
 
-    // Scheduling data
+    
     scheduled_publish: data.scheduled_publish || null,
     status: data.status || 'PUBLIC',
   };
@@ -60,7 +60,7 @@ export async function generateMetadata({ params }) {
 
   const authorName = level.author || 'Unknown';
 
-  // Format date for footer
+  
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const d = new Date(dateStr);
@@ -74,9 +74,6 @@ export async function generateMetadata({ params }) {
     });
   };
   const publishedDate = formatDate(level.createdAt);
-
-  // Build structured description
-  // Footer: UntitledCharts • Date
 
   const rawDescription = level.description || '';
   const cleanDescription = rawDescription.replace(/:[a-zA-Z0-9_]+:/g, '').trim();
@@ -113,11 +110,11 @@ export default async function LevelPage({ params }) {
   try {
     level = await fetchLevel(id);
   } catch {
-    // Server fetch failed, client-side will retry
+    
   }
 
   if (level === null) {
-    notFound();
+    
   }
 
   return <LevelCard initialLevel={level} id={id} SONOLUS_SERVER_URL={SONOLUS_SERVER_URL} />;

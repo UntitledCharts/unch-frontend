@@ -50,13 +50,13 @@ export default function EmojisPage() {
         <div className="emojis-page">
             <div className="emojis-container">
                 <h1 className="emojis-title">
-                    🎨 Emojis
+                    🎨 {t('emojis.title')}
                 </h1>
                 <p className="emojis-subtitle">
-                    Click on any emoji to copy its command
+                    {t('emojis.subtitle')}
                     <br />
                     <span style={{ fontSize: '0.8em', color: '#f87171', marginTop: '4px', display: 'block' }}>
-                        * These emojis can be used anywhere (comments, descriptions) and will work on the website, but will not appear in Sonolus.
+                        {t('emojis.disclaimer')}
                     </span>
                 </p>
 
@@ -64,7 +64,7 @@ export default function EmojisPage() {
                     <Search size={18} className="search-icon" />
                     <input
                         type="text"
-                        placeholder="Search emojis..."
+                        placeholder={t('emojis.searchPlaceholder')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="search-input"
@@ -72,10 +72,10 @@ export default function EmojisPage() {
                 </div>
 
                 {loading ? (
-                    <div className="emojis-loading">Loading emojis...</div>
+                    <div className="emojis-loading">{t('emojis.loading')}</div>
                 ) : filteredEmojis.length === 0 ? (
                     <div className="emojis-empty">
-                        {searchQuery ? 'No emojis found matching your search' : 'No emojis available'}
+                        {searchQuery ? t('emojis.noResults') : t('emojis.noEmojis')}
                     </div>
                 ) : (
                     <div className="emojis-grid">
@@ -109,7 +109,7 @@ export default function EmojisPage() {
                 )}
 
                 <div className="emojis-footer">
-                    <p>Total: {Object.keys(emojis).length} emojis</p>
+                    <p>{t('emojis.total').replace('{count}', Object.keys(emojis).length)}</p>
                 </div>
             </div>
         </div>

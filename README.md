@@ -33,6 +33,29 @@ Open [http://localhost:3001](http://localhost:3001) with your browser to see the
 
 ---
 
+## ⚙️ Environment Variables
+
+Create a `.env.local` file in the project root with the following variables:
+
+```env
+# (Required) Backend API base URL — no trailing slash
+NEXT_PUBLIC_API_URL=https://your-api-domain.com
+
+# (Required) Public URL of this frontend — used for OG images, embeds, share links
+NEXT_PUBLIC_APP_URL=https://your-frontend-domain.com
+
+# (Required) Sonolus server URL — used for deep-linking into the Sonolus app
+NEXT_PUBLIC_SONOLUS_SERVER_URL=https://your-sonolus-server.com
+```
+
+| Variable | Required | Description |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | ✅ | Base URL of the UntitledCharts backend API |
+| `NEXT_PUBLIC_APP_URL` | ✅ | Public URL of the frontend (for OG images & embeds) |
+| `NEXT_PUBLIC_SONOLUS_SERVER_URL` | ✅ | Sonolus server URL for deep-linking |
+
+---
+
 ## 🛠️ Tech Stack
 
 - **Framework**: [Next.js 15](https://nextjs.org) (App Router)

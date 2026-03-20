@@ -9,10 +9,10 @@
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    /* overflow: hidden;  <-- Removed to allow scrolling if needed, though this is a full screen overlay */
+    
 }
 
-/* Navigation */
+
 .countdown-nav {
     position: fixed;
     top: 100px;
@@ -50,7 +50,7 @@
     border-color: rgba(56, 189, 248, 0.3);
 }
 
-/* Background */
+
 .countdown-bg {
     position: fixed;
     inset: 0;
@@ -69,7 +69,7 @@
             rgba(2, 6, 23, 0.95) 100%);
 }
 
-/* Content */
+
 .countdown-content {
     display: flex;
     flex-direction: column;
@@ -92,7 +92,7 @@
     }
 }
 
-/* Jacket */
+
 .countdown-jacket-wrapper {
     position: relative;
     width: 200px;
@@ -144,7 +144,7 @@
     }
 }
 
-/* Info */
+
 .countdown-info {
     display: flex;
     flex-direction: column;
@@ -178,7 +178,7 @@
     color: rgba(255, 255, 255, 0.8);
 }
 
-/* Timer */
+
 .countdown-timer-section {
     display: flex;
     flex-direction: column;
@@ -248,7 +248,7 @@
     }
 }
 
-/* Final Countdown */
+
 .final-countdown {
     display: flex;
     flex-direction: column;
@@ -317,14 +317,14 @@
     }
 }
 
-/* Footer Message */
+
 .countdown-footer-msg {
     color: rgba(255, 255, 255, 0.5);
     font-size: 0.9rem;
     margin: 0;
 }
 
-/* Confetti */
+
 .confetti-piece {
     position: fixed;
     top: -20px;
@@ -345,7 +345,7 @@
     }
 }
 
-/* Loading */
+
 .countdown-loading {
     display: flex;
     flex-direction: column;
@@ -369,7 +369,7 @@
     }
 }
 
-/* Mobile */
+
 @media (max-width: 768px) {
     .countdown-nav {
         top: 80px;

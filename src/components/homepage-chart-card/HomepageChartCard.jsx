@@ -6,6 +6,7 @@ import "./HomepageChartCard.css";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { formatRelativeTime } from "../../utils/dateUtils";
 import LoadingImage from "../loading-image/LoadingImage";
+import MarqueeText from "../marquee-text/MarqueeText";
 import { extractDominantColor, generateAuraColors } from "../../utils/colorUtils";
 
 export default function HomepageChartCard({
@@ -56,7 +57,7 @@ export default function HomepageChartCard({
         }
     }, [isPlaying]);
 
-    // Extract dominant color from cover for aura effect
+    
     useEffect(() => {
         if (coverUrl && typeof window !== 'undefined') {
             extractDominantColor(coverUrl)
@@ -68,17 +69,17 @@ export default function HomepageChartCard({
         }
     }, [coverUrl]);
 
-    // usage of initialCommentsCount is enough, no need to fetch individually to avoid N+1 problem
+    
     const commentsCount = initialCommentsCount || 0;
 
     const handleMouseEnter = () => {
-        // Use matchMedia directly to avoid listeners
+        
         if (window.matchMedia("(max-width: 768px)").matches || 'ontouchstart' in window) return;
         setIsHovered(true);
     };
 
     const handleMouseLeave = () => {
-        // Use matchMedia directly to avoid listeners
+        
         if (window.matchMedia("(max-width: 768px)").matches || 'ontouchstart' in window) return;
         setIsHovered(false);
     };
@@ -117,7 +118,7 @@ export default function HomepageChartCard({
             onMouseLeave={handleMouseLeave}
             onClick={handleCardClick}
         >
-            {/* Multi-layer aura effect */}
+            {}
             <div className="card-aura-container">
                 <div className="card-aura-layer-1" />
                 <div className="card-aura-layer-2" />
@@ -161,21 +162,14 @@ export default function HomepageChartCard({
                     </button>
                 </div>
 
-                <div className="level-badge">{t('card.level', { 1: rating })}</div>
+                <div className="level-badge">{t('card.level', { 1: parseFloat(Number(rating).toFixed(2)) })}</div>
             </div>
 
             <div className="card-content">
                 <div className="card-title-wrapper" style={{ overflow: 'hidden' }}>
-                    {(title && title.length > 20) ? (
-                        <div className="marquee-container" style={{ width: '100%' }}>
-                            <div className="marquee-track always-scroll" style={{ animationDuration: `${Math.max(8, title.length * 0.25)}s` }}>
-                                <h3 className="card-title" title={title}>{title}</h3>
-                                <h3 className="card-title" title={title} aria-hidden="true">{title}</h3>
-                            </div>
-                        </div>
-                    ) : (
-                        <h3 className="card-title" title={title}>{title}</h3>
-                    )}
+                    <MarqueeText textComponent="h3" className="card-title" maxLength={20}>
+                        {title}
+                    </MarqueeText>
                 </div>
 
 

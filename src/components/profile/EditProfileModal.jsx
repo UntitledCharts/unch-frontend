@@ -5,8 +5,9 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import Cropper from "react-easy-crop";
 import "./EditProfileModal.css";
 import EmojiSuggestion from "../emoji-suggestion/EmojiSuggestion";
+import { createPortal } from "react-dom";
 
-// Helper function to crop image
+
 function getCroppedImg(imageSrc, pixelCrop) {
     const createImage = (url) =>
         new Promise((resolve, reject) => {
@@ -58,21 +59,31 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
     const [error, setError] = useState(null);
     const [toast, setToast] = useState(null);
     const descriptionRef = useRef(null);
-    const [emojiOpen, setEmojiOpen] = useState(false); // { message, type }
+    const [emojiOpen, setEmojiOpen] = useState(false); 
 
-    // Filter accepted types
+    
     const ACCEPTED_TYPES = "image/png, image/jpeg, image/webp";
 
-    // Cropper state
-    const [cropImage, setCropImage] = useState(null); // URL of image being cropped
-    const [cropType, setCropType] = useState(null); // 'profile' or 'banner'
+    
+    const [cropImage, setCropImage] = useState(null); 
+    const [cropType, setCropType] = useState(null); 
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
     useEffect(() => {
-        if (user) setDescription(user.description || "");
-    }, [user]);
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+            document.documentElement.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+        };
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -209,7 +220,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                     const data = await res.json();
                     if (data.hash) newPfpHash = data.hash;
                 } catch (e) {
-                    // ignore
+                    
                 }
             }
 
@@ -231,7 +242,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                     const data = await res.json();
                     if (data.hash) newBannerHash = data.hash;
                 } catch (e) {
-                    // ignore
+                    
                 }
             }
 
@@ -239,13 +250,13 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                 const payload = { description };
                 if (newPfpHash) {
                     payload.profile_hash = newPfpHash;
-                    payload.profile_image_hash = newPfpHash; // Legacy?
+                    payload.profile_image_hash = newPfpHash; 
                     payload.pfp = newPfpHash;
                     payload.hash = newPfpHash;
                 }
                 if (newBannerHash) {
                     payload.banner_hash = newBannerHash;
-                    payload.banner_image_hash = newBannerHash; // Legacy?
+                    payload.banner_image_hash = newBannerHash; 
                     payload.banner = newBannerHash;
                 }
 
@@ -262,7 +273,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                         await res.json().catch(() => ({}));
                     }
                 } catch (e) {
-                    // ignore
+                    
                 }
 
                 if (false) {
@@ -279,7 +290,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                             await res.text().catch(() => "");
                         }
                     } catch (e) {
-                        // ignore
+                        
                     }
                 }
             }
@@ -293,10 +304,13 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
         }
     };
 
-    return (
+    if (!isOpen) return null;
+    if (typeof document === 'undefined') return null;
+
+    return createPortal(
         <div className="modal-overlay">
-            <div className="modal-content edit-profile-modal">
-                {/* ... Header ... */}
+            <div className="modal-content edit-profile-modal custom-scrollbar">
+                {}
                 <div className="modal-header">
                     <h2>{t('profile.editProfile', 'Edit Profile')}</h2>
                     <button onClick={onClose} className="close-btn"><X size={24} /></button>
@@ -305,7 +319,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                 {error && <div className="error-message"><AlertCircle size={16} /> {error}</div>}
 
                 {cropImage ? (
-                    // ... Cropper UI ...
+                    
                     <div className="cropper-container">
                         <div className="cropper-wrapper">
                             <Cropper
@@ -351,7 +365,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                                     <div className="upload-controls">
                                         <label className="upload-btn">
                                             {(pfpPreview || (user.profile_hash && assetBaseUrl)) ? <Pencil size={16} /> : <Upload size={16} />}
-                                            {(pfpPreview || (user.profile_hash && assetBaseUrl)) ? t('common.change', 'Change') : t('common.upload', 'Upload')}
+                                            <span>{(pfpPreview || (user.profile_hash && assetBaseUrl)) ? t('common.change', 'Change') : t('common.upload', 'Upload')}</span>
                                             <input type="file" accept={ACCEPTED_TYPES} onChange={(e) => handleFileChange(e, 'profile')} hidden />
                                         </label>
                                         {(pfpPreview || (user.profile_hash && assetBaseUrl)) && (
@@ -372,7 +386,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                                         {(bannerPreview || (user.banner_hash && assetBaseUrl)) ? (
                                             <img src={bannerPreview || `${assetBaseUrl}/${user.sonolus_id}/banner/${user.banner_hash}_webp`} alt="Banner" />
                                         ) : (
-                                            <div className="placeholder-banner" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.5 }}>
+                                            <div className="placeholder-banner" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '8px', opacity: 0.5, height: '100%' }}>
                                                 <Upload size={24} />
                                                 <span>{t('profile.noBanner', 'No Banner')}</span>
                                             </div>
@@ -381,7 +395,7 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
                                     <div className="upload-controls" style={{ alignSelf: 'flex-start', marginTop: '12px' }}>
                                         <label className="upload-btn">
                                             {(bannerPreview || (user.banner_hash && assetBaseUrl)) ? <Pencil size={16} /> : <Upload size={16} />}
-                                            {(bannerPreview || (user.banner_hash && assetBaseUrl)) ? t('common.change', 'Change') : t('common.upload', 'Upload')}
+                                            <span>{(bannerPreview || (user.banner_hash && assetBaseUrl)) ? t('common.change', 'Change') : t('common.upload', 'Upload')}</span>
                                             <input type="file" accept={ACCEPTED_TYPES} onChange={(e) => handleFileChange(e, 'banner')} hidden />
                                         </label>
                                         {(bannerPreview || (user.banner_hash && assetBaseUrl)) && (
@@ -415,17 +429,18 @@ export default function EditProfileModal({ isOpen, onClose, user, onUpdate, asse
 
                         <div className="modal-actions">
                             <button type="button" onClick={onClose} className="btn-cancel">
-                                <X size={18} /> {t('common.cancel', 'Cancel')}
+                                <X size={18} /> <span>{t('common.cancel', 'Cancel')}</span>
                             </button>
                             <button type="submit" disabled={loading} className="btn-save">
-                                {loading ? <div className="spinner-small"></div> : <><Check size={18} /> {t('common.save', 'Save')}</>}
+                                {loading ? <div className="spinner-small"></div> : <><Check size={18} /> <span>{t('common.save', 'Save')}</span></>}
                             </button>
                         </div>
                     </form>
                 )}
                 {toast && <ToastNotification message={toast.message} onClose={() => setToast(null)} />}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

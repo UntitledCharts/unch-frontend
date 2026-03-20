@@ -11,7 +11,7 @@ import { formatBytes } from "../../utils/byteUtils";
 import FormattedText from "../formatted-text/FormattedText";
 import EmojiSuggestion from "../emoji-suggestion/EmojiSuggestion";
 
-// Helper function to validate level input
+
 const validateLevelValue = (val) => {
   if (val === '' || val === '-') return val;
   const num = parseInt(val, 10);
@@ -80,7 +80,7 @@ const FilePreview = ({ file, type }) => {
     setUrl(objectUrl);
     return () => {
       URL.revokeObjectURL(objectUrl);
-      // Reset playing state when file changes
+      
       setIsPlaying(false);
     };
   }, [file]);
@@ -157,7 +157,7 @@ export default function ChartModal({
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const audioRefs = useRef({});
 
-  // Emoji refs and state
+  
   const descriptionEditRef = useRef(null);
   const descriptionUpRef = useRef(null);
   const [emojiOpenEdit, setEmojiOpenEdit] = useState(false);
@@ -540,10 +540,10 @@ export default function ChartModal({
             </form >
           </div >
 
-          {/* Upload Form */}
+          {}
           < div className="upload-form" hidden={mode !== "upload"
           }>
-            {/* ... Reminders omitted (unchanged) ... */}
+            {}
             < div className="modal-reminders" >
               <h4>{t('modal.remindersTitle', '⚠️ Read before uploading:')}</h4>
               <ul className="rules-list text-sm opacity-90 space-y-1">

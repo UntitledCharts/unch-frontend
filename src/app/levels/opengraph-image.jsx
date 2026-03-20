@@ -18,7 +18,7 @@ export default async function Image() {
                 justifyContent: 'center',
                 gap: 30,
             }}>
-                {/* Icon */}
+                {}
                 <div style={{
                     fontSize: 80,
                     display: 'flex',
@@ -26,7 +26,7 @@ export default async function Image() {
                     📊
                 </div>
 
-                {/* Title */}
+                {}
                 <div style={{
                     fontSize: 64,
                     fontWeight: 900,
@@ -36,7 +36,7 @@ export default async function Image() {
                     Browse Levels
                 </div>
 
-                {/* Subtitle */}
+                {}
                 <div style={{
                     fontSize: 28,
                     color: '#94a3b8',
@@ -45,7 +45,7 @@ export default async function Image() {
                     Discover and play community-created charts on Sonolus
                 </div>
 
-                {/* Branding */}
+                {}
                 <div style={{
                     position: 'absolute',
                     bottom: 40,

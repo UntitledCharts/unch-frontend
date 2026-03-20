@@ -1,4 +1,4 @@
-/* Dashboard Container */
+
 .dashboard-container {
     width: 100%;
     min-height: 80vh;
@@ -11,7 +11,7 @@
     overflow-y: visible;
 }
 
-/* Background Gradients (Enhanced) */
+
 .dashboard-container::before {
     content: '';
     position: absolute;
@@ -51,9 +51,9 @@
     align-items: center;
     margin-bottom: 32px;
     width: 100%;
-    /* Force full width */
+    
     flex-wrap: wrap;
-    /* Allow wrapping on mobile */
+    
     gap: 20px;
 }
 
@@ -71,15 +71,15 @@
 
     .search-wrapper {
         width: 100%;
-        /* Full width search on mobile */
+        
         max-width: none;
     }
 
     .header-left h1 {
         font-size: 1.5rem;
-        /* Smaller font on mobile */
+        
         white-space: normal;
-        /* Allow wrap */
+        
         overflow: visible;
     }
 }
@@ -107,7 +107,7 @@
     gap: 8px;
     margin: 0;
     font-size: 1.5rem;
-    /* Adjust as needed */
+    
 }
 
 @media (max-width: 768px) {
@@ -128,7 +128,7 @@
     align-items: center;
 }
 
-/* Hide Spinners */
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -147,7 +147,7 @@ input[type=number] {
     border: none;
     padding: 10px 24px;
     border-radius: 99px;
-    /* Pill */
+    
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
@@ -172,7 +172,7 @@ input[type=number] {
     transform: rotate(90deg);
 }
 
-/* 2-Column Layout */
+
 .dashboard-structure {
     display: grid;
     grid-template-columns: 280px 1fr;
@@ -194,7 +194,7 @@ input[type=number] {
     font-weight: 700;
 }
 
-/* Stat with Graph Styles (Ported from LevelCard) */
+
 .stat-with-graph-container {
     background: rgba(15, 23, 42, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -259,7 +259,7 @@ input[type=number] {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-/* Comments Card */
+
 .comments-card {
     background: rgba(15, 23, 42, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -268,18 +268,18 @@ input[type=number] {
     backdrop-filter: blur(12px);
 }
 
-/* Main Grid */
+
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 24px;
-    /* Force remove any inherited scroll or height constraints */
+    
     height: auto !important;
     overflow: visible !important;
     padding-bottom: 20px;
 }
 
-/* Premium Glass Vercel Card */
+
 .vercel-card {
     background: rgba(10, 10, 10, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -373,7 +373,7 @@ input[type=number] {
 
 .search-wrapper {
     position: relative;
-    /* display: flex; Removed flex to rely on absolute positioning */
+    
     display: block;
     width: 300px;
     height: 44px;
@@ -405,7 +405,7 @@ input[type=number] {
     background: transparent;
     border: none;
     padding: 0 20px 0 44px;
-    /* Left padding for icon */
+    
     color: #fff;
     font-size: 0.95rem;
     outline: none;
@@ -435,24 +435,24 @@ input[type=number] {
 
 .status-dot.public {
     color: #4ade80;
-    /* Green */
+    
     background: rgba(74, 222, 128, 0.1);
     border-color: rgba(74, 222, 128, 0.2);
 }
 
 .status-dot.private {
     color: #f87171;
-    /* Red */
+    
     background: rgba(248, 113, 113, 0.1);
     border-color: rgba(248, 113, 113, 0.2);
 }
 
 .status-dot.unlisted {
     color: #94a3b8;
-    /* Gray */
+    
 }
 
-/* Action Menu */
+
 .action-menu-wrapper {
     position: relative;
 }
@@ -510,6 +510,13 @@ input[type=number] {
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.action-dropdown button svg {
+    flex-shrink: 0;
 }
 
 .action-dropdown button:hover {
@@ -526,7 +533,7 @@ input[type=number] {
     color: #f87171;
 }
 
-/* Card Body */
+
 .vercel-card-body {
     flex: 1;
     display: flex;
@@ -556,7 +563,7 @@ input[type=number] {
     line-height: 1.5;
 }
 
-/* Card Footer */
+
 .vercel-card-footer {
     display: flex;
     justify-content: space-between;
@@ -584,7 +591,7 @@ input[type=number] {
     color: #fff;
 }
 
-/* Redesigned Card */
+
 .chart-card-redesigned {
     position: relative;
     display: flex;
@@ -594,19 +601,19 @@ input[type=number] {
     border-radius: 16px;
     padding: 12px;
     gap: 16px;
-    /* overflow: hidden; Removed to allow dropdowns */
+    
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100px;
     backdrop-filter: blur(10px);
     z-index: 1;
-    /* Establish stacking context */
+    
 }
 
-/* Ensure background stays clipped */
+
 .chart-card-redesigned>.card-bg,
 .chart-card-redesigned>.card-thumb {
     border-radius: 12px;
-    /* Match parent radius */
+    
 }
 
 .chart-card-redesigned:hover {
@@ -614,10 +621,10 @@ input[type=number] {
     transform: translateY(-2px);
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     z-index: 10;
-    /* Bring to front on hover */
+    
 }
 
-/* Background Layer */
+
 .card-bg {
     position: absolute;
     top: 0;
@@ -637,7 +644,7 @@ input[type=number] {
     filter: blur(4px) grayscale(0.4);
 }
 
-/* Thumbnail */
+
 .card-thumb {
     width: 76px;
     height: 76px;
@@ -659,14 +666,14 @@ input[type=number] {
     transform: scale(1.05);
 }
 
-/* Info Section */
+
 .card-info {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     min-width: 0;
-    /* Text truncation fix */
+    
     gap: 4px;
 }
 
@@ -720,7 +727,7 @@ input[type=number] {
     border-radius: 4px;
 }
 
-/* Right Actions (Toggle Buttons) */
+
 .card-actions-right {
     display: flex;
     gap: 10px;
@@ -746,7 +753,7 @@ input[type=number] {
     color: #cbd5e1;
 }
 
-/* Active States */
+
 .vis-btn.public.active {
     background: rgba(74, 222, 128, 0.2);
     border-color: #4ade80;
@@ -788,7 +795,7 @@ input[type=number] {
     color: #fbbf24;
 }
 
-/* Mobile Adjustments */
+
 @media (max-width: 600px) {
     .dashboard-grid {
         grid-template-columns: 1fr !important;
@@ -821,7 +828,7 @@ input[type=number] {
     }
 }
 
-/* Animations */
+
 @keyframes fade-in-up {
     from {
         opacity: 0;
@@ -838,7 +845,7 @@ input[type=number] {
     animation: fade-in-up 0.5s ease-out forwards;
 }
 
-/* Responsive - Mobile Layout with Proper Stacking */
+
 @media (max-width: 900px) {
     .dashboard-container {
         padding-top: 100px;
@@ -856,7 +863,7 @@ input[type=number] {
         margin-bottom: 20px;
     }
 
-    /* Hide Welcome Message on Mobile */
+    
     .dashboard-header-row h1,
     .welcome-text {
         display: none !important;
@@ -888,7 +895,7 @@ input[type=number] {
         flex-direction: column-reverse;
     }
 
-    /* Move sidebar to bottom (stats/comments) */
+    
     .dashboard-sidebar {
         display: flex;
         flex-direction: column;
@@ -905,7 +912,7 @@ input[type=number] {
         gap: 20px;
     }
 
-    /* Stack cards vertically with full width */
+    
     .vercel-card {
         padding: 20px;
         gap: 16px;
@@ -962,7 +969,7 @@ input[type=number] {
         justify-content: space-between;
     }
 
-    /* Empty state mobile */
+    
     .empty-state {
         padding: 40px 20px;
     }
@@ -980,7 +987,7 @@ input[type=number] {
         font-size: 0.95rem;
     }
 
-    /* Delete modal mobile */
+    
     .delete-modal {
         padding: 24px;
         max-width: 90%;
@@ -998,25 +1005,7 @@ input[type=number] {
     }
 }
 
-/* Custom Scrollbar for Modal (and globally if desired) */
-.custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-}
 
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 99px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-/* --- Added for Delete Modal & Empty State --- */
 .delete-modal {
     background: rgba(15, 23, 42, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1032,7 +1021,7 @@ input[type=number] {
     flex-direction: column;
     gap: 16px;
     color: white;
-    /* Ensure text is visible */
+    
 }
 
 .delete-modal h3 {
@@ -1086,7 +1075,7 @@ input[type=number] {
     transform: translateY(-2px);
 }
 
-/* Empty State */
+
 .empty-state {
     grid-column: 1 / -1;
     display: flex;
@@ -1118,29 +1107,7 @@ input[type=number] {
     font-size: 1.1rem;
 }
 
-/* ========== Global Custom Scrollbar ========== */
-.dashboard-container *::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
 
-.dashboard-container *::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.4);
-    border-radius: 10px;
-}
-
-.dashboard-container *::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(56, 189, 248, 0.4), rgba(14, 165, 233, 0.3));
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-}
-
-.dashboard-container *::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(56, 189, 248, 0.6), rgba(14, 165, 233, 0.5));
-}
-
-/* NUCLEAR FIX FOR SCROLL CONTAINER ISSUE */
 .dashboard-container,
 .dashboard-main,
 .dashboard-grid,
@@ -1153,18 +1120,12 @@ input[type=number] {
     width: 100%;
 }
 
-/* Ensure body does not lock */
+
 body {
     overflow-y: auto !important;
 }
 
-/* Firefox scrollbar */
-.dashboard-container * {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(56, 189, 248, 0.4) rgba(15, 23, 42, 0.4);
-}
 
-/* ========== Enhanced Animations ========== */
 @keyframes slideInLeft {
     from {
         opacity: 0;
@@ -1265,7 +1226,7 @@ body {
     transform: scale(0.98);
 }
 
-/* Mobile Animations */
+
 @media (max-width: 900px) {
     .dashboard-header-row {
         animation: slideInLeft 0.4s ease-out;
@@ -1282,7 +1243,7 @@ body {
 
 
 
-/* Scoped to Dashboard Sidebar to prevent leaking to global search page */
+
 .dashboard-sidebar .search-control-group {
     display: flex;
     flex-direction: column;
@@ -1301,7 +1262,7 @@ body {
 }
 
 .dashboard-sidebar .search-controls-grid {
-    /* Fix layout destruction */
+    
     background: transparent;
     border: none;
     box-shadow: none;
@@ -1324,7 +1285,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
-    /* Removed grid-column since we are flex column now */
+    
     margin-top: 15px;
     width: 100%;
     box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
@@ -1337,7 +1298,7 @@ body {
     filter: brightness(1.1);
 }
 
-/* Schedule Popover Styles */
+
 .schedule-popover {
     position: fixed;
     z-index: 1000;
@@ -1396,7 +1357,7 @@ body {
     border-color: rgba(248, 113, 113, 0.3);
 }
 
-/* Increase card height for more space */
+
 .dashboard-grid .chart-card-redesigned,
 .dashboard-grid .vercel-card {
     min-height: 140px;
@@ -1413,13 +1374,13 @@ body {
     }
 }
 
-/* Fix datetime-local calendar icon visibility */
+
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
     cursor: pointer;
 }
 
-/* Fix dropdown squeeze */
+
 .card-meta-row .action-menu-wrapper {
     flex-shrink: 0;
 }

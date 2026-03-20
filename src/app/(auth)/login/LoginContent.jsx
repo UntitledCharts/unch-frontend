@@ -49,7 +49,7 @@ export default function LoginContent() {
     const apiUrl = process.env['NEXT_PUBLIC_API_URL'];
 
     const getHostFromUrl = (url) => {
-        if (!url) return "unch.untitledcharts.com";
+        if (!url) return "unch.untitledcharts.com"; 
         if (url.includes("://")) {
             return url.split("://")[1].split('/')[0];
         }
@@ -115,7 +115,7 @@ export default function LoginContent() {
 
     return (
         <div className="login-box glass-card animate-scale-in">
-            {/* Miku Sitting on top of the login box */}
+            {}
             <div className="mascot-wrapper">
                 <img src="/miku-sitting.png" alt="Miku" className="login-mascot" />
             </div>

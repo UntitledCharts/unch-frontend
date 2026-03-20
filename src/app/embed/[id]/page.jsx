@@ -4,9 +4,9 @@ import { Heart, MessageSquare } from 'lucide-react';
 import FormattedText from '@/components/formatted-text/FormattedText';
 
 const APILink = process.env.NEXT_PUBLIC_API_URL;
-// ... (keep existing lines)
 
-// Inside component:
+
+
 const SONOLUS_SERVER_URL = process.env.NEXT_PUBLIC_SONOLUS_SERVER_URL;
 
 async function fetchLevel(rawId) {
@@ -16,7 +16,7 @@ async function fetchLevel(rawId) {
     const json = await res.json();
     const data = json.data;
 
-    // Fetch comments count
+    
     let commentsCount = 0;
     try {
         const commentsRes = await fetch(`${APILink}/api/charts/${cleanId}/comment/?page=0`);
@@ -24,7 +24,7 @@ async function fetchLevel(rawId) {
             const commentsData = await commentsRes.json();
             commentsCount = Array.isArray(commentsData) ? commentsData.length : (commentsData?.data?.length || 0);
         }
-    } catch (e) { /* ignore */ }
+    } catch (e) {  }
 
     return {
         id: data.id,
@@ -50,7 +50,7 @@ export default async function EmbedPage({ params }) {
         notFound();
     }
 
-    // Explicit check to satisfy static analysis/runtime safety if notFound() behavior varies
+    
     if (!level) return null;
 
     const authorName = level.author ? level.author.split('#')[0] : 'Unknown';

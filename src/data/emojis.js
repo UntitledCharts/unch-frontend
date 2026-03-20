@@ -19,6 +19,9 @@ export const emojis = {
     },
     "silly_3d_printed_cat": {
         "image": "silly_3d_printed_cat.webp"
+    },
+    "bugcat_swim": {
+        "image": "bugcat_swim.gif"
     }
 };
 
