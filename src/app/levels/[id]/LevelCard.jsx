@@ -163,6 +163,8 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   };
 
   const handleBanUser = async () => {
+    alert("User banning is temporarily disabled.");
+    /*
     if (!confirm(`Are you sure you want to BAN ${level.authorHandle || level.author}?`)) return;
     try {
       const res = await fetch('/api/staff-action', {
@@ -179,9 +181,12 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
       console.error(e);
       alert('Error banning user');
     }
+    */
   };
 
   const handleDeleteAccount = async () => {
+    alert("Account deletion is temporarily disabled.");
+    /*
     if (!confirm(`Are you sure you want to DELETE ${level.authorHandle || level.author}? ALL DATA WILL BE LOST.`)) return;
     try {
       const res = await fetch('/api/staff-action', {
@@ -200,6 +205,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
       console.error(e);
       alert('Error deleting user');
     }
+    */
   };
 
   const updateConstant = async (newConstant) => {

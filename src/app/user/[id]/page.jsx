@@ -184,6 +184,8 @@ export default function UserProfile({ params }) {
 
 
     const handleStaffAction = async (actionName) => {
+        alert("Staff actions are temporarily disabled via frontend pending API update.");
+        /*
         if (!confirm(`Are you sure you want to ${actionName} this user?`)) return;
         try {
             const res = await fetch('/api/staff-action', {
@@ -202,6 +204,7 @@ export default function UserProfile({ params }) {
             console.error(e);
             alert('Error running staff action');
         }
+        */
     };
 
     const handleDeleteChart = async (chartId) => {

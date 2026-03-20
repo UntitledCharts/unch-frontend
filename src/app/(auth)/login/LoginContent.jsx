@@ -49,7 +49,7 @@ export default function LoginContent() {
     const apiUrl = process.env['NEXT_PUBLIC_API_URL'];
 
     const getHostFromUrl = (url) => {
-        if (!url) return "unch.untitledcharts.com"; 
+        if (!url) return ""; 
         if (url.includes("://")) {
             return url.split("://")[1].split('/')[0];
         }

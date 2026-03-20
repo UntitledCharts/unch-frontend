@@ -177,6 +177,7 @@ export default function AdminPanel({
                 {isUser && currentUser.isAdmin && (
                     <>
                         {}
+                        {/*
                         {targetData.isBanned ? (
                             <button
                                 onClick={() => onAction('unbanUser')}
@@ -200,8 +201,10 @@ export default function AdminPanel({
                                 <span>{t('userProfile.banUser', 'Ban User')}</span>
                             </button>
                         )}
+                        */}
 
                         {}
+                        {/*
                         {targetData.isMod ? (
                             <button
                                 onClick={() => onAction('unmod')}
@@ -226,7 +229,7 @@ export default function AdminPanel({
                             </button>
                         )}
 
-                        {}
+                        
                         {targetData.isAdmin ? (
                             <button
                                 onClick={() => onAction('unadmin')}
@@ -250,8 +253,10 @@ export default function AdminPanel({
                                 <span>{t('userProfile.makeAdmin', 'Make Admin')}</span>
                             </button>
                         )}
+                        */}
 
                         {}
+                        {/*
                         <button
                             onClick={() => onAction('deleteAccount')}
                             className="btn-edit-profile"
@@ -262,6 +267,7 @@ export default function AdminPanel({
                             <UserX size={16} />
                             <span>{t('userProfile.deleteAccountData', 'Delete Account Data')}</span>
                         </button>
+                        */}
                     </>
                 )}
             </div>
