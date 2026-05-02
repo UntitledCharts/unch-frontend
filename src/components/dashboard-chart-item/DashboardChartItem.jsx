@@ -211,7 +211,7 @@ const DashboardChartItem = memo(
           </div>
 
           <div className="author-name">
-            {t("hero.chartedBy", "Charted by")} {post.author}
+            {t("hero.chartedBy", { 1: post.author })}
           </div>
 
           <div className="card-stats-row" style={{ marginTop: "auto" }}>
@@ -230,7 +230,7 @@ const DashboardChartItem = memo(
           {scheduledLabel && (
             <div className="text-xs opacity-75" style={{ marginTop: "6px" }}>
               <Clock size={12} style={{ display: "inline", marginRight: "4px" }} />
-              {t("dashboard.scheduledFor", "Scheduled for")}: {scheduledLabel}
+              {t("dashboard.scheduledFor", { 1: scheduledLabel })}
             </div>
           )}
         </div>
@@ -247,7 +247,7 @@ const DashboardChartItem = memo(
               className={`status-text ${post.status?.toLowerCase()}`}
               options={["UNLISTED", "PRIVATE", "PUBLIC"].map((x) => ({
                 value: x,
-                label: x,
+                label: t(`dashboard.${x.toLowerCase()}`),
               }))}
               onChange={onStatusChange}
             />

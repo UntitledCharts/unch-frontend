@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, Fragment } from "react";
 
 const LanguageContext = createContext({
     t: (key) => key,
@@ -111,8 +111,17 @@ export function LanguageProvider({ children }) {
         return value;
     };
 
+    const tReact = (key, elements = {}) => {
+        const raw = t(key);
+        return raw.split(/(\{\d+\})/g).map((part, i) => {
+            const m = part.match(/^\{(\d+)\}$/);
+            if (m && elements[m[1]] !== undefined) return <Fragment key={i}>{elements[m[1]]}</Fragment>;
+            return part || null;
+        }).filter(Boolean);
+    };
+
     return (
-        <LanguageContext.Provider value={{ language, changeLanguage, t, supportedLangs, loading }}>
+        <LanguageContext.Provider value={{ language, changeLanguage, t, tReact, supportedLangs, loading }}>
             {children}
         </LanguageContext.Provider>
     );

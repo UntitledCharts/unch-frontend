@@ -150,9 +150,9 @@ export default function ChartModal({
   };
 
   const visibilityOptions = [
-    { value: "public", label: "Public", icon: Globe },
-    { value: "unlisted", label: "Unlisted", icon: LinkIcon },
-    { value: "private", label: "Private", icon: Lock }
+    { value: "public", label: t('dashboard.public'), icon: Globe },
+    { value: "unlisted", label: t('dashboard.unlisted'), icon: LinkIcon },
+    { value: "private", label: t('dashboard.private'), icon: Lock }
   ];
 
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
@@ -207,9 +207,9 @@ export default function ChartModal({
         <div className="modal-content">
           <div className="meta-form" hidden={mode !== "edit"}>
             <form onSubmit={onSubmit}>
-              <ModalInput id="title_edit" label={`${t('modal.songTitle', 'Song Title')} * `} value={form.title} onChange={onUpdate("title")} maxLength={limits?.text?.title || 50} placeholder="e.g. Bad Apple!!" required />
-              <ModalInput id="artists_edit" label={`${t('modal.artists', 'Artist(s)')} * `} value={form.artists} onChange={onUpdate("artists")} maxLength={limits?.text?.artist || 50} placeholder="e.g. Alstroemeria Records" required />
-              <ModalInput id="author_edit" label={`${t('modal.charter', 'Charter Name')} * `} value={form.author} onChange={onUpdate("author")} maxLength={limits?.text?.author || 50} placeholder="Your username" required />
+              <ModalInput id="title_edit" label={`${t('modal.songTitle', 'Song Title')} * `} value={form.title} onChange={onUpdate("title")} maxLength={limits?.text?.title || 50} placeholder={t('modal.placeholderTitle')} required />
+              <ModalInput id="artists_edit" label={`${t('modal.artists', 'Artist(s)')} * `} value={form.artists} onChange={onUpdate("artists")} maxLength={limits?.text?.artist || 50} placeholder={t('modal.placeholderArtist')} required />
+              <ModalInput id="author_edit" label={`${t('modal.charter', 'Charter Name')} * `} value={form.author} onChange={onUpdate("author")} maxLength={limits?.text?.author || 50} placeholder={t('modal.placeholderCharter')} required />
 
               <ModalInput
                 id="rating_edit"
@@ -220,7 +220,7 @@ export default function ChartModal({
                   if (val.length > 3) val = val.slice(0, 3);
                   onUpdate("rating")(val)
                 }}
-                placeholder="e.g. 28"
+                placeholder={t('modal.placeholderLevel')}
                 required type="number"
                 inputMode="numeric"
                 onWheel={(e) => e.target.blur()}
@@ -233,7 +233,7 @@ export default function ChartModal({
                   value={form.description}
                   onChange={onUpdate("description")}
                   maxLength={limits?.text?.description || 1000}
-                  placeholder="Any comments or details..."
+                  placeholder={t('modal.placeholderDescription')}
                   ref={descriptionEditRef}
                 />
                 <EmojiSuggestion
@@ -245,7 +245,7 @@ export default function ChartModal({
                 />
               </div>
 
-              <ModalInput id="tags_edit" label={t('modal.tags', 'Tags')} value={form.tags} onChange={onUpdate("tags")} placeholder="e.g. Touhou, Vocaloid" />
+              <ModalInput id="tags_edit" label={t('modal.tags', 'Tags')} value={form.tags} onChange={onUpdate("tags")} placeholder={t('modal.placeholderTags')} />
 
               <div className="form-group">
                 <label htmlFor="visibility_edit">{t('modal.visibility', 'Visibility')}</label>
@@ -280,20 +280,20 @@ export default function ChartModal({
                       onClick={() => onUpdate("removeJacket")(true)}
                     >
                       <XIcon className="size-4" />
-                      Remove Existing
+                      {t('modal.removeExisting')}
                     </div>
                   )}
                   {form.removeJacket && (
                     <div className="text-red-500 font-bold text-sm my-2 flex items-center gap-2">
-                      <XIcon size={14} /> Existing cover will be removed
-                      <button type="button" onClick={() => onUpdate("removeJacket")(false)} className="text-blue-500 underline text-xs">Undo</button>
+                      <XIcon size={14} /> {t('modal.existingRemoved', { 1: t('modal.coverImage').toLowerCase() })}
+                      <button type="button" onClick={() => onUpdate("removeJacket")(false)} className="text-blue-500 underline text-xs">{t('common.undo')}</button>
                     </div>
                   )}
                 </div>
                 {form.jacket && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.jacket.name })}</span>
+                      <span>{t('modal.selected', { 1: form.jacket.name })}</span>
                       <button type="button" onClick={() => onUpdate("jacket")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -304,7 +304,7 @@ export default function ChartModal({
                 {editData && editData.jacketUrl && !form.jacket && !form.removeJacket && (
                   <div className="file-preview">
                     <div className="file-info-row">
-                      <span>{t('modal.current', { name: editData.jacketUrl.split('/').pop() })}</span>
+                      <span>{t('modal.current', { 1: editData.jacketUrl.split('/').pop() })}</span>
                     </div>
                     <img src={editData.jacketUrl} alt="Current jacket" />
                   </div>
@@ -329,20 +329,20 @@ export default function ChartModal({
                       onClick={() => onUpdate("removeAudio")(true)}
                     >
                       <XIcon className="size-4" />
-                      Remove Existing
+                      {t('modal.removeExisting')}
                     </div>
                   )}
                   {form.removeAudio && (
                     <div className="text-red-500 font-bold text-sm my-2 flex items-center gap-2">
-                      <XIcon size={14} /> Existing audio will be removed
-                      <button type="button" onClick={() => onUpdate("removeAudio")(false)} className="text-blue-500 underline text-xs">Undo</button>
+                      <XIcon size={14} /> {t('modal.existingRemoved', { 1: t('modal.audio').toLowerCase() })}
+                      <button type="button" onClick={() => onUpdate("removeAudio")(false)} className="text-blue-500 underline text-xs">{t('common.undo')}</button>
                     </div>
                   )}
                 </div>
                 {form.bgm && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.bgm.name })}</span>
+                      <span>{t('modal.selected', { 1: form.bgm.name })}</span>
                       <button type="button" onClick={() => onUpdate("bgm")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -353,7 +353,7 @@ export default function ChartModal({
                 {editData && editData.bgmUrl && !form.bgm && !form.removeAudio && (
                   <div className="file-preview">
                     <div className="file-info-row">
-                      <span>{t('modal.current', { name: editData.bgmUrl.split('/').pop() })}</span>
+                      <span>{t('modal.current', { 1: editData.bgmUrl.split('/').pop() })}</span>
                     </div>
                     <div className="audio-preview-container">
                       <AudioControls
@@ -394,20 +394,20 @@ export default function ChartModal({
                       onClick={() => onUpdate("removeChart")(true)}
                     >
                       <XIcon className="size-4" />
-                      Remove Existing / Replace
+                      {t('modal.removeExistingReplace')}
                     </div>
                   )}
                   {form.removeChart && (
                     <div className="text-red-500 font-bold text-sm my-2 flex items-center gap-2">
-                      <XIcon size={14} /> Existing chart will be removed
-                      <button type="button" onClick={() => onUpdate("removeChart")(false)} className="text-blue-500 underline text-xs">Undo</button>
+                      <XIcon size={14} /> {t('modal.existingRemoved', { 1: t('modal.chartFile').toLowerCase() })}
+                      <button type="button" onClick={() => onUpdate("removeChart")(false)} className="text-blue-500 underline text-xs">{t('common.undo')}</button>
                     </div>
                   )}
                 </div>
                 {form.chart && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.chart.name })}</span>
+                      <span>{t('modal.selected', { 1: form.chart.name })}</span>
                       <button type="button" onClick={() => onUpdate("chart")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -417,7 +417,7 @@ export default function ChartModal({
                 {editData && editData.chartUrl && !form.chart && !form.removeChart && (
                   <div className="file-preview">
                     <div className="file-info-row">
-                      <span>{t('modal.current', { name: "Chart File" })}</span>
+                      <span>{t('modal.current', { 1: t('modal.chartFile') })}</span>
                     </div>
                   </div>
                 )}
@@ -443,20 +443,20 @@ export default function ChartModal({
                       }}
                     >
                       <XIcon className="size-4" />
-                      Remove Existing
+                      {t('modal.removeExisting')}
                     </div>
                   )}
                   {form.removePreview && (
                     <div className="text-red-500 font-bold text-sm my-2 flex items-center gap-2">
-                      <XIcon size={14} /> Existing preview will be removed
-                      <button type="button" onClick={() => onUpdate("removePreview")(false)} className="text-blue-500 underline text-xs">Undo</button>
+                      <XIcon size={14} /> {t('modal.existingRemoved', { 1: t('modal.previewAudio').toLowerCase() })}
+                      <button type="button" onClick={() => onUpdate("removePreview")(false)} className="text-blue-500 underline text-xs">{t('common.undo')}</button>
                     </div>
                   )}
                 </div>
                 {form.preview && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.preview.name })}</span>
+                      <span>{t('modal.selected', { 1: form.preview.name })}</span>
                       <button type="button" onClick={() => onUpdate("preview")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -466,7 +466,7 @@ export default function ChartModal({
                 )}
                 {editData && editData.previewUrl && !form.preview && !form.removePreview && (
                   <div className="file-preview">
-                    <span>{t('modal.current', { name: editData.previewUrl.split('/').pop() })}</span>
+                    <span>{t('modal.current', { 1: editData.previewUrl.split('/').pop() })}</span>
                     <div className="audio-preview-container">
                       <AudioControls
                         bgmUrl={editData.previewUrl}
@@ -507,20 +507,20 @@ export default function ChartModal({
                       }}
                     >
                       <XIcon className="size-4" />
-                      Remove Existing
+                      {t('modal.removeExisting')}
                     </div>
                   )}
                   {form.removeBackground && (
                     <div className="text-red-500 font-bold text-sm my-2 flex items-center gap-2">
-                      <XIcon size={14} /> Existing background will be removed
-                      <button type="button" onClick={() => onUpdate("removeBackground")(false)} className="text-blue-500 underline text-xs">Undo</button>
+                      <XIcon size={14} /> {t('modal.existingRemoved', { 1: t('modal.backgroundImage').toLowerCase() })}
+                      <button type="button" onClick={() => onUpdate("removeBackground")(false)} className="text-blue-500 underline text-xs">{t('common.undo')}</button>
                     </div>
                   )}
                 </div>
                 {form.background && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.background.name })}</span>
+                      <span>{t('modal.selected', { 1: form.background.name })}</span>
                       <button type="button" onClick={() => onUpdate("background")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -548,29 +548,29 @@ export default function ChartModal({
             < div className="modal-reminders" >
               <h4>{t('modal.remindersTitle', '⚠️ Read before uploading:')}</h4>
               <ul className="rules-list text-sm opacity-90 space-y-1">
-                <li>1. No slurs, racism, politics, heavily inappropriate things, advertising, etc.</li>
-                <li>2. No super-low quality shitposts (we allow some shitposts)</li>
-                <li>3. No public Arcaea or Taiko no Tatsujin songs</li>
-                <li>4. Do not abuse our services for the sake of abusing them</li>
-                <li>5. No official charts with minor modifications (All Flicks or All Traces are allowed occasionally only)</li>
-                <li>6. Use some common sense please</li>
-                <li>7. No incomplete charts</li>
+                <li>1. {t('uploadPolicy.rule1')}</li>
+                <li>2. {t('uploadPolicy.rule2')}</li>
+                <li>3. {t('uploadPolicy.rule3')}</li>
+                <li>4. {t('uploadPolicy.rule4')}</li>
+                <li>5. {t('uploadPolicy.rule5')}</li>
+                <li>6. {t('uploadPolicy.rule6')}</li>
+                <li>7. {t('uploadPolicy.rule7')}</li>
               </ul>
               <div className="mt-2 text-xs opacity-75 flex items-center gap-1">
                 <CheckCircleIcon size={12} />
-                <span>Rules 2, 3, 5, and 7 can be <strong>ignored if Unlisted</strong>.</span>
+                <span dangerouslySetInnerHTML={{ __html: t('uploadPolicy.relaxedNote') }} />
               </div>
             </div >
             <form onSubmit={onSubmit}>
-              <ModalInput id="title_up" label={`${t('modal.songTitle', 'Song Title')} * `} value={form.title} onChange={onUpdate("title")} maxLength={limits?.text?.title || 50} placeholder="e.g. Bad Apple!!" required />
-              <ModalInput id="artists_up" label={`${t('modal.artists', 'Artist(s)')} * `} value={form.artists} onChange={onUpdate("artists")} maxLength={limits?.text?.artist || 50} placeholder="e.g. Alstroemeria Records" required />
+              <ModalInput id="title_up" label={`${t('modal.songTitle', 'Song Title')} * `} value={form.title} onChange={onUpdate("title")} maxLength={limits?.text?.title || 50} placeholder={t('modal.placeholderTitle')} required />
+              <ModalInput id="artists_up" label={`${t('modal.artists', 'Artist(s)')} * `} value={form.artists} onChange={onUpdate("artists")} maxLength={limits?.text?.artist || 50} placeholder={t('modal.placeholderArtist')} required />
               <div className="preview-text text-sm text-gray-400 mt-1">
-                Preview: <FormattedText text={form.artists || "Artist Name"} />
+                {t('common.preview')} <FormattedText text={form.artists || t('modal.artistPreview')} />
               </div>
               <div className="form-group">
-                <ModalInput id="author_up" label={`${t('modal.charter', 'Charter Name')} * `} value={form.author} onChange={onUpdate("author")} maxLength={limits?.text?.author || 50} placeholder="Your username" required />
+                <ModalInput id="author_up" label={`${t('modal.charter', 'Charter Name')} * `} value={form.author} onChange={onUpdate("author")} maxLength={limits?.text?.author || 50} placeholder={t('modal.placeholderCharter')} required />
                 <div className="preview-text text-sm text-gray-400 mt-1">
-                  Preview: <FormattedText text={form.author || "Charter Name"} />
+                  {t('common.preview')} <FormattedText text={form.author || t('modal.charterPreview')} />
                 </div>
               </div>
 
@@ -583,7 +583,7 @@ export default function ChartModal({
                   if (val.length > 3) val = val.slice(0, 3);
                   onUpdate("rating")(val)
                 }}
-                placeholder="e.g. 28"
+                placeholder={t('modal.placeholderLevel')}
                 required type="number"
                 inputMode="numeric"
                 onWheel={(e) => e.target.blur()}
@@ -596,7 +596,7 @@ export default function ChartModal({
                   value={form.description}
                   onChange={onUpdate("description")}
                   maxLength={limits?.text?.description || 1000}
-                  placeholder="Any comments or details..."
+                  placeholder={t('modal.placeholderDescription')}
                   ref={descriptionUpRef}
                 />
                 <EmojiSuggestion
@@ -608,7 +608,7 @@ export default function ChartModal({
                 />
               </div>
 
-              <ModalInput id="tags_up" label={t('modal.tags', 'Tags')} value={form.tags} onChange={onUpdate("tags")} placeholder="e.g. Touhou, Vocaloid" />
+              <ModalInput id="tags_up" label={t('modal.tags', 'Tags')} value={form.tags} onChange={onUpdate("tags")} placeholder={t('modal.placeholderTags')} />
 
               <div className="form-group">
                 <label htmlFor="visibility_up">{t('modal.visibility', 'Visibility')} *</label>
@@ -631,7 +631,7 @@ export default function ChartModal({
                 {form.jacket && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.jacket.name })}</span>
+                      <span>{t('modal.selected', { 1: form.jacket.name })}</span>
                       <button type="button" onClick={() => onUpdate("jacket")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -655,7 +655,7 @@ export default function ChartModal({
                 {form.bgm && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.bgm.name })}</span>
+                      <span>{t('modal.selected', { 1: form.bgm.name })}</span>
                       <button type="button" onClick={() => onUpdate("bgm")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -676,7 +676,7 @@ export default function ChartModal({
                 {form.chart && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.chart.name })}</span>
+                      <span>{t('modal.selected', { 1: form.chart.name })}</span>
                       <button type="button" onClick={() => onUpdate("chart")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -696,7 +696,7 @@ export default function ChartModal({
                 {form.preview && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.preview.name })}</span>
+                      <span>{t('modal.selected', { 1: form.preview.name })}</span>
                       <button type="button" onClick={() => onUpdate("preview")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>
@@ -717,7 +717,7 @@ export default function ChartModal({
                 {form.background && (
                   <div className="file-preview selected">
                     <div className="file-info-row">
-                      <span>{t('modal.selected', { name: form.background.name })}</span>
+                      <span>{t('modal.selected', { 1: form.background.name })}</span>
                       <button type="button" onClick={() => onUpdate("background")(null)} className="remove-preview-btn">
                         <XIcon size={14} /> {t('modal.remove', 'Remove')}
                       </button>

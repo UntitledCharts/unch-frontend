@@ -109,7 +109,7 @@ export default function EmojisPage() {
                 )}
 
                 <div className="emojis-footer">
-                    <p>{t('emojis.total').replace('{count}', Object.keys(emojis).length)}</p>
+                    <p>{t('emojis.total', { 1: Object.keys(emojis).length })}</p>
                 </div>
             </div>
         </div>

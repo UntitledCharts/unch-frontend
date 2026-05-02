@@ -75,7 +75,7 @@ function AuthorPopout({ authorId, anchorRect }) {
 
 
 const StatWithGraph = ({ icon: Icon, label, value, color, data }) => {
-  const { t } = useLanguage();
+  const { t, tReact } = useLanguage();
 
   const safeData = Array.isArray(data) && data.length > 0
     ? data.map(d => (typeof d === 'number' && !isNaN(d) ? d : 0))
@@ -132,7 +132,7 @@ const StatWithGraph = ({ icon: Icon, label, value, color, data }) => {
 
 export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, tReact } = useLanguage();
   const { sonolusUser, session } = useUser();
   const sonolusServerUrl = SONOLUS_SERVER_URL;
 
@@ -781,33 +781,35 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                   fontWeight: 'bold',
                   boxShadow: '0 0 10px rgba(251,191,36,0.1)',
                   whiteSpace: 'nowrap'
-                }} title="Staff Pick">
+                }} title={t('levelDetail.staffPick')}>
                   <Star fill="currentColor" size={14} style={{ marginRight: '4px' }} />
-                  STAFF PICK
+                  {t('levelDetail.staffPick').toUpperCase()}
                 </div>
               )}
             </div>
 
             <div className="level-credits">
               <div className="level-credit-item">
-                <span className="credit-label">{t('levelDetail.by')}</span>
-                <span><FormattedText text={levelData.artists || 'Unknown Artist'} /></span>
+                {tReact('levelDetail.by', {
+                  1: <span><FormattedText text={levelData.artists || t('common.unknownArtist')} /></span>
+                })}
               </div>
               <div className="level-credit-item">
-                <span className="credit-label">{t('levelDetail.chartedBy')}</span>
-                <span
-                  ref={authorLinkRef}
-                  style={{ position: 'relative', display: 'inline-block' }}
-                  onMouseEnter={handleAuthorEnter}
-                  onMouseLeave={handleAuthorLeave}
-                >
-                  <Link href={`/user/${levelData.authorHandle || levelData.authorId}`} className="charter-link">
-                    <FormattedText text={levelData.author} />
-                  </Link>
-                  {showAuthorPopout && (
-                    <AuthorPopout authorId={levelData.authorId} anchorRect={authorAnchorRect} />
-                  )}
-                </span>
+                {tReact('levelDetail.chartedBy', {
+                  1: <span
+                    ref={authorLinkRef}
+                    style={{ position: 'relative', display: 'inline-block' }}
+                    onMouseEnter={handleAuthorEnter}
+                    onMouseLeave={handleAuthorLeave}
+                  >
+                    <Link href={`/user/${levelData.authorHandle || levelData.authorId}`} className="charter-link">
+                      <FormattedText text={levelData.author} />
+                    </Link>
+                    {showAuthorPopout && (
+                      <AuthorPopout authorId={levelData.authorId} anchorRect={authorAnchorRect} />
+                    )}
+                  </span>
+                })}
               </div>
               <div className="level-credit-item">
                 <span className="credit-label"><Calendar size={14} style={{ marginRight: '4px', verticalAlign: 'text-bottom' }} /></span>
@@ -922,7 +924,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                 className="action-btn btn-sonolus"
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
               >
-                {t('levelDetail.openViaSonolus')} <img src="https://sonolus.com/logo.png" alt="Sonolus" style={{ height: '1.2em', verticalAlign: 'middle', marginLeft: '6px' }} />
+                {tReact('levelDetail.openViaSonolus', { 1: <img src="https://sonolus.com/logo.png" alt="Sonolus" style={{ height: '1.2em', verticalAlign: 'middle', marginLeft: '6px' }} /> })}
               </button>
               <button
                 onClick={handleShare}

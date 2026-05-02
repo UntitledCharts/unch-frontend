@@ -7,6 +7,7 @@ import AudioControls from "../audio-control/AudioControls";
 import AudioVisualizer from "../audio-visualizer/AudioVisualizer";
 import LoadingImage from "../loading-image/LoadingImage";
 import { useLanguage } from "@/contexts/LanguageContext";
+
 import { useAudioPlayer } from "@/contexts/AudioPlayerContext";
 import "./ChartsList.css";
 import { formatRelativeTime } from "@/utils/dateUtils";
@@ -76,7 +77,7 @@ export default function ChartsList({
   onEdit,
   onDelete
 }) {
-  const { t } = useLanguage();
+  const { t, tReact } = useLanguage();
 
   if (loading) {
     return (
@@ -246,27 +247,28 @@ const MemoizedChartItem = memo(function ChartItem({
                     : post.title}
                 </span>
                 <span className="author-dashboard" style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px', display: 'block' }}>
-                  {t('hero.chartedBy')}{' '}
-                  <span
-                    ref={authorAnchorRef}
-                    onMouseEnter={handleAuthorEnter}
-                    onMouseLeave={handleAuthorLeave}
-                    style={{ display: 'inline-block', position: 'relative' }}
-                  >
-                    <span
-                      style={{ color: '#38bdf8', textDecoration: 'none', cursor: 'pointer' }}
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = `/user/${post.authorHandle || post.authorId}`; }}
+                  {tReact('hero.chartedBy', {
+                    1: <span
+                      ref={authorAnchorRef}
+                      onMouseEnter={handleAuthorEnter}
+                      onMouseLeave={handleAuthorLeave}
+                      style={{ display: 'inline-block', position: 'relative' }}
                     >
-                      {post.author}
+                      <span
+                        style={{ color: '#38bdf8', textDecoration: 'none', cursor: 'pointer' }}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = `/user/${post.authorHandle || post.authorId}`; }}
+                      >
+                        {post.author}
+                      </span>
                     </span>
-                  </span>
+                  })}
                 </span>
               </Link>
               <div className="meta-stack-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px', minWidth: '120px' }}>
                 <span className="song-artist-dashboard" style={{ fontSize: '12px', whiteSpace: 'nowrap', fontWeight: '600' }}>
-                  {t('search.songBy', 'Song by')}: {post.artists.length > 30
+                  {t('search.songBy', { 1: post.artists.length > 30
                     ? post.artists.substring(0, 30) + "..."
-                    : post.artists}
+                    : post.artists })}
                 </span>
               </div>
             </div>
@@ -410,6 +412,7 @@ const MemoizedChartItem = memo(function ChartItem({
 });
 
 function ChartAction({ post, onVisibilityChange, intent }) {
+  const { t } = useLanguage();
   return (
     <button
       className={`visibility-toggle-btn status-${intent.toLowerCase()}`}
@@ -422,9 +425,9 @@ function ChartAction({ post, onVisibilityChange, intent }) {
         {intent === "UNLISTED" && <LinkIcon size={16} />}
       </span>
       <span className="visibility-text">
-        {intent === "PUBLIC" && "Public"}
-        {intent === "PRIVATE" && "Private"}
-        {intent === "UNLISTED" && "Unlisted"}
+        {intent === "PUBLIC" && t('dashboard.public')}
+        {intent === "PRIVATE" && t('dashboard.private')}
+        {intent === "UNLISTED" && t('dashboard.unlisted')}
       </span>
     </button>
   );

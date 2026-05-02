@@ -205,7 +205,7 @@ export default function CountdownPage({ params }) {
 
                     <div className="countdown-schedule">
                         <Calendar size={16} />
-                        <span>{t('countdown.premieres').replace('{date}', formatDate(level.scheduled_publish))}</span>
+                        <span>{t('countdown.premieres', { 1: formatDate(level.scheduled_publish) })}</span>
                     </div>
                 </div>
 

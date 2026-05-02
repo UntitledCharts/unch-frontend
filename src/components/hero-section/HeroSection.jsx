@@ -62,7 +62,7 @@ function HeroAuthorPopout({ data, anchorRect }) {
 
 export default function HeroSection({ posts = [] }) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const { t } = useLanguage();
+    const { t, tReact } = useLanguage();
     const [commentCounts, setCommentCounts] = useState({});
     const [showAuthorPopout, setShowAuthorPopout] = useState(false);
     const [authorPopoutData, setAuthorPopoutData] = useState(null);
@@ -252,29 +252,27 @@ export default function HeroSection({ posts = [] }) {
                             <div className="hero-meta-item">
                                 <span className="hero-label flex items-center justify-center gap-1">
                                     <User size={16} />
-                                    {t('hero.by')}
                                 </span>
-                                <span>{currentPost.artists}</span>
+                                <span>{t('hero.by', { 1: currentPost.artists })}</span>
                             </div>
                             <div className="hero-meta-item">
-                                <span className="hero-label">
-                                    {t('hero.chartedBy')}
-                                </span>
-                                <span
-                                    ref={authorAnchorRef}
-                                    className="hero-author-wrapper"
-                                    onMouseEnter={() => handleAuthorEnter(currentPost)}
-                                    onMouseLeave={handleAuthorLeave}
-                                    style={{ position: 'relative', display: 'inline-block' }}
-                                >
-                                    <Link
-                                        href={`/user/${currentPost.authorHandle || currentPost.authorId || currentPost.author}`}
-                                        className="hero-author-link"
-                                        style={{ color: '#38bdf8', textDecoration: 'none' }}
+                                {tReact('hero.chartedBy', {
+                                    1: <span
+                                        ref={authorAnchorRef}
+                                        className="hero-author-wrapper"
+                                        onMouseEnter={() => handleAuthorEnter(currentPost)}
+                                        onMouseLeave={handleAuthorLeave}
+                                        style={{ position: 'relative', display: 'inline-block' }}
                                     >
-                                        {currentPost.author}
-                                    </Link>
-                                </span>
+                                        <Link
+                                            href={`/user/${currentPost.authorHandle || currentPost.authorId || currentPost.author}`}
+                                            className="hero-author-link"
+                                            style={{ color: '#38bdf8', textDecoration: 'none' }}
+                                        >
+                                            {currentPost.author}
+                                        </Link>
+                                    </span>
+                                })}
                             </div>
                         </div>
                         <div className="hero-meta">
@@ -317,7 +315,7 @@ export default function HeroSection({ posts = [] }) {
             </div>
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 py-2 px-4 rounded-full flex items-center justify-center gap-2 text-sm bg-sky-200/10 select-none">
                 <ArrowDown className="size-5" />
-                <span>More</span>
+                <span>{t('hero.more')}</span>
             </div>
         </section>
 

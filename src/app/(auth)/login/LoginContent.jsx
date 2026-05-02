@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function LoginContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { t } = useLanguage();
+    const { t, tReact } = useLanguage();
     const [isWaiting, setIsWaiting] = useState(false);
     const [externalLoginId, setExternalLoginId] = useState(null);
     const [loginError, setLoginError] = useState(null);
@@ -143,20 +143,22 @@ export default function LoginContent() {
                             }}
                             className="login-btn-primary"
                         >
-                            {t('login.openSonolusApp')}
-                            <span className="sonolus-icon-wrapper">
-                                <img src="https://sonolus.com/logo.png" alt="Sonolus" />
-                            </span>
+                            {tReact('login.openSonolusApp', {
+                                1: <span className="sonolus-icon-wrapper">
+                                    <img src="https://sonolus.com/logo.png" alt="Sonolus" />
+                                </span>
+                            })}
                         </button>
                     )}
                 </div>
             ) : (
                 <form onSubmit={onSubmit}>
                     <button type="submit" className="login-btn-primary">
-                        {t('login.loginVia')}
-                        <span className="sonolus-icon-wrapper">
-                            <img src="https://sonolus.com/logo.png" alt="Sonolus" />
-                        </span>
+                        {tReact('login.loginVia', {
+                            1: <span className="sonolus-icon-wrapper">
+                                <img src="https://sonolus.com/logo.png" alt="Sonolus" />
+                            </span>
+                        })}
                     </button>
                 </form>
             )}

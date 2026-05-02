@@ -59,10 +59,10 @@ export default function ChartCard({
         const diff = now - date;
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-        if (days === 0) return "Today";
-        if (days === 1) return "Yesterday";
-        if (days < 7) return `${days}d ago`;
-        if (days < 30) return `${Math.floor(days / 7)}w ago`;
+        if (days === 0) return t('time.today');
+        if (days === 1) return t('time.yesterday');
+        if (days < 7) return t('time.daysAgo', { 1: days });
+        if (days < 30) return t('time.weeksAgo', { 1: Math.floor(days / 7) });
         return date.toLocaleDateString();
     };
 
@@ -92,7 +92,7 @@ export default function ChartCard({
                             {isPlaying ? "❚❚" : "▶"}
                         </button>
                     )}
-                    <div className="chart-card-play-hint">View Details</div>
+                    <div className="chart-card-play-hint">{t('common.viewDetails')}</div>
                 </div>
             </div>
 
@@ -127,7 +127,7 @@ export default function ChartCard({
 
                 <div className="chart-card-footer">
                     <span className="chart-card-author" title={author}>
-                        {t('hero.by')} {truncate(author, 12)}
+                        {t('hero.by', { 1: truncate(author, 12) })}
                     </span>
                     {createdAt && (
                         <span className="chart-card-date">

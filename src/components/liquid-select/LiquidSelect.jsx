@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
 import "./LiquidSelect.css";
 
 const LiquidSelect = ({ value, onChange, options, label, icon: Icon, className, type }) => {
+    const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownStyle, setDropdownStyle] = useState({});
     const containerRef = useRef(null);
@@ -88,7 +90,7 @@ const LiquidSelect = ({ value, onChange, options, label, icon: Icon, className, 
             >
                 <div className="trigger-content">
                     {Icon && <Icon size={18} className="trigger-icon" />}
-                    <span className="trigger-text">{selectedOption ? (selectedOption.label || selectedOption.value) : "Select..."}</span>
+                    <span className="trigger-text">{selectedOption ? (selectedOption.label || selectedOption.value) : t('common.select')}</span>
                 </div>
                 <div className="trigger-arrow">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

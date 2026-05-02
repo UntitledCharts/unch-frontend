@@ -12,7 +12,7 @@ export default function PaginationControls({
   isRandom = false,
   onReroll
 }) {
-  const { t } = useLanguage();
+  const { t, tReact } = useLanguage();
   const [inputPage, setInputPage] = useState(currentPage + 1);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function PaginationControls({
   return (
     <div className="pagination-card">
       <div className="pagination-info">
-        {!isRandom && resultsCount > 0 && <p>{(t('search.showingCharts', { count: resultsCount }) || '')}</p>}
+        {!isRandom && resultsCount > 0 && <p>{(t('search.showingCharts', { 1: resultsCount }) || '')}</p>}
       </div>
       <div className="pagination-controls">
         {isRandom ? (
@@ -80,17 +80,18 @@ export default function PaginationControls({
             </button>
 
             <div className="pagination-input-container">
-              <span className="pagination-text">{t('search.page')}</span>
-              <input
-                type="text"
-                className="pagination-input"
-                value={inputPage}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                onBlur={handleBlur}
-                aria-label="Page number"
-              />
-              <span className="pagination-text">{t('search.of')} {pageCount}</span>
+              {tReact('search.pageOf', {
+                1: <input
+                  type="text"
+                  className="pagination-input"
+                  value={inputPage}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  onBlur={handleBlur}
+                  aria-label="Page number"
+                />,
+                2: pageCount
+              })}
             </div>
 
             <button

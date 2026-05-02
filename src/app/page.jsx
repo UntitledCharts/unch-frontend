@@ -99,7 +99,7 @@ function HomeContent() {
       ...item,
       id: item.id || item.name || "",
       title: item.title,
-      artists: item.artists || "Unknown Artist",
+      artists: item.artists || t('common.unknownArtist'),
       author: authorName,
       authorId: item.author || "",
       authorHandle: item.author_handle || item.author || "",

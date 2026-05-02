@@ -55,8 +55,9 @@
     "viewChart": "View Chart",
     "viewDetails": "View Details",
     "playNow": "Play Now",
-    "by": "by",
-    "chartedBy": "Charted by"
+    "by": "by {1}",
+    "chartedBy": "Charted by {1}",
+    "more": "More"
   },
   "search": {
     "title": "search",
@@ -92,9 +93,8 @@
     "tagsPlaceholder": "Comma-separated",
     "staffPickOnly": "Staff Pick Only",
     "search": "Search",
-    "showingCharts": "Showing {count} charts",
-    "page": "Page",
-    "of": "of",
+    "showingCharts": "Showing {1} charts",
+    "pageOf": "Page {1} of {2}",
     "previous": "Previous",
     "next": "Next",
     "noResults": "No results found",
@@ -102,7 +102,7 @@
     "descriptionIncludes": "Description Includes",
     "descriptionPlaceholder": "Search in descriptions...",
     "newest": "Newest",
-    "songBy": "Song By",
+    "songBy": "Song by {1}",
     "reroll": "Reroll"
   },
   "time": {
@@ -118,14 +118,18 @@
     "month_plural": "{1} months ago",
     "year_singular": "{1} year ago",
     "year_plural": "{1} years ago",
-    "justNow": "Just now"
+    "justNow": "Just now",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{1}d ago",
+    "weeksAgo": "{1}w ago"
   },
   "levelDetail": {
     "back": "Back",
-    "by": "By",
-    "chartedBy": "Charted by",
+    "by": "By {1}",
+    "chartedBy": "Charted by {1}",
     "level": "Lv. {1}",
-    "openViaSonolus": "Open via",
+    "openViaSonolus": "Open via {1}",
     "share": "Share",
     "statistics": "Statistics",
     "likes": "Likes",
@@ -144,7 +148,7 @@
     "linkCopied": "Link copied!",
     "failedToCopy": "Failed to copy",
     "embedCopied": "Embed code copied!",
-    "poweredBy": "Powered by",
+    "poweredBy": "Powered by {1}",
     "last7Days": "Last 7 Days",
     "premieringIn": "Scheduled to release in",
     "viewFullCountdown": "View Full-Screen Countdown",
@@ -157,7 +161,8 @@
     "makeStaffPick": "Make Staff Pick",
     "removeStaffPick": "Remove Staff Pick",
     "editConstant": "Edit Difficulty Constant",
-    "deleteChart": "Delete Chart"
+    "deleteChart": "Delete Chart",
+    "staffPick": "Staff Pick"
   },
   "viewAll": {
     "filterPlaceholder": "Filter charts...",
@@ -172,8 +177,8 @@
   },
   "login": {
     "title": "Login",
-    "loginVia": "Log in via",
-    "openSonolusApp": "Open Login Link via",
+    "loginVia": "Log in via {1}",
+    "openSonolusApp": "Open Login Link via {1}",
     "scanQRCode": "Scan QR Code",
     "waitingForAuth": "Waiting for authentication response... Don't close this page!",
     "authSuccess": "Authentication successful!",
@@ -201,7 +206,11 @@
     "more": "more",
     "total": "total",
     "readMore": "Read More",
-    "readLess": "Read Less"
+    "readLess": "Read Less",
+    "select": "Select...",
+    "undo": "Undo",
+    "preview": "Preview:",
+    "viewDetails": "View Details"
   },
   "card": {
     "level": "Lv. {1}"
@@ -261,7 +270,7 @@
     "schedulePublish": "Schedule publish",
     "confirm": "Confirm",
     "removeSchedule": "Remove scheduled publish",
-    "scheduledFor": "Scheduled for"
+    "scheduledFor": "Scheduled for {1}"
   },
   "header": {
     "language": "Language",
@@ -293,13 +302,24 @@
     "saving": "Saving...",
     "upload": "Upload Chart",
     "uploading": "Uploading...",
-    "remindersTitle": "⚠️ Read before uploading:",
+    "remindersTitle": "\u26a0\ufe0f Read before uploading:",
     "reminder1": "Do not upload stolen content or charts you do not have permission to distribute.",
-    "reminder2": "Ensure audio is properly trimmed and under {size}.",
+    "reminder2": "Ensure audio is properly trimmed and under {1}.",
     "reminder3": "Follow our upload rules at https://discord.gg/UntitledCharts.",
     "reminder4": "Have some common sense when uploading.",
-    "selected": "Selected: {name}",
-    "current": "Current: {name}"
+    "selected": "Selected: {1}",
+    "current": "Current: {1}",
+    "removeExisting": "Remove Existing",
+    "removeExistingReplace": "Remove Existing / Replace",
+    "existingRemoved": "Existing {1} will be removed",
+    "placeholderTitle": "e.g. Bad Apple!!",
+    "placeholderArtist": "e.g. Alstroemeria Records",
+    "placeholderCharter": "Your username",
+    "placeholderLevel": "e.g. 28",
+    "placeholderTags": "e.g. Touhou, Vocaloid",
+    "placeholderDescription": "Any comments or details...",
+    "artistPreview": "Artist Name",
+    "charterPreview": "Charter Name"
   },
   "dmca": {
     "backToHome": "Back to Home",
@@ -344,13 +364,13 @@
     "loading": "Loading emojis...",
     "noResults": "No emojis found matching your search",
     "noEmojis": "No emojis available",
-    "total": "Total: {count} emojis"
+    "total": "Total: {1} emojis"
   },
   "countdown": {
     "loading": "Loading...",
     "home": "Home",
     "backToChart": "Back to Chart",
-    "premieres": "Premieres {date}",
+    "premieres": "Premieres {1}",
     "countdownLabel": "Countdown",
     "getReady": "GET READY!",
     "almostThere": "Almost there...",

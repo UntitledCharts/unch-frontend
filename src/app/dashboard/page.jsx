@@ -899,7 +899,7 @@ function DashboardContent() {
                       <label>{t("search.titleIncludes")}</label>
                       <input
                         type="text"
-                        placeholder="Search in titles..."
+                        placeholder={t("search.titleIncludesPlaceholder")}
                         value={titleIncludes}
                         onChange={(e) => setTitleIncludes(e.target.value)}
                         className="liquid-input"
@@ -910,7 +910,7 @@ function DashboardContent() {
                       <label>{t("search.artistsIncludes")}</label>
                       <input
                         type="text"
-                        placeholder="Search in artists..."
+                        placeholder={t("search.artistsIncludesPlaceholder")}
                         value={artistsIncludes}
                         onChange={(e) => setArtistsIncludes(e.target.value)}
                         className="liquid-input"
@@ -921,7 +921,7 @@ function DashboardContent() {
                       <label>{t("search.tags")}</label>
                       <input
                         type="text"
-                        placeholder="Comma-separated tags"
+                        placeholder={t("search.tagsPlaceholder")}
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
                         className="liquid-input"
@@ -1057,8 +1057,7 @@ function DashboardContent() {
                               }}
                             >
                               <Clock size={14} />
-                              {t("dashboard.scheduledFor", "Scheduled for")}:{" "}
-                              {new Date(post.scheduled_publish).toLocaleString()}
+                              {t("dashboard.scheduledFor", { 1: new Date(post.scheduled_publish).toLocaleString() })}
                             </div>
                           )}
                           <div
@@ -1169,7 +1168,7 @@ function DashboardContent() {
 
                                 {scheduledLabel && (
                                   <div className="text-xs opacity-75">
-                                    {t("dashboard.scheduledFor", "Scheduled for")}: {scheduledLabel}
+                                    {t("dashboard.scheduledFor", { 1: scheduledLabel })}
                                   </div>
                                 )}
                               </div>,

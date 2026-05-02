@@ -136,7 +136,7 @@ function AuthorPopout({ authorId, authorName, assetBaseUrl, side }) {
 }
 
 export default function HomepageChartCard({ chart, index = 0 }) {
-    const { t } = useLanguage();
+    const { t, tReact } = useLanguage();
     const router = useRouter();
     const { audioRef, trackId, isPlaying, isBuffering, play, pause } = useAudioPlayer();
 
@@ -271,18 +271,21 @@ export default function HomepageChartCard({ chart, index = 0 }) {
                     </MarqueeText>
                     <div className="footer-row">
                         <User size={12} />
-                        <span className="footer-label">{t("hero.chartedBy")}:&nbsp;</span>
-                        <span className="author-link-wrapper"
-                            onMouseEnter={handleAuthorEnter}
-                            onMouseLeave={handleAuthorLeave}>
-                            {profileLink
-                                ? <Link href={profileLink} className="author-link" onClick={(e) => e.stopPropagation()}>{author}</Link>
-                                : <span className="author-link">{author}</span>
-                            }
+                        <span className="footer-label">
+                            {tReact("hero.chartedBy", {
+                                1: <span className="author-link-wrapper"
+                                    onMouseEnter={handleAuthorEnter}
+                                    onMouseLeave={handleAuthorLeave}>
+                                    {profileLink
+                                        ? <Link href={profileLink} className="author-link" onClick={(e) => e.stopPropagation()}>{author}</Link>
+                                        : <span className="author-link">{author}</span>
+                                    }
+                                </span>
+                            })}
                         </span>
                     </div>
                     <div className="footer-row muted">
-                        <span className="truncate">{t("hero.by")}: {artists}</span>
+                        <span className="truncate">{t("hero.by", { 1: artists })}</span>
                     </div>
                     <div className="card-mobile-stats">
                         <span className="mobile-stat mobile-stat-likes">
