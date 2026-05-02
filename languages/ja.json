@@ -33,7 +33,6 @@
     "mod": "モデレーター",
     "moderator": "モデレーター",
     "administrator": "管理者",
-    "chartsLiked": "お気に入り譜面",
     "chartsLiked": "いいねした譜面",
     "chartLiked_singular": "いいねした譜面",
     "commentsMade": "コメントが投稿されました",
@@ -193,7 +192,8 @@
     "somethingWentWrong": "何かがうまくいきませんでした",
     "errorMessage": "予期せぬエラーが発生しました。もう一度お試しください。",
     "tryAgain": "もう一度やり直してください",
-    "goHome": "ホームに戻る"
+    "goHome": "ホームに戻る",
+    "chartNotFound": "お探しの譜面は見つかりませんでした。閲覧するにはログインが必要な場合があります。"
   },
   "common": {
     "brandName": "UntitledCharts",
@@ -273,7 +273,10 @@
     "schedulePublish": "公開スケジュール",
     "confirm": "確認する",
     "removeSchedule": "スケジュールされた公開を削除する",
-    "scheduledFor": "予定: {1} "
+    "scheduledFor": "予定: {1} ",
+    "schedule": "スケジュール",
+    "date": "日付",
+    "time": "時間"
   },
   "header": {
     "language": "言語",
@@ -381,7 +384,8 @@
     "hours": "時間",
     "mins": "分",
     "secs": "秒",
-    "footerMsg": "カウントダウンが終了すると、チャートが利用可能になります。"
+    "footerMsg": "カウントダウンが終了すると、チャートが利用可能になります。",
+    "previewChart": "譜面ページをプレビュー"
   },
   "embed": {
     "likes": "いいね！",
