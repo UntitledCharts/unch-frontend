@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ChartCard from "../chart-card/ChartCard";
 import SectionHeader from "../section-header/SectionHeader";
@@ -20,22 +20,27 @@ export default function TrendingCarousel({
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    const checkScroll = () => {
-        if (scrollRef.current) {
-            const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-            setCanScrollLeft(scrollLeft > 0);
-            setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-        }
-    };
+    const checkScrollRef = useRef(null);
+    const checkScroll = useCallback(() => {
+        if (checkScrollRef.current) return;
+        checkScrollRef.current = requestAnimationFrame(() => {
+            if (scrollRef.current) {
+                const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+                setCanScrollLeft(scrollLeft > 0);
+                setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+            }
+            checkScrollRef.current = null;
+        });
+    }, []);
 
     useEffect(() => {
         checkScroll();
         const el = scrollRef.current;
         if (el) {
-            el.addEventListener("scroll", checkScroll);
+            el.addEventListener("scroll", checkScroll, { passive: true });
             return () => el.removeEventListener("scroll", checkScroll);
         }
-    }, [charts]);
+    }, [charts, checkScroll]);
 
     const scroll = (direction) => {
         if (scrollRef.current) {

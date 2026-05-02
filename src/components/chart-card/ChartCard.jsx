@@ -1,9 +1,10 @@
 "use client";
+import { memo } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 import { Heart, Calendar, MessageSquare } from 'lucide-react';
 
-export default function ChartCard({
+export default memo(function ChartCard({
     chart,
     index = 0,
     showPlayButton = false,
@@ -139,4 +140,4 @@ export default function ChartCard({
             </div>
         </Link>
     );
-}
+})

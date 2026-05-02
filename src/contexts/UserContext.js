@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 const UserContext = createContext();
@@ -126,7 +126,7 @@ export function UserProvider({ children }) {
     setSessionReady(true);
   };
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     localStorage.removeItem("session");
     localStorage.removeItem("expiry");
     setIsLoggedIn(false);
@@ -135,13 +135,13 @@ export function UserProvider({ children }) {
     setSessionReady(true);
     window.dispatchEvent(new CustomEvent('authChange'));
     router.push('/login');
-  };
+  }, [router]);
 
-  const refreshUser = () => {
+  const refreshUser = useCallback(() => {
     checkAuthStatus();
-  };
+  }, []);
 
-  const isSessionValid = () => {
+  const isSessionValid = useCallback(() => {
     if (!isClient) return false;
 
     const sessionValue = localStorage.getItem("session");
@@ -152,7 +152,7 @@ export function UserProvider({ children }) {
     }
 
     return !!sessionValue;
-  };
+  }, [isClient]);
 
   useEffect(() => {
     setIsClient(true);
@@ -174,7 +174,7 @@ export function UserProvider({ children }) {
     };
   }, [isClient, isLoggedIn]);
 
-  const value = {
+  const value = useMemo(() => ({
     isLoggedIn,
     sonolusUser,
     assetBaseUrl,
@@ -186,7 +186,7 @@ export function UserProvider({ children }) {
     refreshUser,
     isSessionValid,
     clearExpiredSession
-  };
+  }), [isLoggedIn, sonolusUser, assetBaseUrl, loading, session, isClient, sessionReady, handleLogout, refreshUser, isSessionValid, clearExpiredSession]);
 
   return (
     <UserContext.Provider value={value}>

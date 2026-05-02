@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useRef, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useRef, useState, useEffect, useCallback, useMemo } from "react";
 
 const AudioPlayerContext = createContext(null);
 
@@ -22,7 +22,14 @@ export function AudioPlayerProvider({ children }) {
     audio.crossOrigin = "anonymous";
     audio.volume = 1;
 
-    audio.addEventListener("timeupdate", () => setCurrentTime(audio.currentTime));
+    let lastTimeUpdate = 0;
+    audio.addEventListener("timeupdate", () => {
+      const now = Date.now();
+      if (now - lastTimeUpdate > 250) {
+        lastTimeUpdate = now;
+        setCurrentTime(audio.currentTime);
+      }
+    });
     audio.addEventListener("loadedmetadata", () => setDuration(audio.duration));
     audio.addEventListener("ended", () => { setIsPlaying(false); setCurrentTime(0); });
     audio.addEventListener("waiting", () => setIsBuffering(true));
@@ -165,24 +172,26 @@ export function AudioPlayerProvider({ children }) {
     setDuration(0);
   }, []);
 
+  const contextValue = useMemo(() => ({
+    audioRef,
+    trackId,
+    trackMeta,
+    isPlaying,
+    isBuffering,
+    currentTime,
+    duration,
+    volume,
+    setVolume,
+    loadTrack,
+    play,
+    pause,
+    togglePlay,
+    seek,
+    dismiss,
+  }), [trackId, trackMeta, isPlaying, isBuffering, currentTime, duration, volume, loadTrack, play, pause, togglePlay, seek, dismiss]);
+
   return (
-    <AudioPlayerContext.Provider value={{
-      audioRef,
-      trackId,
-      trackMeta,
-      isPlaying,
-      isBuffering,
-      currentTime,
-      duration,
-      volume,
-      setVolume,
-      loadTrack,
-      play,
-      pause,
-      togglePlay,
-      seek,
-      dismiss,
-    }}>
+    <AudioPlayerContext.Provider value={contextValue}>
       {children}
     </AudioPlayerContext.Provider>
   );

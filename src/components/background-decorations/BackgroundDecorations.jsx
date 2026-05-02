@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from "../../contexts/LanguageContext";
 import './BackgroundDecorations.css';
@@ -21,8 +21,19 @@ export default function BackgroundDecorations() {
     const pathname = usePathname();
     const { t } = useLanguage();
     const containerRef = useRef(null);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
+        const mq = window.matchMedia('(max-width: 768px)');
+        setIsMobile(mq.matches);
+        const handler = (e) => setIsMobile(e.matches);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    }, []);
+
+    useEffect(() => {
+        if (isMobile) return;
+
         let rafId;
         let ticking = false;
 
@@ -43,9 +54,29 @@ export default function BackgroundDecorations() {
             window.removeEventListener('scroll', handleScroll);
             cancelAnimationFrame(rafId);
         };
-    }, []);
+    }, [isMobile]);
 
     const isHome = pathname === '/';
+
+    const shapeElements = useMemo(() => {
+        if (isMobile || !isHome) return null;
+        return SHAPES.map((shape) => (
+            <div
+                key={shape.id}
+                className={`bg-shape bg-common-${shape.type}`}
+                style={{
+                    width: shape.size,
+                    height: shape.size,
+                    left: shape.left,
+                    top: shape.top,
+                    position: 'absolute',
+                    animationDelay: shape.delay,
+                    animationDuration: shape.duration,
+                    transform: `translateY(calc(var(--scroll-y, 0px) * ${shape.parallaxSpeed})) rotate(calc(${shape.rotation} + var(--scroll-y, 0px) * 0.15deg))`
+                }}
+            />
+        ));
+    }, [isMobile, isHome]);
 
     return (
         <div className="bg-decorations-container" ref={containerRef}>
@@ -53,31 +84,20 @@ export default function BackgroundDecorations() {
 
             {isHome && (
                 <>
-                    {SHAPES.map((shape) => (
-                        <div
-                            key={shape.id}
-                            className={`bg-shape bg-common-${shape.type}`}
-                            style={{
-                                width: shape.size,
-                                height: shape.size,
-                                left: shape.left,
-                                top: shape.top,
-                                position: 'absolute',
-                                animationDelay: shape.delay,
-                                animationDuration: shape.duration,
-                                transform: `translateY(calc(var(--scroll-y, 0px) * ${shape.parallaxSpeed})) rotate(calc(${shape.rotation} + var(--scroll-y, 0px) * 0.15deg))`
-                            }}
-                        />
-                    ))}
+                    {shapeElements}
 
-                    <div
-                        className="bg-shape bg-large-circle"
-                        style={{ transform: `translateY(calc(var(--scroll-y, 0px) * 0.15)) rotate(calc(var(--scroll-y, 0px) * 0.05deg))` }}
-                    />
-                    <div
-                        className="bg-shape bg-large-triangle"
-                        style={{ transform: `translateY(calc(var(--scroll-y, 0px) * -0.1))` }}
-                    />
+                    {!isMobile && (
+                        <>
+                            <div
+                                className="bg-shape bg-large-circle"
+                                style={{ transform: `translateY(calc(var(--scroll-y, 0px) * 0.15)) rotate(calc(var(--scroll-y, 0px) * 0.05deg))` }}
+                            />
+                            <div
+                                className="bg-shape bg-large-triangle"
+                                style={{ transform: `translateY(calc(var(--scroll-y, 0px) * -0.1))` }}
+                            />
+                        </>
+                    )}
 
                     <div className="bg-text-container" aria-hidden="true">
                         <div

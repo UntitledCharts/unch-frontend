@@ -463,18 +463,23 @@ video {
 @media (max-width: 768px) {
 
   .card-bg-blur,
-  .level-bg-blur {
-    filter: blur(15px) !important;
+  .level-bg-blur,
+  .countdown-bg-blur {
+    filter: blur(15px) brightness(0.4) !important;
   }
 
-  
-  .my-charts,
-  .search-controls-grid,
-  .carousel-arrow,
-  .comments-card,
-  .stats-card {
+  .dashboard-bg-orb,
+  .egg-orb {
+    filter: blur(30px) !important;
+  }
+
+  *:not(.level-bg-blur):not(.card-bg-blur):not(.countdown-bg-blur):not(.dashboard-bg-orb):not(.egg-orb) {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+  }
+
+  .bg-shape {
+    display: none !important;
   }
 }
 

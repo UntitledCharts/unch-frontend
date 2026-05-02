@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect, Fragment } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, Fragment } from "react";
 
 const LanguageContext = createContext({
     t: (key) => key,
@@ -54,14 +54,12 @@ export function LanguageProvider({ children }) {
             });
     }, [language]);
 
-    const changeLanguage = (langCode) => {
+    const changeLanguage = useCallback((langCode) => {
         if (supportedLangs[langCode]) {
             setLanguage(langCode);
         }
-    };
+    }, [supportedLangs]);
 
-
-    
     const [enTranslations, setEnTranslations] = useState({});
 
     useEffect(() => {
@@ -73,11 +71,10 @@ export function LanguageProvider({ children }) {
         }
     }, [language]);
 
-    const t = (key, params = {}) => {
-        let defaultValue = key; 
+    const t = useCallback((key, params = {}) => {
+        let defaultValue = key;
         let actualParams = params;
 
-        
         if (typeof params === 'string') {
             defaultValue = params;
             actualParams = {};
@@ -89,7 +86,6 @@ export function LanguageProvider({ children }) {
             value = value?.[k];
         }
 
-        
         if (value === undefined && language !== 'en') {
             let enValue = enTranslations;
             for (const k of keys) {
@@ -109,19 +105,23 @@ export function LanguageProvider({ children }) {
         }
 
         return value;
-    };
+    }, [translations, enTranslations, language]);
 
-    const tReact = (key, elements = {}) => {
+    const tReact = useCallback((key, elements = {}) => {
         const raw = t(key);
         return raw.split(/(\{\d+\})/g).map((part, i) => {
             const m = part.match(/^\{(\d+)\}$/);
             if (m && elements[m[1]] !== undefined) return <Fragment key={i}>{elements[m[1]]}</Fragment>;
             return part || null;
         }).filter(Boolean);
-    };
+    }, [t]);
+
+    const contextValue = useMemo(() => ({
+        language, changeLanguage, t, tReact, supportedLangs, loading
+    }), [language, changeLanguage, t, tReact, supportedLangs, loading]);
 
     return (
-        <LanguageContext.Provider value={{ language, changeLanguage, t, tReact, supportedLangs, loading }}>
+        <LanguageContext.Provider value={contextValue}>
             {children}
         </LanguageContext.Provider>
     );

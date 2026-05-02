@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect, use, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,7 +17,7 @@ import {
 import "./page.css";
 import { useUser } from "../../../contexts/UserContext";
 import MarqueeText from "@/components/marquee-text/MarqueeText";
-import EditProfileModal from "../../../components/profile/EditProfileModal";
+const EditProfileModal = dynamic(() => import("../../../components/profile/EditProfileModal"), { ssr: false });
 import FormattedText from "../../../components/formatted-text/FormattedText";
 import HomepageChartCard from "../../../components/homepage-chart-card/HomepageChartCard";
 

@@ -1,6 +1,6 @@
 "use client";
 import { Heart, User, MessageSquare, Calendar } from "lucide-react";
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, memo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "./HomepageChartCard.css";
@@ -135,7 +135,7 @@ function AuthorPopout({ authorId, authorName, assetBaseUrl, side }) {
     );
 }
 
-export default function HomepageChartCard({ chart, index = 0 }) {
+export default memo(function HomepageChartCard({ chart, index = 0 }) {
     const { t, tReact } = useLanguage();
     const router = useRouter();
     const { audioRef, trackId, isPlaying, isBuffering, play, pause } = useAudioPlayer();
@@ -329,4 +329,4 @@ export default function HomepageChartCard({ chart, index = 0 }) {
             )}
         </div>
     );
-}
+})
