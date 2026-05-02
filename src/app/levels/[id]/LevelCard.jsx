@@ -510,9 +510,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
     ? `${level.asset_base_url}/${level.authorId || level.author}/${level.id}/${level.music_hash}`
     : null;
 
-  const proxiedBgmUrl = bgmUrl
-    ? (bgmUrl.startsWith('http') ? `/api/audio-proxy?url=${encodeURIComponent(bgmUrl)}` : bgmUrl)
-    : null;
+  const proxiedBgmUrl = bgmUrl || null;
 
   const isThisTrackLoaded = trackId === id;
   const hasAudio = !!(proxiedBgmUrl || isThisTrackLoaded);

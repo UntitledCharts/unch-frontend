@@ -143,9 +143,7 @@ export default memo(function HomepageChartCard({ chart, index = 0 }) {
     const { id, title, artists, author, authorId, authorHandle, assetBaseUrl,
             rating, coverUrl, likeCount, bgmUrl, commentsCount = 0, createdAt } = chart;
 
-    const proxiedBgmUrl = bgmUrl
-        ? (bgmUrl.startsWith("http") ? `/api/audio-proxy?url=${encodeURIComponent(bgmUrl)}` : bgmUrl)
-        : null;
+    const proxiedBgmUrl = bgmUrl || null;
 
     const isThisPlaying = trackId === id && isPlaying;
     const isThisBuffering = trackId === id && isBuffering;

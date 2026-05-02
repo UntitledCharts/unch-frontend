@@ -24,6 +24,10 @@ export default function AudioControls({
   const currentTime = isExternal ? (externalTime || 0) : localCurrentTime;
 
   useEffect(() => {
+    if (isExternal) setIsLoading(false);
+  }, [isExternal]);
+
+  useEffect(() => {
     if (isExternal || !audioElementRef.current) return;
     const audio = audioElementRef.current;
 

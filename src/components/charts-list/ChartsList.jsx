@@ -77,8 +77,6 @@ export default function ChartsList({
   onEdit,
   onDelete
 }) {
-  const { t, tReact } = useLanguage();
-
   if (loading) {
     return (
       <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '40px' }}>
@@ -97,7 +95,6 @@ export default function ChartsList({
           onVisibilityChange={onVisibilityChange}
           onEdit={onEdit}
           onDelete={onDelete}
-          t={t}
         />
       ))}
     </ul>
@@ -110,8 +107,8 @@ const MemoizedChartItem = memo(function ChartItem({
   onVisibilityChange,
   onEdit,
   onDelete,
-  t
 }) {
+  const { t, tReact } = useLanguage();
   const { audioRef, trackId, isPlaying, isBuffering, currentTime, duration, play, pause } = useAudioPlayer();
   const isThisPlaying = trackId === post.id && isPlaying;
   const isThisBuffering = trackId === post.id && isBuffering;
@@ -119,10 +116,7 @@ const MemoizedChartItem = memo(function ChartItem({
 
   const handlePlay = () => {
     if (!post.bgmUrl) return;
-    const proxied = post.bgmUrl.startsWith("http")
-      ? `/api/audio-proxy?url=${encodeURIComponent(post.bgmUrl)}`
-      : post.bgmUrl;
-    play(post.id, proxied, {
+    play(post.id, post.bgmUrl, {
       title: post.title,
       thumbnail: post.coverUrl,
       href: `/levels/UnCh-${encodeURIComponent(post.id)}`,
@@ -275,11 +269,7 @@ const MemoizedChartItem = memo(function ChartItem({
 
             <div className="audio-section">
               <AudioControls
-                bgmUrl={post.bgmUrl
-                  ? (post.bgmUrl.startsWith("http")
-                    ? `/api/audio-proxy?url=${encodeURIComponent(post.bgmUrl)}`
-                    : post.bgmUrl)
-                  : null}
+                bgmUrl={post.bgmUrl || null}
                 onPlay={handlePlay}
                 onStop={handleStop}
                 isPlaying={isThisPlaying}

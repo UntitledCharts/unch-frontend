@@ -42,9 +42,10 @@ const LiquidSelect = ({ value, onChange, options, label, icon: Icon, className, 
                 left,
                 width: minWidth,
                 zIndex: 9999999,
+                marginTop: 0,
                 ...(dropUp
-                    ? { bottom: window.innerHeight - rect.top + 4 }
-                    : { top: rect.bottom + 4 }),
+                    ? { bottom: window.innerHeight - rect.top + 4, top: "auto" }
+                    : { top: rect.bottom + 4, bottom: "auto" }),
             });
         }
         setIsOpen(v => !v);
