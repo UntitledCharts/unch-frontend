@@ -9,9 +9,23 @@ const LanguageContext = createContext({
     loading: false
 });
 
+function getCachedTranslations(lang) {
+    try {
+        const raw = localStorage.getItem(`translations_${lang}`);
+        return raw ? JSON.parse(raw) : {};
+    } catch { return {}; }
+}
+
 export function LanguageProvider({ children }) {
-    const [language, setLanguage] = useState("en");
-    const [translations, setTranslations] = useState({});
+    const [language, setLanguage] = useState(() => {
+        if (typeof window === 'undefined') return 'en';
+        return localStorage.getItem('language') || 'en';
+    });
+    const [translations, setTranslations] = useState(() => {
+        if (typeof window === 'undefined') return {};
+        const lang = localStorage.getItem('language') || 'en';
+        return getCachedTranslations(lang);
+    });
     const [supportedLangs, setSupportedLangs] = useState({});
     const [loading, setLoading] = useState(true);
 
@@ -46,12 +60,12 @@ export function LanguageProvider({ children }) {
             .then((data) => {
                 setTranslations(data);
                 localStorage.setItem("language", language);
-                setLoading(false);
+                try { localStorage.setItem(`translations_${language}`, JSON.stringify(data)); } catch {}
             })
             .catch((err) => {
                 console.error(`Failed to load translations for ${language}:`, err);
-                setLoading(false);
-            });
+            })
+            .finally(() => setLoading(false));
     }, [language]);
 
     const changeLanguage = useCallback((langCode) => {
@@ -60,13 +74,19 @@ export function LanguageProvider({ children }) {
         }
     }, [supportedLangs]);
 
-    const [enTranslations, setEnTranslations] = useState({});
+    const [enTranslations, setEnTranslations] = useState(() => {
+        if (typeof window === 'undefined') return {};
+        return getCachedTranslations('en');
+    });
 
     useEffect(() => {
         if (language !== 'en') {
             fetch(`/api/languages/en`)
                 .then(res => res.json())
-                .then(data => setEnTranslations(data))
+                .then(data => {
+                    setEnTranslations(data);
+                    try { localStorage.setItem('translations_en', JSON.stringify(data)); } catch {}
+                })
                 .catch(err => console.error("Failed to load English fallback:", err));
         }
     }, [language]);
