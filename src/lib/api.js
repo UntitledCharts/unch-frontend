@@ -35,7 +35,7 @@ export const api = {
     },
 
     deleteChart: async (id) => {
-        return fetchWithAuth(`/api/charts/${id}/delete/`, { method: 'POST' });
+        return fetchWithAuth(`/api/charts/${id}/delete/`, { method: 'DELETE' });
     },
 
     updateVisibility: async (id, intent) => {

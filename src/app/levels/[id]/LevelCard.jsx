@@ -226,7 +226,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
     if (!confirm(t('levelDetail.confirmDelete', 'Are you sure you want to delete this chart?'))) return;
     try {
       const cleanId = id.replace(/^UnCh-/, '');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanId}/delete/`, {
         method: 'DELETE',
         headers: { 'Authorization': session }
       });
