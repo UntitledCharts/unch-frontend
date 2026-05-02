@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Home, ArrowLeft, Clock, Calendar } from "lucide-react";
+import { Home, ArrowLeft, Clock, Calendar, User } from "lucide-react";
 import { useLanguage } from "../../../../contexts/LanguageContext";
 import "./countdown.css";
 
@@ -18,8 +18,9 @@ export default function CountdownPage({ params }) {
     const [showConfetti, setShowConfetti] = useState(false);
     const [confettiPieces, setConfettiPieces] = useState([]);
     const jacketImgRef = useRef(null);
+    const [authorData, setAuthorData] = useState(null);
+    const [assetBaseUrl, setAssetBaseUrl] = useState("");
 
-    
     useEffect(() => {
         const fetchLevel = async () => {
             try {
@@ -27,11 +28,18 @@ export default function CountdownPage({ params }) {
                 if (response.ok) {
                     const data = await response.json();
                     setLevel(data);
+                    setAssetBaseUrl(data.asset_base_url || "");
 
-                    
                     if (data.status !== 'scheduled' || !data.scheduled_publish) {
                         router.replace(`/levels/${id}`);
                         return;
+                    }
+
+                    if (data.author) {
+                        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts/${data.author}`)
+                            .then(r => r.ok ? r.json() : null)
+                            .then(d => { if (d?.account) setAuthorData(d.account); })
+                            .catch(() => {});
                     }
                 } else {
                     router.replace('/');
@@ -46,7 +54,6 @@ export default function CountdownPage({ params }) {
         fetchLevel();
     }, [id, router]);
 
-    
     useEffect(() => {
         if (!level?.scheduled_publish) return;
 
@@ -77,7 +84,6 @@ export default function CountdownPage({ params }) {
         return () => clearInterval(interval);
     }, [level, id, router]);
 
-    
     useEffect(() => {
         if (!level?.thumbnail || !jacketImgRef.current) return;
 
@@ -144,9 +150,14 @@ export default function CountdownPage({ params }) {
     const isFinalCountdown = countdown.total <= 60;
     const isCritical = countdown.total <= 10;
 
+    const authorName = authorData?.sonolus_username || level.author_full || level.author;
+    const authorHandle = authorData?.sonolus_handle || level.author;
+    const authorPfpUrl = (authorData?.profile_hash && assetBaseUrl)
+        ? `${assetBaseUrl}/${authorData.sonolus_id}/profile/${authorData.profile_hash}_webp`
+        : "/defpfp.webp";
+
     return (
         <main className="countdown-page">
-            {}
             <nav className="countdown-nav">
                 <Link href="/" className="nav-btn home-btn">
                     <Home size={18} />
@@ -158,7 +169,6 @@ export default function CountdownPage({ params }) {
                 </Link>
             </nav>
 
-            {}
             {showConfetti && confettiPieces.map(piece => (
                 <div
                     key={piece.id}
@@ -174,7 +184,6 @@ export default function CountdownPage({ params }) {
                 />
             ))}
 
-            {}
             <div
                 className="countdown-bg"
                 style={{
@@ -185,31 +194,39 @@ export default function CountdownPage({ params }) {
                 <div className="countdown-bg-overlay"></div>
             </div>
 
-            {}
             <div className="countdown-content">
-                {}
-                <div className="countdown-jacket-wrapper">
-                    <img
-                        ref={jacketImgRef}
-                        src={level.thumbnail || "/placeholder.png"}
-                        alt={level.title}
-                        className="countdown-jacket"
-                    />
-                    <div className="countdown-jacket-glow" style={{ background: dominantColor }}></div>
-                </div>
+                <div className="countdown-hero">
+                    <div className="countdown-jacket-wrapper">
+                        <img
+                            ref={jacketImgRef}
+                            src={level.thumbnail || "/placeholder.png"}
+                            alt={level.title}
+                            className="countdown-jacket"
+                        />
+                        <div className="countdown-jacket-glow" style={{ background: dominantColor }}></div>
+                    </div>
 
-                {}
-                <div className="countdown-info">
-                    <h1 className="countdown-title">{level.title}</h1>
-                    <p className="countdown-artist">{level.artists}</p>
+                    <div className="countdown-info">
+                        <h1 className="countdown-title">{level.title}</h1>
+                        <p className="countdown-artist">{level.artists}</p>
 
-                    <div className="countdown-schedule">
-                        <Calendar size={16} />
-                        <span>{t('countdown.premieres', { 1: formatDate(level.scheduled_publish) })}</span>
+                        <Link href={`/user/${authorHandle}`} className="countdown-author">
+                            <img
+                                src={authorPfpUrl}
+                                alt={authorName}
+                                className="countdown-author-pfp"
+                                onError={(e) => { e.target.src = '/defpfp.webp'; }}
+                            />
+                            <span className="countdown-author-name">{authorName}</span>
+                        </Link>
+
+                        <div className="countdown-schedule">
+                            <Calendar size={16} />
+                            <span>{t('countdown.premieres', { 1: formatDate(level.scheduled_publish) })}</span>
+                        </div>
                     </div>
                 </div>
 
-                {}
                 <div className="countdown-timer-section">
                     <div className="timer-label">
                         <Clock size={18} />
@@ -222,7 +239,7 @@ export default function CountdownPage({ params }) {
                                 {countdown.seconds}
                             </div>
                             <p className={`final-message ${isCritical ? 'critical' : ''}`}>
-                                {isCritical ? `🚀 ${t('countdown.getReady')}` : t('countdown.almostThere')}
+                                {isCritical ? t('countdown.getReady') : t('countdown.almostThere')}
                             </p>
                         </div>
                     ) : (
@@ -251,7 +268,6 @@ export default function CountdownPage({ params }) {
                     )}
                 </div>
 
-                {}
                 <p className="countdown-footer-msg">
                     {t('countdown.footerMsg')}
                 </p>
