@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { createPortal } from "react-dom";
 import { Play, Heart, Info, User, Music, Calendar, MessageSquare, ArrowDown } from "lucide-react";
 import Link from "next/link";
@@ -61,7 +61,7 @@ function HeroAuthorPopout({ data, anchorRect }) {
     );
 }
 
-export default function HeroSection({ posts = [] }) {
+export default memo(function HeroSection({ posts = [] }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { t, tReact } = useLanguage();
     const [commentCounts, setCommentCounts] = useState({});
@@ -79,7 +79,6 @@ export default function HeroSection({ posts = [] }) {
         setCurrentIndex(index);
         setShowAuthorPopout(false);
         setAuthorPopoutData(null);
-        setProgress(0);
     };
 
     const goNext = () => goTo((currentIndex + 1) % posts.length);
@@ -184,8 +183,11 @@ export default function HeroSection({ posts = [] }) {
         >
             <div className="hero-bg-container">
                 {posts.map((post, index) => {
-                    const imgUrl = getValidUrl(post.backgroundV3Url || post.backgroundUrl || post.coverUrl);
                     const isActive = index === currentIndex;
+                    const isNext = index === (currentIndex + 1) % posts.length;
+                    const isPrev = index === (currentIndex - 1 + posts.length) % posts.length;
+                    if (!isActive && !isNext && !isPrev) return null;
+                    const imgUrl = getValidUrl(post.backgroundV3Url || post.backgroundUrl || post.coverUrl);
                     return (
                         <img
                             key={post.id}
@@ -193,9 +195,9 @@ export default function HeroSection({ posts = [] }) {
                             alt=""
                             aria-hidden="true"
                             className={`hero-bg-slide ${isActive ? "active" : ""}`}
-                            loading={index === 0 ? "eager" : "lazy"}
-                            fetchPriority={index === 0 ? "high" : "low"}
-                            decoding={index === 0 ? "sync" : "async"}
+                            loading={isActive ? "eager" : "lazy"}
+                            fetchPriority={isActive ? "high" : "low"}
+                            decoding={isActive ? "sync" : "async"}
                             onError={(e) => { e.target.src = "/def.webp"; }}
                         />
                     );
@@ -318,4 +320,4 @@ export default function HeroSection({ posts = [] }) {
         }
     </>
     );
-}
+})

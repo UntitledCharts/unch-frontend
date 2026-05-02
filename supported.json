@@ -28,5 +28,11 @@
         "name": "Português",
         "english_name": "Portuguese",
         "file": "pt.json"
+    },
+    "zh_tw": {
+        "country": "tw",
+        "name": "繁體中文",
+        "english_name": "Traditional Chinese",
+        "file": "zh_tw.json"
     }
 }

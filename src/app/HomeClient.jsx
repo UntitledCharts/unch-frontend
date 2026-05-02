@@ -1,5 +1,5 @@
 ﻿"use client";
-import { useEffect, useState, Suspense, useCallback } from "react";
+import { useEffect, useState, Suspense, useCallback, useMemo } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Zap, Shuffle, PlayCircle, Settings, Clock, Star, Heart, Type, ArrowUp, ArrowDown, User } from "lucide-react";
@@ -20,6 +20,10 @@ const ViewAllDrawer = dynamic(() => import("../components/view-all-drawer/ViewAl
 
 const APILink = process.env.NEXT_PUBLIC_API_URL;
 
+let _homeCache = null;
+let _homeCacheTime = 0;
+const HOME_CACHE_TTL = 60_000;
+
 function HomeContent() {
   const { t } = useLanguage();
   const { sonolusUser } = useUser();
@@ -27,14 +31,15 @@ function HomeContent() {
 
   const [viewMode, setViewMode] = useState("home");
 
-  const [homeData, setHomeData] = useState({
+  const hasCached = _homeCache && (Date.now() - _homeCacheTime < HOME_CACHE_TTL);
+  const [homeData, setHomeData] = useState(hasCached ? _homeCache : {
     staffPicks: [],
     trending: [],
     newCharts: []
   });
 
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!hasCached);
   const [error, setError] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -128,11 +133,14 @@ function HomeContent() {
 
       const base = staffPicksJson.asset_base_url || trendingJson.asset_base_url || "";
 
-      setHomeData({
+      const data = {
         staffPicks: (staffPicksJson.data || []).map(item => mapChartData(item, base)),
         trending: (trendingJson.data || []).map(item => mapChartData(item, base)),
         newCharts: (newJson.data || []).map(item => mapChartData(item, base))
-      });
+      };
+      _homeCache = data;
+      _homeCacheTime = Date.now();
+      setHomeData(data);
     } catch (err) {
       console.error("Home fetch error:", err);
     } finally {
@@ -192,7 +200,12 @@ function HomeContent() {
 
   useEffect(() => {
     if (viewMode === 'home') {
-      fetchHomeData();
+      if (_homeCache && Date.now() - _homeCacheTime < HOME_CACHE_TTL) {
+        setHomeData(_homeCache);
+        setLoading(false);
+      } else {
+        fetchHomeData();
+      }
     } else {
       fetchSearchData();
     }
@@ -230,12 +243,28 @@ function HomeContent() {
     }
   }, [viewParam]);
 
-  const handleViewAll = (title, charts, fetchType = null) => {
+  const handleViewAll = useCallback((title, charts, fetchType = null) => {
     setDrawerTitle(title);
     setDrawerCharts(charts);
     setDrawerFetchType(fetchType);
     setDrawerOpen(true);
-  };
+  }, []);
+
+  const newChartsIcon = useMemo(() => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="14" height="14" rx="3" stroke="currentColor" strokeWidth="2"/><path d="M6 10H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+  ), []);
+
+  const trendingIcon = useMemo(() => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 20H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M10 16V10C10 8.89543 9.10457 8 8 8C6.89543 8 6 8.89543 6 10V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M18 16V6C18 4.89543 17.1046 4 16 4C14.8954 4 14 4.89543 14 6V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+  ), []);
+
+  const handleViewAllNew = useCallback(() => {
+    handleViewAll(t('home.newCharts'), homeData.newCharts, "new");
+  }, [handleViewAll, t, homeData.newCharts]);
+
+  const handleViewAllTrending = useCallback(() => {
+    handleViewAll(t('home.trendingCharts'), homeData.trending, "trending");
+  }, [handleViewAll, t, homeData.trending]);
 
   return (
     <div className="home-container">
@@ -247,20 +276,20 @@ function HomeContent() {
           <div className="carousel-section-wrapper">
             <TrendingCarousel
               title={t('home.newCharts')}
-              icon={<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="14" height="14" rx="3" stroke="currentColor" strokeWidth="2"/><path d="M6 10H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>}
+              icon={newChartsIcon}
               charts={homeData.newCharts}
               CardComponent={HomepageChartCard}
-              onViewAll={() => handleViewAll(t('home.newCharts'), homeData.newCharts, "new")}
+              onViewAll={handleViewAllNew}
             />
           </div>
 
           <div className="carousel-section-wrapper">
             <TrendingCarousel
               title={t('home.trendingCharts')}
-              icon={<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 20H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M10 16V10C10 8.89543 9.10457 8 8 8C6.89543 8 6 8.89543 6 10V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M18 16V6C18 4.89543 17.1046 4 16 4C14.8954 4 14 4.89543 14 6V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>}
+              icon={trendingIcon}
               charts={homeData.trending}
               CardComponent={HomepageChartCard}
-              onViewAll={() => handleViewAll(t('home.trendingCharts'), homeData.trending, "trending")}
+              onViewAll={handleViewAllTrending}
             />
           </div>
 

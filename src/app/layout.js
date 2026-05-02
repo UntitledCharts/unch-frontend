@@ -1,5 +1,4 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import "./layout.css";
 import ClientLayout from "./ClientLayout";
@@ -55,11 +54,10 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {assetCdn && <link rel="preconnect" href={assetCdn} crossOrigin="anonymous" />}
         <link rel="preconnect" href="https://ba14959b4680d4b81463a1d708c63691.untitledcharts.com" crossOrigin="anonymous" />
-        <Script
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1175503001380961"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
       </head>
       <ClientLayout variableClasses={`${geistSans.variable} ${geistMono.variable}`}>

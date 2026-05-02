@@ -1,12 +1,12 @@
 "use client";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, memo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ChartCard from "../chart-card/ChartCard";
 import SectionHeader from "../section-header/SectionHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import "./TrendingCarousel.css";
 
-export default function TrendingCarousel({
+export default memo(function TrendingCarousel({
     title,
     icon = null,
     charts = [],
@@ -121,4 +121,4 @@ export default function TrendingCarousel({
             </div>
         </section>
     );
-}
+})
