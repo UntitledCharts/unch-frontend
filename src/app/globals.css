@@ -494,6 +494,19 @@ main,
   }
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.skeleton-pulse {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 .marquee-container {
   overflow: hidden;
   white-space: nowrap;
