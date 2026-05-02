@@ -296,8 +296,8 @@
     "remindersTitle": "⚠️ Read before uploading:",
     "reminder1": "Do not upload stolen content or charts you do not have permission to distribute.",
     "reminder2": "Ensure audio is properly trimmed and under {size}.",
-    "reminder3": "Chart files must be .sus or .usc format (max {size}).",
-    "reminder4": "Cover images should be square (max {size}).",
+    "reminder3": "Follow our upload rules at https://discord.gg/UntitledCharts.",
+    "reminder4": "Have some common sense when uploading.",
     "selected": "Selected: {name}",
     "current": "Current: {name}"
   },
