@@ -67,13 +67,10 @@ export default function HeroSection({ posts = [] }) {
     const [showAuthorPopout, setShowAuthorPopout] = useState(false);
     const [authorPopoutData, setAuthorPopoutData] = useState(null);
     const [authorAnchorRect, setAuthorAnchorRect] = useState(null);
-    const [progress, setProgress] = useState(0);
     const authorTimerRef = useRef(null);
     const authorAnchorRef = useRef(null);
     const touchStartX = useRef(null);
-    const progressRef = useRef(null);
     const intervalRef = useRef(null);
-    const progressIntervalRef = useRef(null);
 
     const SLIDE_DURATION = 6000;
 
@@ -147,26 +144,14 @@ export default function HeroSection({ posts = [] }) {
     useEffect(() => {
         if (posts.length <= 1) return;
 
-        setProgress(0);
-
-        const TICK = 60;
-        progressIntervalRef.current = setInterval(() => {
-            setProgress(p => {
-                const next = p + (TICK / SLIDE_DURATION) * 100;
-                return next >= 100 ? 100 : next;
-            });
-        }, TICK);
-
         intervalRef.current = setInterval(() => {
             setCurrentIndex(prev => (prev + 1) % posts.length);
             setShowAuthorPopout(false);
             setAuthorPopoutData(null);
-            setProgress(0);
         }, SLIDE_DURATION);
 
         return () => {
             clearInterval(intervalRef.current);
-            clearInterval(progressIntervalRef.current);
         };
     }, [currentIndex, posts.length]);
 
@@ -295,21 +280,20 @@ export default function HeroSection({ posts = [] }) {
                     </div>
                 </div>
 
-                <div className="hero-indicators">
+                <div className="hero-indicators" aria-hidden="true">
                     {posts.map((_, index) => (
-                        <button
+                        <div
                             key={index}
                             className={`indicator-dot ${index === currentIndex ? "active" : ""}`}
-                            onClick={() => goTo(index)}
-                            aria-label={`Go to slide ${index + 1}`}
                         >
                             {index === currentIndex && (
                                 <span
+                                    key={currentIndex}
                                     className="indicator-progress"
-                                    style={{ width: `${progress}%` }}
+                                    style={{ animation: `indicatorFill ${SLIDE_DURATION}ms linear forwards` }}
                                 />
                             )}
-                        </button>
+                        </div>
                     ))}
                 </div>
             </div>

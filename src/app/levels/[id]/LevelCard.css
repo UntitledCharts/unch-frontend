@@ -2488,7 +2488,7 @@ body.light-mode .stat-with-graph-container .stat-header {
 }
 
 body.light-mode .graph-svg {
-    background: rgba(15, 23, 42, 0.03);
+    background: rgba(255, 255, 255, 0.8);
 }
 
 /* LIGHT MODE - Comments */

@@ -9,7 +9,7 @@ import { UserProvider, useUser } from "../contexts/UserContext";
 import { LanguageProvider, useLanguage } from "../contexts/LanguageContext";
 import { ThemeProvider, useTheme } from "../contexts/ThemeContext";
 import { AudioPlayerProvider } from "../contexts/AudioPlayerContext";
-import BackgroundDecorations from '../components/background-decorations/BackgroundDecorations';
+const BackgroundDecorations = dynamic(() => import('../components/background-decorations/BackgroundDecorations'), { ssr: false });
 const MiniPlayer = dynamic(() => import('../components/mini-player/MiniPlayer'), { ssr: false });
 import NavigationProgress from '../components/navigation-progress/NavigationProgress';
 import { Menu, X, Sun, Moon, Globe, User, LogOut } from "lucide-react";

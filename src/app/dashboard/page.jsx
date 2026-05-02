@@ -805,28 +805,17 @@ function DashboardContent() {
                   style={{ width: "100%", ...(filtersExpanded ? {} : { height: 0 }) }}
                 >
                   <div className="search-controls-grid">
-                    <div
-                      className="search-control-group"
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        minWidth: "auto",
-                        flex: "none",
-                        paddingBottom: "12px",
-                        gap: "8px",
-                      }}
-                    >
+                    <div className="search-control-group checkbox-group">
                       <input
                         type="checkbox"
                         id="staffPick"
                         checked={staffPick}
                         onChange={(e) => setStaffPick(e.target.checked)}
-                        className="accent-sky-500"
-                        style={{ width: "18px", height: "18px", margin: 0, cursor: "pointer" }}
+                        className="styled-checkbox"
                       />
                       <label
                         htmlFor="staffPick"
-                        style={{ margin: 0, fontSize: "0.9rem", color: "rgba(255,255,255,0.9)", cursor: "pointer" }}
+                        className="checkbox-label"
                       >
                         {t("search.staffPickOnly")}
                       </label>

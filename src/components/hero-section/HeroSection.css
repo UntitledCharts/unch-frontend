@@ -323,16 +323,12 @@
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.3);
     border: none;
-    cursor: pointer;
+    pointer-events: none;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
     padding: 0;
-}
-
-.indicator-dot:hover {
-    background: rgba(255, 255, 255, 0.55);
 }
 
 .indicator-dot.active {
@@ -346,10 +342,15 @@
     top: 0;
     left: 0;
     height: 100%;
+    width: 0;
     background: #38bdf8;
     border-radius: 999px;
-    transition: width 0.06s linear;
     pointer-events: none;
+}
+
+@keyframes indicatorFill {
+    from { width: 0; }
+    to { width: 100%; }
 }
 
 body.light-mode .indicator-dot.active {
