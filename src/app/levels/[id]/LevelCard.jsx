@@ -1080,6 +1080,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
 
                       <div style={{ position: 'relative', zIndex: 1 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', alignItems: 'baseline', gap: '8px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0, flexShrink: 1 }}>
                           {commentUserLink ? (
                             <Link
                               href={`/user/${commentUserLink}`}
@@ -1117,7 +1118,6 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                               <FormattedText text={displayName || "User"} />
                             </span>
                           )}
-                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
                             {comment.account?.owner && <span style={{ background: 'linear-gradient(135deg, #ef4444, #f97316)', color: 'white', padding: '1px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>OWNER</span>}
                             {comment.account?.admin && <span style={{ background: 'rgba(244, 63, 94, 0.2)', border: '1px solid rgba(244, 63, 94, 0.3)', color: '#f43f5e', padding: '1px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>ADMIN</span>}
                             {comment.account?.mod && <span style={{ background: 'rgba(34, 197, 94, 0.2)', border: '1px solid rgba(34, 197, 94, 0.3)', color: '#4ade80', padding: '1px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>MOD</span>}
