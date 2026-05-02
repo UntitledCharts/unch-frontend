@@ -5,16 +5,16 @@ import dynamic from "next/dynamic";
 import { Zap, Shuffle, PlayCircle, Settings, Clock, Star, Heart, Type, ArrowUp, ArrowDown, User } from "lucide-react";
 import ChartsList from "../components/charts-list/ChartsList";
 import PaginationControls from "../components/pagination-controls/PaginationControls";
+import HeroSection from "../components/hero-section/HeroSection";
+import TrendingCarousel from "../components/trending-carousel/TrendingCarousel";
 import "../components/trending-carousel/TrendingCarousel.css";
+import HomepageChartCard from "../components/homepage-chart-card/HomepageChartCard";
 import "./page.css";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useUser } from "../contexts/UserContext";
 import { useSearchParams } from "next/navigation";
 import LiquidSelect from "../components/liquid-select/LiquidSelect";
 
-const HeroSection = dynamic(() => import("../components/hero-section/HeroSection"), { ssr: false });
-const TrendingCarousel = dynamic(() => import("../components/trending-carousel/TrendingCarousel"));
-const HomepageChartCard = dynamic(() => import("../components/homepage-chart-card/HomepageChartCard"));
 const ViewAllDrawer = dynamic(() => import("../components/view-all-drawer/ViewAllDrawer"), { ssr: false });
 
 const APILink = process.env.NEXT_PUBLIC_API_URL;

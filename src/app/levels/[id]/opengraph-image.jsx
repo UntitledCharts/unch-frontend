@@ -44,7 +44,7 @@ export default async function Image({ params }) {
     let assetBaseUrl = null;
 
     try {
-        const { id } = params;
+        const { id } = await params;
         const cleanId = id.replace(/^UnCh-/, '');
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
