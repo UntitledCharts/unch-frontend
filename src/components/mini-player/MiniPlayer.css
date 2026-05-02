@@ -1,9 +1,10 @@
 .mini-player {
-    position: fixed;
+    position: sticky;
     bottom: 24px;
-    right: 24px;
     z-index: 9000;
     width: 320px;
+    margin-left: auto;
+    margin-right: 24px;
     background: rgba(8, 12, 24, 0.92);
     border: 1px solid rgba(56, 189, 248, 0.2);
     border-radius: 16px;
@@ -247,8 +248,8 @@ a.mini-player-title:hover {
 @media (max-width: 480px) {
     .mini-player {
         bottom: 16px;
-        right: 12px;
-        left: 12px;
+        margin-left: 12px;
+        margin-right: 12px;
         width: auto;
     }
 }

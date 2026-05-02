@@ -417,8 +417,8 @@ function RootLayoutInner({ children }) {
                     </div>
                 </main>
             )}
-            <FooterContent />
             <MiniPlayer />
+            <FooterContent />
         </>
     );
 }
