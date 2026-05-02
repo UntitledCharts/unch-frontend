@@ -310,16 +310,15 @@ function HomeContent() {
 
                 {searchType !== "random" && searchType !== "newest" && (
                   <>
-                    <div className="search-control-group" style={{ flexDirection: 'row', alignItems: 'center', minWidth: 'auto', flex: 'none', paddingBottom: '12px', gap: '8px' }}>
+                    <div className="search-control-group checkbox-group">
                       <input
                         type="checkbox"
                         id="staffPick"
                         checked={staffPick}
                         onChange={(e) => setStaffPick(e.target.checked)}
-                        className="accent-sky-500"
-                        style={{ width: '18px', height: '18px', margin: 0, cursor: 'pointer' }}
+                        className="styled-checkbox"
                       />
-                      <label htmlFor="staffPick" style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>{t('search.staffPickOnly')}</label>
+                      <label htmlFor="staffPick" className="checkbox-label">{t('search.staffPickOnly')}</label>
                     </div>
 
                     <div className="search-control-group">
@@ -394,10 +393,12 @@ function HomeContent() {
                       <label>{t('search.authorHandle', 'Author Handle')}</label>
                       <input type="text" placeholder={t('search.authorHandlePlaceholder', 'e.g. 78302')} value={sonolusHandleIs} onChange={(e) => setSonolusHandleIs(e.target.value)} className="liquid-input" />
                     </div>
-                    <div className="search-control-group" style={{ flexDirection: 'row', alignItems: 'center', minWidth: 'auto', flex: 'none', paddingBottom: '12px' }}>
-                      <input type="checkbox" id="likedByMe" checked={likedBy} onChange={(e) => setLikedBy(e.target.checked)} className="accent-sky-500" style={{ width: '18px', height: '18px', margin: 0, cursor: 'pointer' }} />
-                      <label htmlFor="likedByMe" style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)', cursor: 'pointer' }}>{t('search.likedByMe', 'Liked by me')}</label>
+                    {sonolusUser && (
+                    <div className="search-control-group checkbox-group">
+                      <input type="checkbox" id="likedByMe" checked={likedBy} onChange={(e) => setLikedBy(e.target.checked)} className="styled-checkbox" />
+                      <label htmlFor="likedByMe" className="checkbox-label">{t('search.likedByMe', 'Liked by me')}</label>
                     </div>
+                    )}
                   </>
                 )}
 

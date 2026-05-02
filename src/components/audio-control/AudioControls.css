@@ -99,3 +99,20 @@
     transition: width 0.1s ease;
     box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
 }
+
+body.light-mode .time-display {
+    color: #475569;
+}
+
+body.light-mode .progress-bar {
+    background-color: rgba(15, 23, 42, 0.1);
+}
+
+body.light-mode .audio-controls.active {
+    background-color: rgba(15, 23, 42, 0.05);
+    border-color: rgba(15, 23, 42, 0.1);
+}
+
+body.light-mode .no-audio-label {
+    color: #94a3b8;
+}

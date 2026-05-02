@@ -267,9 +267,45 @@ body.light-mode .mini-player-time {
     color: rgba(15, 23, 42, 0.5);
 }
 
+body.light-mode .mini-player-body {
+    background: rgba(240, 248, 255, 0.95);
+}
+
+body.light-mode .mini-player-progress-bar {
+    background: rgba(15, 23, 42, 0.08);
+}
+
+body.light-mode .mini-player-thumb {
+    background: rgba(15, 23, 42, 0.06);
+}
+
 body.light-mode .mini-vol-btn,
 body.light-mode .mini-dismiss-btn {
     background: rgba(15, 23, 42, 0.07);
     border-color: rgba(15, 23, 42, 0.12);
     color: rgba(15, 23, 42, 0.6);
+}
+
+body.light-mode .mini-vol-btn:hover,
+body.light-mode .mini-dismiss-btn:hover {
+    background: rgba(15, 23, 42, 0.14);
+    color: #0f172a;
+}
+
+body.light-mode .mini-volume-slider-wrap {
+    background: rgba(240, 248, 255, 0.98);
+    border-color: rgba(2, 132, 199, 0.2);
+}
+
+body.light-mode .mini-volume-slider {
+    background: rgba(15, 23, 42, 0.12);
+}
+
+body.light-mode .mini-player.mini-player-playing {
+    border-color: rgba(2, 132, 199, 0.35);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1), 0 0 20px rgba(56, 189, 248, 0.08);
+}
+
+body.light-mode .mini-player {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(56, 189, 248, 0.05);
 }

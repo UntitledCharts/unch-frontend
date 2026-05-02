@@ -15,6 +15,10 @@
     z-index: 10;
 }
 
+.homepage-chart-card:hover {
+    z-index: 20;
+}
+
 .card-inner {
     position: relative;
     width: 100%;
@@ -214,8 +218,7 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    background: rgba(10, 15, 28, 0.82);
-    backdrop-filter: blur(8px);
+    background: rgba(10, 15, 28, 0.92);
     color: #38bdf8;
     padding: 4px 10px;
     border-radius: 10px;
@@ -366,8 +369,7 @@
     flex-direction: column;
     gap: 6px;
     padding: 12px 12px 12px 10px;
-    background: rgba(6, 10, 20, 0.92);
-    backdrop-filter: blur(16px);
+    background: rgba(6, 10, 20, 0.96);
     border: 1px solid rgba(56, 189, 248, 0.12);
     border-left: none;
     border-radius: 0 16px 16px 0;
@@ -446,6 +448,19 @@ body.light-mode .level-badge {
 body.light-mode .card-stats-panel {
     background: rgba(255, 255, 255, 0.95);
     border-color: rgba(15, 23, 42, 0.1);
+}
+
+body.light-mode .card-inner::after {
+    background: linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+body.light-mode .homepage-chart-card.hovered .card-inner {
+    border-color: rgba(56, 189, 248, 0.35);
+    box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.12);
+}
+
+body.light-mode .author-popout-name {
+    color: #0f172a;
 }
 
 .card-mobile-stats {

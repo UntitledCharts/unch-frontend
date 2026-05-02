@@ -1287,9 +1287,17 @@ body.light-mode .music-player {
 }
 
 body.light-mode .level-description {
-    background: rgba(255, 255, 255, 0.4);
-    border-color: rgba(15, 23, 42, 0.1);
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(15, 23, 42, 0.08);
     color: #334155;
+}
+
+body.light-mode .level-detail-wrapper {
+    background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 50%, #ede9fe 100%);
+}
+
+body.light-mode .level-bg-blur {
+    filter: blur(60px) brightness(1.2) saturate(0.8);
 }
 
 
@@ -2065,7 +2073,8 @@ body.light-mode .volume-slider::-webkit-slider-thumb {
 }
 
 body.light-mode .back-btn {
-    color: #0f172a;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 body.light-mode .level-image-container {
@@ -2171,9 +2180,15 @@ body.light-mode .player-text span {
 }
 
 .comment-username-link:hover {
+    color: #38bdf8;
     text-decoration: underline;
     text-decoration-color: rgba(56, 189, 248, 0.5);
     text-underline-offset: 4px;
+}
+
+body.light-mode .comment-username-link:hover {
+    color: #0284c7;
+    text-decoration-color: rgba(2, 132, 199, 0.5);
 }
 
 
@@ -2382,6 +2397,293 @@ body.light-mode .player-text span {
         height: 120px;
         display: none; 
     }
+}
+
+/* COMMENT STYLES */
+.comment-username-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #f8fafc;
+    text-decoration: none;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.comment-handle {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    flex-shrink: 0;
+}
+
+.comment-role-badge {
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.comment-role-owner {
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    color: white;
+}
+
+.comment-role-admin {
+    background: rgba(244, 63, 94, 0.2);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    color: #f43f5e;
+}
+
+.comment-role-mod {
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #4ade80;
+}
+
+.comment-date {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.comment-text {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95em;
+}
+
+/* LIGHT MODE - Stats card */
+body.light-mode .stats-card {
+    background: rgba(255, 255, 255, 0.45);
+    border-color: rgba(15, 23, 42, 0.1);
+}
+
+body.light-mode .stat-with-graph-container {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.light-mode .stat-with-graph-container:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(15, 23, 42, 0.15);
+}
+
+body.light-mode .stat-with-graph-container .stat-label {
+    color: #475569;
+}
+
+body.light-mode .stat-with-graph-container .stat-value {
+    color: #0f172a;
+}
+
+body.light-mode .stat-with-graph-container .stat-header {
+    color: #334155;
+}
+
+body.light-mode .graph-svg {
+    background: rgba(15, 23, 42, 0.03);
+}
+
+/* LIGHT MODE - Comments */
+body.light-mode .comment-item {
+    background: rgba(255, 255, 255, 0.7) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+body.light-mode .comment-item:hover {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(56, 189, 248, 0.3) !important;
+}
+
+body.light-mode .comment-item .comment-banner-bg {
+    opacity: 0.06 !important;
+}
+
+body.light-mode .comment-item:hover .comment-banner-bg {
+    opacity: 0.12 !important;
+}
+
+body.light-mode .comment-username-link {
+    color: #0f172a;
+}
+
+body.light-mode .comment-handle {
+    color: #64748b;
+}
+
+body.light-mode .comment-date {
+    color: #64748b !important;
+}
+
+body.light-mode .comment-text {
+    color: #334155 !important;
+}
+
+body.light-mode .comments-pagination {
+    background: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* LIGHT MODE - Leaderboard */
+body.light-mode .podium-spot {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.light-mode .podium-banner-bg {
+    opacity: 0.08 !important;
+}
+
+body.light-mode .podium-spot:hover .podium-banner-bg {
+    opacity: 0.15 !important;
+}
+
+body.light-mode .podium-spot.rank-1 {
+    background: linear-gradient(180deg, rgba(251, 191, 36, 0.12) 0%, rgba(255, 255, 255, 0.5) 100%);
+    border-color: rgba(251, 191, 36, 0.4);
+}
+
+body.light-mode .podium-spot.rank-2 {
+    border-color: rgba(148, 163, 184, 0.4);
+}
+
+body.light-mode .podium-spot.rank-3 {
+    border-color: rgba(180, 83, 9, 0.3);
+}
+
+body.light-mode .podium-name {
+    color: #0f172a;
+}
+
+body.light-mode .podium-spot.rank-1 .podium-name {
+    color: #b45309;
+}
+
+body.light-mode .podium-details span:last-child {
+    color: #475569;
+}
+
+body.light-mode .leaderboard-item {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%);
+    border-color: rgba(15, 23, 42, 0.06);
+}
+
+body.light-mode .leaderboard-item:hover {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.5) 100%);
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+body.light-mode .leaderboard-item-bg {
+    opacity: 0.06 !important;
+}
+
+body.light-mode .leaderboard-item:hover .leaderboard-item-bg {
+    opacity: 0.12 !important;
+}
+
+body.light-mode .leaderboard-name {
+    color: #0f172a !important;
+}
+
+body.light-mode .leaderboard-name:hover {
+    color: #0284c7 !important;
+}
+
+body.light-mode .leaderboard-score {
+    color: #0284c7 !important;
+}
+
+body.light-mode .leaderboard-accuracy {
+    color: #334155 !important;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+body.light-mode .leaderboard-date {
+    color: #64748b;
+}
+
+body.light-mode .leaderboard-row-bottom span {
+    color: #94a3b8 !important;
+}
+
+body.light-mode .leaderboard-row-bottom .game-grade {
+    color: unset !important;
+}
+
+body.light-mode .leaderboard-row-bottom .leaderboard-score {
+    color: #0284c7 !important;
+}
+
+body.light-mode .leaderboard-row-bottom .leaderboard-accuracy {
+    color: #334155 !important;
+}
+
+body.light-mode .podium-rank-badge {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+body.light-mode .podium-spot.rank-1 .podium-rank-badge {
+    background: #fbbf24;
+    color: #000;
+}
+
+body.light-mode .podium-spot.rank-2 .podium-rank-badge {
+    background: #94a3b8;
+    color: #000;
+}
+
+body.light-mode .podium-spot.rank-3 .podium-rank-badge {
+    background: #b45309;
+    color: #fff;
+}
+
+.podium-handle {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.light-mode .podium-handle {
+    color: #64748b !important;
+}
+
+.leaderboard-handle {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-mode .leaderboard-handle {
+    color: #64748b !important;
+}
+
+.leaderboard-divider {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+body.light-mode .leaderboard-divider {
+    color: #cbd5e1;
+}
+
+.leaderboard-info-icon {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+body.light-mode .leaderboard-info-icon {
+    color: #94a3b8;
+}
+
+.pagination-counter {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body.light-mode .pagination-counter {
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.6);
 }
 
 @keyframes spin {

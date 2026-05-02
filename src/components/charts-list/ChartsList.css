@@ -383,7 +383,6 @@ body.light-mode .stats-combined {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    backdrop-filter: blur(8px);
     min-width: 80px;
     min-height: 50px;
 }
@@ -623,11 +622,11 @@ body.light-mode .stats-combined {
 
 
 body.light-mode .dashboard-content-layer {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.82);
 }
 
 body.light-mode .dashboard-li:hover .dashboard-content-layer {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.72);
 }
 
 body.light-mode .song-title-dashboard {
@@ -636,7 +635,16 @@ body.light-mode .song-title-dashboard {
 
 body.light-mode .song-artist-dashboard,
 body.light-mode .author-dashboard {
-    color: #475569;
+    color: #475569 !important;
+}
+
+body.light-mode .author-dashboard span {
+    color: #475569 !important;
+}
+
+body.light-mode .author-dashboard a,
+body.light-mode .author-dashboard span span {
+    color: #0284c7 !important;
 }
 
 body.light-mode .rating-dashboard {
@@ -661,7 +669,6 @@ body.light-mode .metadata-item.likes {
 }
 
 body.light-mode .visibility-toggle-btn {
-    backdrop-filter: blur(4px);
 }
 
 body.light-mode .dashboard-li {
@@ -669,6 +676,38 @@ body.light-mode .dashboard-li {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-body.light-mode .song-link-wrapper span {
+body.light-mode .song-link-wrapper > span {
     color: #0f172a;
+}
+
+body.light-mode .no-audio-label {
+    color: #94a3b8;
+}
+
+body.light-mode .loading-container p {
+    color: #64748b;
+}
+
+body.light-mode .dashboard-bg-layer {
+    filter: brightness(1.1) saturate(0.5);
+    opacity: 0.3;
+}
+
+body.light-mode .chartlist-ambience {
+    filter: blur(32px) saturate(0.8) brightness(1);
+    opacity: 0.15;
+}
+
+body.light-mode .metadata-item.created,
+body.light-mode .metadata-item.updated {
+    color: #64748b;
+}
+
+body.light-mode .likes-part {
+    background: rgba(239, 68, 68, 0.08);
+    border-right-color: rgba(15, 23, 42, 0.1);
+}
+
+body.light-mode .comments-part {
+    background: rgba(56, 189, 248, 0.08);
 }

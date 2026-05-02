@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import NavLinks from "./NavLinks";
 import Link from "next/link";
 import { useEffect, useState, Suspense } from "react";
@@ -9,7 +10,7 @@ import { LanguageProvider, useLanguage } from "../contexts/LanguageContext";
 import { ThemeProvider, useTheme } from "../contexts/ThemeContext";
 import { AudioPlayerProvider } from "../contexts/AudioPlayerContext";
 import BackgroundDecorations from '../components/background-decorations/BackgroundDecorations';
-import MiniPlayer from '../components/mini-player/MiniPlayer';
+const MiniPlayer = dynamic(() => import('../components/mini-player/MiniPlayer'), { ssr: false });
 import NavigationProgress from '../components/navigation-progress/NavigationProgress';
 import { Menu, X, Sun, Moon, Globe, User, LogOut } from "lucide-react";
 import LiquidSelect from "../components/liquid-select/LiquidSelect";
@@ -126,7 +127,7 @@ function HeaderContent() {
                                             onError={(e) => { e.target.src = "/defpfp.webp"; }}
                                         />
                                     </div>
-                                    <span className="user-name" style={{ zIndex: 2, position: 'relative', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
+                                    <span className="user-name">
                                         {sonolusUser.sonolus_username}
                                     </span>
                                     <span className="dropdown-arrow" style={{ zIndex: 2, position: 'relative' }}>▼</span>
@@ -155,7 +156,7 @@ function HeaderContent() {
                             <div className="user-profile-container">
                                 <Link href="/login" className="user-profile login-nav-link" style={{ padding: '6px 16px 6px 6px' }}>
                                     <div className="user-avatar">
-                                        <div className="default-avatar" style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}>
+                                        <div className="default-avatar">
                                             <User size={14} />
                                         </div>
                                     </div>

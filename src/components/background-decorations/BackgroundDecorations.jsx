@@ -56,10 +56,10 @@ export default function BackgroundDecorations() {
         };
     }, [isMobile]);
 
-    const isHome = pathname === '/';
+    const showDecorations = pathname === '/';
 
     const shapeElements = useMemo(() => {
-        if (isMobile || !isHome) return null;
+        if (isMobile || !showDecorations) return null;
         return SHAPES.map((shape) => (
             <div
                 key={shape.id}
@@ -76,13 +76,13 @@ export default function BackgroundDecorations() {
                 }}
             />
         ));
-    }, [isMobile, isHome]);
+    }, [isMobile, showDecorations]);
 
     return (
         <div className="bg-decorations-container" ref={containerRef}>
             <div className="bg-grid-pattern" />
 
-            {isHome && (
+            {showDecorations && (
                 <>
                     {shapeElements}
 

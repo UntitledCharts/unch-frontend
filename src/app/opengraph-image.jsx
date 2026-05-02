@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const revalidate = false;
+export const revalidate = 86400;
 export const alt = 'UntitledCharts';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
@@ -28,7 +28,7 @@ export default async function Image() {
                 justifyContent: 'center',
                 gap: 30,
             }}>
-                {logoData ? <img src={logoData} width={120} height={120} /> : <div style={{ fontSize: 100, display: 'flex' }}>🎵</div>}
+                {logoData ? <img src={`data:image/png;base64,${Buffer.from(logoData).toString('base64')}`} width={120} height={120} /> : <div style={{ fontSize: 100, display: 'flex' }}>🎵</div>}
 
                 <div style={{
                     fontSize: 80,

@@ -313,10 +313,19 @@ export default function HeroSection({ posts = [] }) {
                     ))}
                 </div>
             </div>
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 py-2 px-4 rounded-full flex items-center justify-center gap-2 text-sm bg-sky-200/10 select-none">
+            <button
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 py-2 px-5 rounded-full flex items-center justify-center gap-2 text-base bg-sky-200/10 select-none cursor-pointer border-none text-white font-medium"
+                onClick={() => {
+                    const hero = document.querySelector('.hero-section');
+                    if (hero) {
+                        const next = hero.nextElementSibling;
+                        if (next) next.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }}
+            >
                 <ArrowDown className="size-5" />
                 <span>{t('hero.more')}</span>
-            </div>
+            </button>
         </section>
 
         {showAuthorPopout && authorPopoutData && typeof document !== 'undefined' &&

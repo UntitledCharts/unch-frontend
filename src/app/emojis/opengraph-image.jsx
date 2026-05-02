@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { getDecodedFonts } from '../../data/fontLoader';
 
 export const runtime = 'edge';
-export const revalidate = false;
+export const revalidate = 86400;
 export const alt = 'Untitled Charts - Supported Emojis';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';

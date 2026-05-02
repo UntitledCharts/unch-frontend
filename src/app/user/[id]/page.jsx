@@ -283,7 +283,7 @@ export default function UserProfile({ params }) {
         <main className="profile-page">
             <div className="profile-side-ambience" style={{ backgroundImage:`url(${bannerUrl})` }} />
             <div className="profile-side-ambience profile-side-ambience-pfp" style={{ backgroundImage:`url(${avatarUrl})` }} />
-            <div style={{ position:"fixed", inset:0, backgroundImage:`url(${bannerUrl})`, backgroundSize:"cover", backgroundPosition:"center", filter:"blur(60px) brightness(0.3)", opacity:0.6, zIndex:0, pointerEvents:"none" }} />
+            <div className="profile-bg-blur" style={{ backgroundImage:`url(${bannerUrl})` }} />
 
             <button className="back-btn" onClick={handleBack}><ArrowLeft size={16} /><span>{t('userProfile.back','Back')}</span></button>
 
@@ -345,11 +345,15 @@ export default function UserProfile({ params }) {
                     <div className="profile-stats-row profile-stats-row-secondary">
                         <div className="profile-stat-small">
                             <span>{formatNumber(stats.liked_charts_count ?? 0)}</span>
-                            {' '}{t('userProfile.chartsLiked','Charts Liked')}
+                            {' '}{(stats.liked_charts_count ?? 0) === 1
+                                ? t('userProfile.chartLiked_singular', 'Chart Liked')
+                                : t('userProfile.chartsLiked', 'Charts Liked')}
                         </div>
                         <div className="profile-stat-small">
                             <span>{formatNumber(stats.comments_count ?? 0)}</span>
-                            {' '}{t('userProfile.commentsMade','Comments Made')}
+                            {' '}{(stats.comments_count ?? 0) === 1
+                                ? t('userProfile.commentMade_singular', 'Comment Posted')
+                                : t('userProfile.commentsMade', 'Comments Posted')}
                         </div>
                     </div>
                     {account.description && (

@@ -8,6 +8,7 @@
     z-index: 1000;
     background: var(--glass-bg);
     backdrop-filter: blur(16px);
+    will-change: transform;
     border: 1px solid var(--glass-border);
     border-radius: 40px;
     height: 60px;
@@ -204,6 +205,13 @@ body.light-mode .header-lang-select {
     justify-content: center;
     font-weight: bold;
     font-size: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+body.light-mode .default-avatar {
+    background: #e2e8f0;
+    color: #475569;
 }
 
 .user-profile .user-name {
@@ -261,6 +269,8 @@ body.light-mode .header-lang-select {
     color: white;
     z-index: 2;
     position: relative;
+    -webkit-text-stroke: 0.5px rgba(0,0,0,0.3);
+    paint-order: stroke fill;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
     white-space: nowrap;
     overflow: hidden;
@@ -380,7 +390,6 @@ body.light-mode {
 
 .liquid-input {
     background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--foreground);
     padding: 12px 18px;
@@ -410,7 +419,6 @@ body.light-mode .liquid-input {
 
 .liquid-select-trigger {
     background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--foreground);
     padding: 12px 18px;
@@ -532,7 +540,6 @@ body.light-mode .liquid-select-item:hover {
 
 .glass-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
     border-radius: 24px;
     padding: 40px;
@@ -559,6 +566,11 @@ body.light-mode .user-profile {
 
 body.light-mode .user-profile .user-name {
     color: #0f172a;
+}
+
+body.light-mode .user-profile.redesigned-trigger .user-name {
+    -webkit-text-stroke: 0.5px rgba(255,255,255,0.5);
+    text-shadow: 0 1px 3px rgba(255,255,255,0.8);
 }
 
 body.light-mode .header-lang-select {
@@ -1043,7 +1055,8 @@ footer {
 
     border-top: 1px solid var(--glass-border);
     display: flex;
-    position: static;
+    position: relative;
+    z-index: 1;
     bottom: 0;
     flex-wrap: wrap;
 

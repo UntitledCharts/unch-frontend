@@ -1,12 +1,11 @@
 .pagination-card {
     background-color: var(--glass-bg);
 
-    background: rgba(15, 23, 42, 0.7);
+    background: rgba(15, 23, 42, 0.92);
 
     border: 1px solid rgba(56, 189, 248, 0.1);
     border-radius: 40px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
     margin-top: 20px;
     padding: 20px;
     width: 100%;

@@ -107,6 +107,19 @@
     }
 }
 
+body.light-mode .carousel-arrow {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(15, 23, 42, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: #0f172a;
+}
+
+body.light-mode .carousel-arrow:hover {
+    background: #ffffff;
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
 @media (min-width: 1440px) {
     .carousel-arrow-left {
         left: -32px;

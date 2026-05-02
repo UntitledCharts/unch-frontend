@@ -947,7 +947,7 @@ function DashboardContent() {
                       <h3>{t("dashboard.noCharts", "No Charts Yet")}</h3>
                       <p>{t("dashboard.startUpload", "Upload your first chart to get started!")}</p>
                       <button onClick={openUpload} className="upload-btn mt-4">
-                        <Plus size={18} className="plus-icon" /> {t("dashboard.uploadFirst", "Upload Now")}
+                        <Plus size={18} className="plus-icon" /><span>{t("dashboard.uploadFirst", "Upload Now")}</span>
                       </button>
                     </>
                   )}

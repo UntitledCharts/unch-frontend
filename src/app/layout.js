@@ -47,7 +47,7 @@ export default function RootLayout({ children }) {
   const assetCdn = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || '';
 
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {assetCdn && <link rel="preconnect" href={assetCdn} crossOrigin="anonymous" />}
         <link rel="dns-prefetch" href="https://ba14959b4680d4b81463a1d708c63691.untitledcharts.com" />

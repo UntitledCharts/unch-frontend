@@ -1081,54 +1081,31 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                       </Link>
 
                       <div style={{ position: 'relative', zIndex: 1 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', alignItems: 'baseline', gap: '8px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0, flexShrink: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', minWidth: 0, flexShrink: 1, flexWrap: 'wrap' }}>
                           {commentUserLink ? (
                             <Link
                               href={`/user/${commentUserLink}`}
                               className="comment-username-link"
                               onClick={(e) => e.stopPropagation()}
-                              style={{
-                                fontWeight: '600',
-                                color: '#38bdf8',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                maxWidth: '70%',
-                                flexShrink: 1,
-                                display: 'inline-block',
-                                position: 'relative',
-                                zIndex: 2,
-                                textDecoration: 'none',
-                                cursor: 'pointer'
-                              }}
                             >
                               <FormattedText text={displayName || "User"} />
-                              {handle && <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginLeft: '6px', fontWeight: 'normal' }}>@{handle}</span>}
                             </Link>
                           ) : (
-                            <span style={{
-                              fontWeight: '600',
-                              color: '#38bdf8',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              maxWidth: '70%',
-                              flexShrink: 1,
-                              display: 'inline-block'
-                            }}>
+                            <span className="comment-username-link">
                               <FormattedText text={displayName || "User"} />
                             </span>
                           )}
-                            {comment.account?.owner && <span style={{ background: 'linear-gradient(135deg, #ef4444, #f97316)', color: 'white', padding: '1px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>OWNER</span>}
-                            {comment.account?.admin && <span style={{ background: 'rgba(244, 63, 94, 0.2)', border: '1px solid rgba(244, 63, 94, 0.3)', color: '#f43f5e', padding: '1px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>ADMIN</span>}
-                            {comment.account?.mod && <span style={{ background: 'rgba(34, 197, 94, 0.2)', border: '1px solid rgba(34, 197, 94, 0.3)', color: '#4ade80', padding: '1px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>MOD</span>}
+                            {handle && <span className="comment-handle">@{handle}</span>}
+                            {comment.account?.owner && <span className="comment-role-badge comment-role-owner">OWNER</span>}
+                            {comment.account?.admin && <span className="comment-role-badge comment-role-admin">ADMIN</span>}
+                            {comment.account?.mod && <span className="comment-role-badge comment-role-mod">MOD</span>}
                           </div>
-                          <span style={{ fontSize: '0.8em', color: 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                            {comment.created_at ? new Date(comment.created_at).toLocaleDateString() : ""}
+                          <span className="comment-date">
+                            {comment.created_at ? (() => { const d = new Date(comment.created_at); return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`; })() : ""}
                           </span>
                         </div>
-                        <div style={{ margin: 0, color: 'rgba(255,255,255,0.9)', fontSize: '0.95em' }}>
+                        <div className="comment-text">
                           <FormattedText text={comment.content} />
                         </div>
                         {(sonolusUser && (sonolusUser.isMod || sonolusUser.isAdmin || sonolusUser.sonolus_id === comment.user_id)) && (
@@ -1205,13 +1182,11 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                   <ChevronLeft size={18} />
                   {t('common.prev') || 'Prev'}
                 </button>
-                <span style={{
+                <span className="pagination-counter" style={{
                   display: 'flex',
                   alignItems: 'center',
-                  color: '#f8fafc',
                   fontWeight: '600',
                   fontSize: '0.85rem',
-                  background: 'rgba(255,255,255,0.08)',
                   padding: '6px 10px',
                   borderRadius: '8px',
                   whiteSpace: 'nowrap'
@@ -1300,14 +1275,14 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                             <img src={pfpUrl} alt="" onError={(e) => { e.target.src = DEFAULT_PFP; }} />
                             <div className="podium-rank-badge">2</div>
                           </div>
-                          <div style={{ position: 'absolute', top: '8px', right: '8px', color: 'rgba(255,255,255,0.4)', cursor: 'help' }} title={`Perfect: ${record.nperfect || 0}\nGreat: ${record.ngreat || 0}\nGood: ${record.ngood || 0}\nMiss: ${record.nmiss || 0}`}>
+                          <div className="leaderboard-info-icon" style={{ position: 'absolute', top: '8px', right: '8px', cursor: 'help' }} title={`Perfect: ${record.nperfect || 0}\nGreat: ${record.ngreat || 0}\nGood: ${record.ngood || 0}\nMiss: ${record.nmiss || 0}`}>
                             <Info size={14} />
                           </div>
                           <Link href={`/user/${userLink}`} className="podium-name" style={{ display: 'block', textDecoration: 'none', width: '100%', overflow: 'hidden' }}>
                             <MarqueeText maxLength={10} style={{ display: 'block', textAlign: 'center' }}>
                               {displayName}
                             </MarqueeText>
-                            {handle && <MarqueeText maxLength={15} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 'normal', textAlign: 'center' }}>@{handle}</MarqueeText>}
+                            {handle && <MarqueeText maxLength={15} className="podium-handle" style={{ fontSize: '0.75rem', fontWeight: 'normal', textAlign: 'center' }}>@{handle}</MarqueeText>}
                           </Link>
                           <div className="podium-score">{record.arcade_score.toLocaleString()}</div>
                           <div className="podium-details">
@@ -1337,14 +1312,14 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                             <img src={pfpUrl} alt="" onError={(e) => { e.target.src = DEFAULT_PFP; }} />
                             <div className="podium-rank-badge">1</div>
                           </div>
-                          <div style={{ position: 'absolute', top: '8px', right: '8px', color: 'rgba(255,255,255,0.4)', cursor: 'help' }} title={`Perfect: ${record.nperfect || 0}\nGreat: ${record.ngreat || 0}\nGood: ${record.ngood || 0}\nMiss: ${record.nmiss || 0}`}>
+                          <div className="leaderboard-info-icon" style={{ position: 'absolute', top: '8px', right: '8px', cursor: 'help' }} title={`Perfect: ${record.nperfect || 0}\nGreat: ${record.ngreat || 0}\nGood: ${record.ngood || 0}\nMiss: ${record.nmiss || 0}`}>
                             <Info size={14} />
                           </div>
                           <Link href={`/user/${userLink}`} className="podium-name" style={{ display: 'block', textDecoration: 'none', width: '100%', overflow: 'hidden' }}>
                             <MarqueeText maxLength={10} style={{ display: 'block', textAlign: 'center' }}>
                               {displayName}
                             </MarqueeText>
-                            {handle && <MarqueeText maxLength={15} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 'normal', textAlign: 'center' }}>@{handle}</MarqueeText>}
+                            {handle && <MarqueeText maxLength={15} className="podium-handle" style={{ fontSize: '0.75rem', fontWeight: 'normal', textAlign: 'center' }}>@{handle}</MarqueeText>}
                           </Link>
                           <div className="podium-score">{record.arcade_score.toLocaleString()}</div>
                           <div className="podium-details">
@@ -1374,14 +1349,14 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                             <img src={pfpUrl} alt="" onError={(e) => { e.target.src = DEFAULT_PFP; }} />
                             <div className="podium-rank-badge">3</div>
                           </div>
-                          <div style={{ position: 'absolute', top: '8px', right: '8px', color: 'rgba(255,255,255,0.4)', cursor: 'help' }} title={`Perfect: ${record.nperfect || 0}\nGreat: ${record.ngreat || 0}\nGood: ${record.ngood || 0}\nMiss: ${record.nmiss || 0}`}>
+                          <div className="leaderboard-info-icon" style={{ position: 'absolute', top: '8px', right: '8px', cursor: 'help' }} title={`Perfect: ${record.nperfect || 0}\nGreat: ${record.ngreat || 0}\nGood: ${record.ngood || 0}\nMiss: ${record.nmiss || 0}`}>
                             <Info size={14} />
                           </div>
                           <Link href={`/user/${userLink}`} className="podium-name" style={{ display: 'block', textDecoration: 'none', width: '100%', overflow: 'hidden' }}>
                             <MarqueeText maxLength={10} style={{ display: 'block', textAlign: 'center' }}>
                               {displayName}
                             </MarqueeText>
-                            {handle && <MarqueeText maxLength={15} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 'normal', textAlign: 'center' }}>@{handle}</MarqueeText>}
+                            {handle && <MarqueeText maxLength={15} className="podium-handle" style={{ fontSize: '0.75rem', fontWeight: 'normal', textAlign: 'center' }}>@{handle}</MarqueeText>}
                           </Link>
                           <div className="podium-score">{record.arcade_score.toLocaleString()}</div>
                           <div className="podium-details">
@@ -1420,27 +1395,27 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                             <Link href={`/user/${userLink}`} className="leaderboard-item-avatar" style={{ width: '28px', height: '28px', flexShrink: 0 }}>
                               <img src={pfpUrl} alt="" onError={(e) => { e.target.src = DEFAULT_PFP; }} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
                             </Link>
-                            <Link href={`/user/${userLink}`} className="leaderboard-name" style={{ display: 'block', textDecoration: 'none', color: 'white', fontWeight: 'bold', overflow: 'hidden' }}>
+                            <Link href={`/user/${userLink}`} className="leaderboard-name" style={{ display: 'block', textDecoration: 'none', fontWeight: 'bold', overflow: 'hidden' }}>
                               <MarqueeText maxLength={15} style={{ display: 'block' }}>{displayName}</MarqueeText>
                             </Link>
-                            {handle && <MarqueeText maxLength={20} style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', display: 'block' }}>@{handle}</MarqueeText>}
+                            {handle && <MarqueeText maxLength={20} className="leaderboard-handle" style={{ fontSize: '0.8rem', display: 'block' }}>@{handle}</MarqueeText>}
                           </div>
 
                           <div className="leaderboard-row-bottom" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', paddingLeft: '40px', fontSize: '0.9rem' }}>
-                            <div className="leaderboard-score" style={{ fontWeight: 'bold', color: 'white', fontSize: '1rem', flexShrink: 0 }}>{record.arcade_score.toLocaleString()}</div>
-                            <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
+                            <div className="leaderboard-score" style={{ fontWeight: 'bold', fontSize: '1rem', flexShrink: 0 }}>{record.arcade_score.toLocaleString()}</div>
+                            <span className="leaderboard-divider">|</span>
                             <span className={`game-grade ${record.grade}`}>
                               {record.grade === 'allPerfect' ? 'All Perfect' :
                                 record.grade === 'fullCombo' ? 'Full Combo' :
                                   record.grade === 'pass' ? 'Pass' :
                                     record.grade === 'fail' ? 'Fail' : record.grade}
                             </span>
-                            <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
+                            <span className="leaderboard-divider">|</span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span className="leaderboard-accuracy" style={{ color: '#e2e8f0', fontWeight: '700' }}>
+                              <span className="leaderboard-accuracy" style={{ fontWeight: '700' }}>
                                 {formatAccuracy(record.accuracy_score)} {record.speed && `x${parseFloat(Number(record.speed).toFixed(2))}`}
                               </span>
-                              <div style={{ color: 'rgba(255,255,255,0.4)', cursor: 'help', display: 'flex', alignItems: 'center' }} title={`Perfect: ${record.nperfect || 0}\nGreat: ${record.ngreat || 0}\nGood: ${record.ngood || 0}\nMiss: ${record.nmiss || 0}`}>
+                              <div className="leaderboard-info-icon" style={{ cursor: 'help', display: 'flex', alignItems: 'center' }} title={`Perfect: ${record.nperfect || 0}\nGreat: ${record.ngreat || 0}\nGood: ${record.ngood || 0}\nMiss: ${record.nmiss || 0}`}>
                                 <Info size={14} />
                               </div>
                             </div>
@@ -1469,7 +1444,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                 }}>
                   <ChevronLeft size={18} /> {t('common.prev') || 'Prev'}
                 </button>
-                <span style={{ display: 'flex', alignItems: 'center', color: '#f8fafc', fontWeight: '600', fontSize: '0.85rem', background: 'rgba(255,255,255,0.08)', padding: '6px 10px', borderRadius: '8px', whiteSpace: 'nowrap' }}>
+                <span className="pagination-counter" style={{ display: 'flex', alignItems: 'center', fontWeight: '600', fontSize: '0.85rem', padding: '6px 10px', borderRadius: '8px', whiteSpace: 'nowrap' }}>
                   {leaderboardPage} / {leaderboardTotalPages}
                 </span>
                 <button disabled={leaderboardPage >= leaderboardTotalPages} onClick={() => setLeaderboardPage(p => Math.min(leaderboardTotalPages, p + 1))} className="pagination-btn" style={{

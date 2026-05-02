@@ -1,6 +1,7 @@
 ﻿.profile-page {
     min-height: 100vh;
     padding-bottom: 80px;
+    position: relative;
 }
 
 .profile-banner-wrap {
@@ -30,8 +31,19 @@
     );
 }
 
+.profile-bg-blur {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(60px) brightness(0.3);
+    opacity: 0.6;
+    z-index: 0;
+    pointer-events: none;
+}
+
 .profile-side-ambience {
-    position: fixed;
+    position: absolute;
     top: 0;
     bottom: 0;
     width: 220px;
@@ -475,6 +487,26 @@ body.light-mode .chart-card { background: rgba(255,255,255,0.8); border-color: r
 body.light-mode .chart-title { color: #0f172a; }
 body.light-mode .profile-tab.active { color: #0f172a; border-bottom-color: #0284c7; }
 body.light-mode .profile-tabs-bar { border-bottom-color: rgba(15,23,42,0.1); }
+body.light-mode .profile-banner-fade { background: linear-gradient(to bottom, rgba(253,253,253,0) 50%, rgba(253,253,253,0.6) 80%, rgba(253,253,253,0.95) 100%); }
+body.light-mode .name-line h1 { color: #0f172a; text-shadow: none; }
+body.light-mode .handle { color: rgba(15,23,42,0.5); }
+body.light-mode .profile-description-section { color: rgba(15,23,42,0.65); border-top-color: rgba(15,23,42,0.1); }
+body.light-mode .profile-stat-value { color: #0f172a; }
+body.light-mode .profile-stat-label { color: rgba(15,23,42,0.5); }
+body.light-mode .profile-stat-small { color: rgba(15,23,42,0.5); }
+body.light-mode .profile-stat-small span { color: rgba(15,23,42,0.75); }
+body.light-mode .btn-edit-profile { background: rgba(15,23,42,0.08); border-color: rgba(15,23,42,0.15); color: #0f172a; }
+body.light-mode .btn-edit-profile:hover { background: rgba(15,23,42,0.14); }
+body.light-mode .profile-tab { color: rgba(15,23,42,0.45); }
+body.light-mode .profile-tab:hover:not(.active) { color: rgba(15,23,42,0.75); }
+body.light-mode .empty-state { color: rgba(15,23,42,0.4); }
+body.light-mode .load-more-btn-flat { color: rgba(15,23,42,0.7); background: rgba(2,132,199,0.07); border-color: rgba(2,132,199,0.2); }
+body.light-mode .profile-bg-blur { filter: blur(60px) brightness(1.2) saturate(0.6); opacity: 0.25; }
+body.light-mode .profile-side-ambience { filter: blur(50px) saturate(1) brightness(1); opacity: 0.12; }
+body.light-mode .profile-loading,
+body.light-mode .profile-error { color: rgba(15,23,42,0.5); }
+body.light-mode .back-btn { background: rgba(255,255,255,0.7); color: #0f172a; }
+body.light-mode .back-btn:hover { color: #0284c7; }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-4px); }
