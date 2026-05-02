@@ -4,11 +4,5 @@
         "name": "English",
         "english_name": "English",
         "file": "en.json"
-    },
-    "ja": {
-        "flag": "🇯🇵",
-        "name": "日本語",
-        "english_name": "Japanese",
-        "file": "ja.json"
     }
 }
