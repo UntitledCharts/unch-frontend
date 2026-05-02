@@ -205,10 +205,6 @@ function HomeContent() {
 
   const handleSearch = (e) => {
     e?.preventDefault();
-    if (searchQuery.trim().toLowerCase() === "jadixexposed") {
-      router.push("/?view=jadixexposed-egg-2026");
-      return;
-    }
     setPage(0);
     fetchSearchData();
   };
@@ -229,10 +225,7 @@ function HomeContent() {
 
   const viewParam = searchParams.get('view');
   useEffect(() => {
-    if (viewParam === 'jadixexposed-egg-2026') {
-      setViewMode('jadixexposed-egg-2026');
-      setLoading(false);
-    } else if (viewParam === 'search') {
+    if (viewParam === 'search') {
       setViewMode('search');
       if (viewMode !== 'search') {
         setLoading(true);
@@ -293,57 +286,6 @@ function HomeContent() {
             </Link>
           </div>
         </div>
-      ) : viewMode === 'jadixexposed-egg-2026' ? (
-        <div className="egg-page animate-fade-in">
-          <div className="egg-orb egg-orb-1" />
-          <div className="egg-orb egg-orb-2" />
-          <div className="egg-orb egg-orb-3" />
-          <div className="egg-inner">
-            <div className="egg-badge">SECRET UNLOCKED</div>
-            <h1 className="egg-title">
-              You found the Jadix Files
-              <span className="egg-title-sub">classified intel on a certain someone</span>
-            </h1>
-            <div className="egg-gallery">
-              <div className="egg-card">
-                <div className="egg-card-img-wrap">
-                  <img src="/Untitled1472_20260120224400.jpg" alt="Jadixexposed" loading="lazy" />
-                </div>
-                <p>Jadixexposed Original &mdash; Jadix in a maid costume, exposed by his muscular man</p>
-              </div>
-              <div className="egg-card">
-                <div className="egg-card-img-wrap">
-                  <img src="/reiyunlover.png" alt="Reiyunlover" loading="lazy" />
-                </div>
-                <p>Reiyunlover</p>
-              </div>
-              <div className="egg-card">
-                <div className="egg-card-img-wrap">
-                  <img src="/Untitled1498_20260206013808.webp" alt="Welcome Home Master" loading="lazy" />
-                </div>
-                <p>Jadix saying &quot;Welcome Home, Master&quot;</p>
-              </div>
-            </div>
-            <div className="egg-quotes">
-              <div className="egg-quote egg-quote-purple">
-                <div className="egg-quote-avatar">R</div>
-                <div className="egg-quote-body">
-                  <p>&quot;Hai hai! ReiyuN here~ Congratulations for finding this silly page about Jadix! I do lots of abominations so expect more things to pile up here whenever Jadix gets punished by me since I occasionally draw something for him whenever he does something stupid. That&apos;s all bai bai!!&quot;</p>
-                  <span>&mdash; ReiyuN</span>
-                </div>
-              </div>
-              <div className="egg-quote egg-quote-red">
-                <div className="egg-quote-avatar">J</div>
-                <div className="egg-quote-body">
-                  <p>&quot;if you see this, theres a missile coming to your house right now&quot;</p>
-                  <span>&mdash; Jadix</span>
-                </div>
-              </div>
-            </div>
-            <Link href="/" className="egg-back-btn">Back to Safety</Link>
-          </div>
-        </div>
-
       ) : (
         <div className="search-content animate-fade-in" style={{ width: '100%', maxWidth: '1000px', margin: '120px auto 0' }}>
           <div className="searchContainer">

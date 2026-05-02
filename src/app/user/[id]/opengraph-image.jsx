@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
 import { getDecodedFonts } from '../../../data/fontLoader';
-import { customProfiles } from '../../../data/customProfiles';
 
 export const runtime = 'edge';
 export const revalidate = 3600;
@@ -47,25 +46,11 @@ export default async function Image({ params }) {
     let pfpUrl = defpfpUrl.toString();
     if (accountData?.profile_hash && assetBaseUrl) {
         pfpUrl = `${assetBaseUrl}/${accountData.sonolus_id}/profile/${accountData.profile_hash}`;
-    } else {
-        const customProfile = accountData ? (customProfiles[accountData.id] || customProfiles[accountData.sonolus_id] || customProfiles[id]) : null;
-        if (customProfile?.pfp) {
-            pfpUrl = customProfile.pfp.startsWith('http')
-                ? customProfile.pfp
-                : new URL(`../../../../public${customProfile.pfp}`, import.meta.url).toString();
-        }
     }
 
     let bannerUrl = null;
     if (accountData?.banner_hash && assetBaseUrl) {
         bannerUrl = `${assetBaseUrl}/${accountData.sonolus_id}/banner/${accountData.banner_hash}`;
-    } else {
-        const customProfile = accountData ? (customProfiles[accountData.id] || customProfiles[accountData.sonolus_id] || customProfiles[id]) : null;
-        if (customProfile?.banner) {
-            bannerUrl = customProfile.banner.startsWith('http')
-                ? customProfile.banner
-                : new URL(`../../../../public${customProfile.banner}`, import.meta.url).toString();
-        }
     }
 
     

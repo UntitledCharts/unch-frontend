@@ -1,5 +1,3 @@
-import { customProfiles } from "../../../data/customProfiles";
-
 export async function generateMetadata({ params }) {
     const { id } = await params;
 
@@ -45,11 +43,8 @@ export async function generateMetadata({ params }) {
         };
     }
 
-    const customProfile = customProfiles[account.id] || customProfiles[account.sonolus_id] || customProfiles[id];
-
-    
     const title = `${account.sonolus_username || "User"} on UntitledCharts`;
-    const description = customProfile?.bio || `Check out ${account.sonolus_username || "User"}'s charts on UntitledCharts!`;
+    const description = `Check out ${account.sonolus_username || "User"}'s charts on UntitledCharts!`;
 
     return {
         title: title,
