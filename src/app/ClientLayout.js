@@ -54,7 +54,10 @@ function HeaderContent() {
     const LangPicker = () => {
         const options = Object.entries(supportedLangs).map(([code, lang]) => ({
             value: code,
-            label: `${lang.flag} ${lang.name} (${lang.english_name || lang.name})`
+            label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                <img src={`https://flagcdn.com/w40/${lang.country}.png`} alt="" width={20} height={15} style={{ borderRadius: 2, objectFit: 'cover' }} />
+                {lang.name} ({lang.english_name || lang.name})
+            </span>
         }));
 
         return (
@@ -336,7 +339,10 @@ function FooterContent() {
                             onChange={(e) => changeLanguage(e.target.value)}
                             options={Object.entries(supportedLangs).map(([code, lang]) => ({
                                 value: code,
-                                label: `${lang.flag} ${lang.name}`
+                                label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                    <img src={`https://flagcdn.com/w40/${lang.country}.png`} alt="" width={20} height={15} style={{ borderRadius: 2, objectFit: 'cover' }} />
+                                    {lang.name}
+                                </span>
                             }))}
                         />
                     </div>

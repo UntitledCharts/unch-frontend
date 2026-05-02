@@ -1,8 +1,26 @@
 {
     "en": {
-        "flag": "🇺🇸",
+        "country": "us",
         "name": "English",
         "english_name": "English",
         "file": "en.json"
+    },
+    "ja": {
+        "country": "jp",
+        "name": "日本語",
+        "english_name": "Japanese",
+        "file": "ja.json"
+    },
+    "ko": {
+        "country": "kr",
+        "name": "한국어",
+        "english_name": "Korean",
+        "file": "ko.json"
+    },
+    "it": {
+        "country": "it",
+        "name": "Italiano",
+        "english_name": "Italian",
+        "file": "it.json"
     }
 }
