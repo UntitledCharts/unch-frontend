@@ -361,6 +361,10 @@ body.light-mode .indicator-progress {
     background: #0284c7;
 }
 
+body.light-mode .indicator-dot {
+    background: rgba(15, 23, 42, 0.2);
+}
+
 @media (max-width: 768px) {
     .hero-title {
         font-size: 2.5rem;
@@ -419,8 +423,4 @@ body.light-mode .hero-badge {
 
 body.light-mode .hero-jacket-container {
     box-shadow: none;
-}
-
-body.light-mode .indicator-dot {
-    background: rgba(15, 23, 42, 0.2);
 }

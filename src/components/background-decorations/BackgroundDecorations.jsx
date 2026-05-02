@@ -79,7 +79,7 @@ export default function BackgroundDecorations() {
                         style={{ transform: `translateY(calc(var(--scroll-y, 0px) * -0.1))` }}
                     />
 
-                    <div className="bg-text-container">
+                    <div className="bg-text-container" aria-hidden="true">
                         <div
                             className="bg-text bg-text-1"
                             style={{ transform: `translateX(-10%) rotate(-5deg) translateY(calc(var(--scroll-y, 0px) * 0.08))` }}

@@ -141,6 +141,7 @@ function DashboardContent() {
 
   const [scheduleMenuPostId, setScheduleMenuPostId] = useState(null);
   const [scheduleDtLocal, setScheduleDtLocal] = useState("");
+  const [scheduleAnchor, setScheduleAnchor] = useState(null);
   const scheduleAnchorRef = useRef(null);
 
   useEffect(() => setMounted(true), []);
@@ -180,11 +181,24 @@ function DashboardContent() {
     const epoch = getScheduledEpochSeconds(post);
     setScheduleDtLocal(epoch ? epochSecondsToDtLocal(epoch) : "");
     setScheduleMenuPostId(post.id);
+    setTimeout(() => {
+      const anchor = scheduleAnchorRef.current;
+      if (!anchor) return;
+      const rect = anchor.getBoundingClientRect();
+      const popoverWidth = 300;
+      let left = rect.left;
+      if (left + popoverWidth > window.innerWidth - 8) left = window.innerWidth - popoverWidth - 8;
+      if (left < 8) left = 8;
+      let top = rect.bottom + 6;
+      if (top + 260 > window.innerHeight - 8) top = rect.top - 260 - 6;
+      setScheduleAnchor({ top, left });
+    }, 0);
   };
 
   const closeScheduleMenu = () => {
     setScheduleMenuPostId(null);
     setScheduleDtLocal("");
+    setScheduleAnchor(null);
   };
 
 
@@ -1092,76 +1106,75 @@ function DashboardContent() {
                                   updateVisibility(post, next);
                                 }}
                               />
+                            </div>
 
-                              {scheduleMenuPostId === post.id && (
-                                <div
-                                  className="schedule-popover"
-                                  onClick={(e) => e.stopPropagation()}
+                            {scheduleMenuPostId === post.id && mounted && scheduleAnchor && createPortal(
+                              <div
+                                className="schedule-popover"
+                                style={{ top: scheduleAnchor.top, left: scheduleAnchor.left }}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <div className="text-xs opacity-75">{t("dashboard.publicOptions", "Public options")}</div>
+
+                                <button
+                                  className="icon-btn-ghost"
+                                  onClick={async () => {
+                                    await updateVisibility(post, "PUBLIC");
+                                    closeScheduleMenu();
+                                  }}
                                 >
-                                  <div className="text-xs opacity-75">{t("dashboard.publicOptions", "Public options")}</div>
+                                  {t("dashboard.publicNow", "Public Now")}
+                                </button>
 
-                                  {}
-                                  <button
-                                    className="icon-btn-ghost"
-                                    onClick={async () => {
-                                      await updateVisibility(post, "PUBLIC");
-                                      closeScheduleMenu();
-                                    }}
-                                  >
-                                    {t("dashboard.publicNow", "Public Now")}
-                                  </button>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                                  <div className="text-xs opacity-75">{t("dashboard.schedulePublish", "Schedule publish")}</div>
 
-                                  <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                                    <div className="text-xs opacity-75">{t("dashboard.schedulePublish", "Schedule publish")}</div>
+                                  <input
+                                    type="datetime-local"
+                                    value={scheduleDtLocal}
+                                    onChange={(e) => setScheduleDtLocal(e.target.value)}
+                                    className="input"
+                                  />
 
-                                    <input
-                                      type="datetime-local"
-                                      value={scheduleDtLocal}
-                                      onChange={(e) => setScheduleDtLocal(e.target.value)}
-                                      className="input"
-                                    />
-
-                                    <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
-                                      <button className="icon-btn-ghost" onClick={closeScheduleMenu}>
-                                        {t("dashboard.cancel", "Cancel")}
-                                      </button>
-                                      <button
-                                        className="icon-btn-ghost"
-                                        disabled={!scheduleDtLocal}
-                                        onClick={async () => {
-                                          const epoch = dtLocalToEpochSeconds(scheduleDtLocal);
-                                          if (!epoch) return;
-                                          await updateVisibility(post, post.status, { publish_time: epoch });
-                                          closeScheduleMenu();
-                                        }}
-                                      >
-                                        {t("dashboard.confirm", "Confirm")}
-                                      </button>
-                                    </div>
-                                  </div>
-
-                                  {}
-                                  {scheduledEpoch && (
+                                  <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+                                    <button className="icon-btn-ghost" onClick={closeScheduleMenu}>
+                                      {t("dashboard.cancel", "Cancel")}
+                                    </button>
                                     <button
-                                      className="icon-btn-ghost text-red"
+                                      className="icon-btn-ghost"
+                                      disabled={!scheduleDtLocal}
                                       onClick={async () => {
-                                        await updateVisibility(post, post.status, { publish_time: null });
+                                        const epoch = dtLocalToEpochSeconds(scheduleDtLocal);
+                                        if (!epoch) return;
+                                        await updateVisibility(post, post.status, { publish_time: epoch });
                                         closeScheduleMenu();
                                       }}
                                     >
-                                      {t("dashboard.removeSchedule", "Remove scheduled publish")}
+                                      {t("dashboard.confirm", "Confirm")}
                                     </button>
-                                  )}
-
-                                  {}
-                                  {scheduledLabel && (
-                                    <div className="text-xs opacity-75">
-                                      {t("dashboard.scheduledFor", "Scheduled for")}: {scheduledLabel}
-                                    </div>
-                                  )}
+                                  </div>
                                 </div>
-                              )}
-                            </div>
+
+                                {scheduledEpoch && (
+                                  <button
+                                    className="icon-btn-ghost text-red"
+                                    onClick={async () => {
+                                      await updateVisibility(post, post.status, { publish_time: null });
+                                      closeScheduleMenu();
+                                    }}
+                                  >
+                                    {t("dashboard.removeSchedule", "Remove scheduled publish")}
+                                  </button>
+                                )}
+
+                                {scheduledLabel && (
+                                  <div className="text-xs opacity-75">
+                                    {t("dashboard.scheduledFor", "Scheduled for")}: {scheduledLabel}
+                                  </div>
+                                )}
+                              </div>,
+                              document.body
+                            )}
                           </div>
                         </div>
                         </div>

@@ -472,7 +472,15 @@ function HomeContent() {
             />
           </div>
 
-          {pageCount > 1 && (
+          {searchType === "random" ? (
+            <button
+              className="search-btn"
+              style={{ marginTop: '24px', width: '100%' }}
+              onClick={(e) => { e.preventDefault(); fetchSearchData(); }}
+            >
+              {t('search.reroll', 'Reroll')}
+            </button>
+          ) : pageCount > 1 && (
             <PaginationControls
               currentPage={page}
               pageCount={pageCount}

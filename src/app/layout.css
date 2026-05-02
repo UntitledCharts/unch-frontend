@@ -1173,6 +1173,8 @@ body.light-mode .lang-select option {
     overflow: hidden;
     pointer-events: none;
     transition: opacity 1s ease;
+    contain: strict;
+    will-change: auto;
 }
 
 
@@ -1461,7 +1463,8 @@ body:not(.light-mode) .bg-grid-pattern {
 }
 
 .footer-bg-logo {
-    height: 150px;
+    height: 160px;
+    width: 160px;
     opacity: 0.08;
     filter: blur(3px);
 }
