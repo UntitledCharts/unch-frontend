@@ -181,7 +181,7 @@ export default memo(function HomepageChartCard({ chart, index = 0 }) {
     const handleMouseLeave = () => { if (!isMobileRef.current) setIsHovered(false); };
     const handleCardClick = (e) => {
         if (e.target.closest("button") || e.target.closest("a")) return;
-        if (isMobileDevice()) {
+        if (isMobileRef.current) {
             if (!isFocused) { checkPanelSide(); setIsFocused(true); return; }
         }
         router.push(`/levels/UnCh-${encodeURIComponent(id)}`);
@@ -211,7 +211,7 @@ export default memo(function HomepageChartCard({ chart, index = 0 }) {
 
     const handleCoverClick = (e) => {
         if (e.target.closest("button") || e.target.closest("a")) return;
-        if (!isMobileDevice()) return;
+        if (!isMobileRef.current) return;
         if (!proxiedBgmUrl) return;
         if (isThisActive) {
             pause();
