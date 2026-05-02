@@ -22,5 +22,11 @@
         "name": "Italiano",
         "english_name": "Italian",
         "file": "it.json"
+    },
+    "pt": {
+        "country": "br",
+        "name": "Português",
+        "english_name": "Portuguese",
+        "file": "pt.json"
     }
 }
