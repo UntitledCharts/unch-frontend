@@ -1,5 +1,10 @@
 import { ImageResponse } from 'next/og';
 import { getDecodedFonts, getDecodedFontDB } from '../../../data/fontLoader';
+import { emojis } from '../../../data/emojis';
+
+const logoUrl = new URL('../../../../public/636a8f1e76b38cb1b9eb0a3d88d7df6f.png', import.meta.url);
+const mikuUrl = new URL('../../../../public/mikudayo.png', import.meta.url);
+const starsUrl = new URL('../../../../public/stars.png', import.meta.url);
 
 export const runtime = 'edge';
 export const revalidate = 3600;
@@ -26,9 +31,12 @@ const bufferToBase64 = (buffer, defaultMime = 'image/png') => {
     else if (bytes[0] === 0x47 && bytes[1] === 0x49) mimeType = 'image/gif';
     else if (bytes[0] === 0x89 && bytes[1] === 0x50) mimeType = 'image/png';
     else if (bytes[0] === 0x52 && bytes[1] === 0x49) mimeType = 'image/webp';
-    let binary = '';
-    for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
-    return `data:${mimeType};base64,${btoa(binary)}`;
+    const CHUNK = 8192;
+    const parts = [];
+    for (let i = 0; i < bytes.length; i += CHUNK) {
+        parts.push(String.fromCharCode(...bytes.subarray(i, i + CHUNK)));
+    }
+    return `data:${mimeType};base64,${btoa(parts.join(''))}`;
 };
 
 export default async function Image({ params }) {
@@ -39,7 +47,6 @@ export default async function Image({ params }) {
         const { id } = params;
         const cleanId = id.replace(/^UnCh-/, '');
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
 
         try {
             const res = await fetch(`${apiUrl}/api/charts/${cleanId}/`);
@@ -62,7 +69,6 @@ export default async function Image({ params }) {
             );
         }
 
-        const { emojis } = await import('../../../../src/data/emojis');
         const requiredEmojiKeys = new Set();
         const textsToCheck = [levelData.title, levelData.artists, levelData.author, levelData.author_full, levelData.description];
         Object.keys(emojis).forEach(key => {
@@ -73,9 +79,9 @@ export default async function Image({ params }) {
         });
 
         
-        const logoPromise = fetch(`${appUrl}/636a8f1e76b38cb1b9eb0a3d88d7df6f.png`).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
-        const mikuPromise = fetch(`${appUrl}/mikudayo.png`).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
-        const starsPromise = fetch(`${appUrl}/stars.png`).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
+        const logoPromise = fetch(logoUrl).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
+        const mikuPromise = fetch(mikuUrl).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
+        const starsPromise = fetch(starsUrl).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
 
         let bgPromise = Promise.resolve(null);
         let jacketPromise = Promise.resolve(null);
@@ -108,7 +114,9 @@ export default async function Image({ params }) {
         const emojiPromises = Array.from(requiredEmojiKeys).map(async (name) => {
             try {
                 const config = emojis[name];
-                const imgUrl = config.image.startsWith('http') ? config.image : `${appUrl}/emojis/${config.image}`;
+                const imgUrl = config.image.startsWith('http')
+                    ? config.image
+                    : new URL(`../../../../public/emojis/${config.image}`, import.meta.url).toString();
                 const imgRes = await fetch(imgUrl);
                 if (imgRes.ok) {
                     const buffer = await imgRes.arrayBuffer();

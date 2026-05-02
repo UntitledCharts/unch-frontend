@@ -442,7 +442,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   };
 
   const handleCopyEmbed = async () => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_APP_URL || '');
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
     const embedUrl = `${origin}/embed/${levelData.sonolusId || 'UnCh-' + levelData.id}`;
     const embedCode = `<iframe src="${embedUrl}" width="450" height="240" style="border:none;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.4);" title="${levelData.title} - UntitledCharts" loading="lazy"></iframe>`;
     try {

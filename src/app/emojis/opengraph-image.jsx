@@ -8,7 +8,6 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 export default async function Image() {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
     const fonts = getDecodedFonts();
 
     return new ImageResponse(

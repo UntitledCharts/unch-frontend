@@ -8,7 +8,7 @@ export const alt = 'User Profile';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-const DEFAULT_PFP = process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL}/defpfp.webp` : "http://localhost:3000/defpfp.webp";
+const defpfpUrl = new URL('../../../../public/defpfp.webp', import.meta.url);
 
 export default async function Image({ params }) {
     const { id } = params;
@@ -44,28 +44,27 @@ export default async function Image({ params }) {
 
     const fonts = getDecodedFonts();
 
-    
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
-
-    
-    let pfpUrl = DEFAULT_PFP;
+    let pfpUrl = defpfpUrl.toString();
     if (accountData?.profile_hash && assetBaseUrl) {
         pfpUrl = `${assetBaseUrl}/${accountData.sonolus_id}/profile/${accountData.profile_hash}`;
     } else {
         const customProfile = accountData ? (customProfiles[accountData.id] || customProfiles[accountData.sonolus_id] || customProfiles[id]) : null;
         if (customProfile?.pfp) {
-            pfpUrl = customProfile.pfp.startsWith('http') ? customProfile.pfp : `${appUrl}${customProfile.pfp}`;
+            pfpUrl = customProfile.pfp.startsWith('http')
+                ? customProfile.pfp
+                : new URL(`../../../../public${customProfile.pfp}`, import.meta.url).toString();
         }
     }
 
-    
     let bannerUrl = null;
     if (accountData?.banner_hash && assetBaseUrl) {
         bannerUrl = `${assetBaseUrl}/${accountData.sonolus_id}/banner/${accountData.banner_hash}`;
     } else {
         const customProfile = accountData ? (customProfiles[accountData.id] || customProfiles[accountData.sonolus_id] || customProfiles[id]) : null;
         if (customProfile?.banner) {
-            bannerUrl = customProfile.banner.startsWith('http') ? customProfile.banner : `${appUrl}${customProfile.banner}`;
+            bannerUrl = customProfile.banner.startsWith('http')
+                ? customProfile.banner
+                : new URL(`../../../../public${customProfile.banner}`, import.meta.url).toString();
         }
     }
 
