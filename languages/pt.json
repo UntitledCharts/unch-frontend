@@ -34,7 +34,9 @@
     "moderator": "Moderador",
     "administrator": "Administrador",
     "chartsLiked": "Charts Curtidas",
+    "chartLiked_singular": "Chart Curtida",
     "commentsMade": "Comentários Postados",
+    "commentMade_singular": "Comentário Postado",
     "adminActions": "Ações do Staff",
     "banUser": "Banir Usuário",
     "unbanUser": "Desbanir Usuário",
@@ -190,7 +192,8 @@
     "somethingWentWrong": "Algo Deu Errado",
     "errorMessage": "Um erro inesperado ocorreu.\nTente novamente.",
     "tryAgain": "Tentar de novo",
-    "goHome": "Ir para página principal"
+    "goHome": "Ir para página principal",
+    "chartNotFound": "A Chart que você está procurando não foi encontrada. Talvez seja necessário fazer login para visualizá-lo."
   },
   "common": {
     "brandName": "UntitledCharts",
@@ -270,7 +273,10 @@
     "schedulePublish": "Publicação Programada",
     "confirm": "Confirmar",
     "removeSchedule": "Remover Publicação Programada",
-    "scheduledFor": "Programada pra {1}"
+    "scheduledFor": "Programada pra {1}",
+    "schedule": "Agendar",
+    "date": "Data",
+    "time": "Tempo"
   },
   "header": {
     "language": "Idioma",
@@ -378,7 +384,8 @@
     "hours": "Horas",
     "mins": "Mins",
     "secs": "Segs",
-    "footerMsg": "Essa chart estará disponível quando a contagem regressiva acabar"
+    "footerMsg": "Essa chart estará disponível quando a contagem regressiva acabar",
+    "previewChart": "Pre-Visualizar Página da Chart"
   },
   "embed": {
     "likes": "Curtidas",
