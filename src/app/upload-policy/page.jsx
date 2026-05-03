@@ -16,6 +16,7 @@ export default function UploadPolicy() {
         { id: 5, text: t('uploadPolicy.rule5'), type: "relaxed" },
         { id: 6, text: t('uploadPolicy.rule6'), type: "strict" },
         { id: 7, text: t('uploadPolicy.rule7'), type: "relaxed" },
+        { id: 8, text: t('uploadPolicy.rule8'), type: "relaxed" },
     ];
 
     return (
