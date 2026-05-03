@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import { Heart, MessageSquare, Share2, Copy, ExternalLink, ArrowLeft, User, Music, Play, Pause, Volume2, Star, Download, Eye, EyeOff, ChevronLeft, ChevronRight, Calendar, MoreVertical, Lock, Trash2, Ban, ShieldCheck, UserX, X, Trophy, Info, ChevronDown } from 'lucide-react';

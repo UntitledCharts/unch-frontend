@@ -1,5 +1,5 @@
 ﻿"use client";
-import { useEffect, useState, Suspense, useCallback, useMemo } from "react";
+import { useEffect, useState, Suspense, useCallback } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Zap, Shuffle, PlayCircle, Settings, Clock, Star, Heart, Type, ArrowUp, ArrowDown, User } from "lucide-react";
@@ -250,13 +250,13 @@ function HomeContent() {
     setDrawerOpen(true);
   }, []);
 
-  const newChartsIcon = useMemo(() => (
+  const newChartsIcon = (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="14" height="14" rx="3" stroke="currentColor" strokeWidth="2"/><path d="M6 10H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-  ), []);
+  );
 
-  const trendingIcon = useMemo(() => (
+  const trendingIcon = (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 20H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M10 16V10C10 8.89543 9.10457 8 8 8C6.89543 8 6 8.89543 6 10V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M18 16V6C18 4.89543 17.1046 4 16 4C14.8954 4 14 4.89543 14 6V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-  ), []);
+  );
 
   const handleViewAllNew = useCallback(() => {
     handleViewAll(t('home.newCharts'), homeData.newCharts, "new");
