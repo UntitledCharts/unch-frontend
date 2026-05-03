@@ -35,7 +35,7 @@
     "administrator": "管理者",
     "chartsLiked": "いいねした譜面",
     "chartLiked_singular": "いいねした譜面",
-    "commentsMade": "コメントが投稿されました",
+    "commentsMade": "コメント投稿",
     "commentMade_singular": "コメントが投稿されました",
     "adminActions": "スタッフの行動",
     "banUser": "ユーザーをBANする",
@@ -57,7 +57,7 @@
     "viewChart": "譜面を表示",
     "viewDetails": "詳細を見る",
     "playNow": "今すぐプレイ",
-    "by": "by {1}",
+    "by": "作曲者：{1}",
     "chartedBy": "チャート作成者：{1}",
     "more": "もっと"
   },
@@ -65,8 +65,8 @@
     "title": "検索",
     "searchType": "検索タイプ",
     "random": "ランダム",
-    "quick": "素早い",
-    "advanced": "高度な",
+    "quick": "クイック検索",
+    "advanced": "細部検索",
     "keywords": "キーワード",
     "keywordsPlaceholder": "検索...",
     "sortBy": "並べ替え",
@@ -179,7 +179,7 @@
   },
   "login": {
     "title": "ログイン",
-    "loginVia": "{1}経由でログインしてください。",
+    "loginVia": "{1}経由でログイン",
     "openSonolusApp": "{1}経由でログインリンクを開く",
     "scanQRCode": "QRコードをスキャン",
     "waitingForAuth": "認証応答を待っています...このページを閉じないでください！",
@@ -294,7 +294,7 @@
     "uploadTitle": "新しい譜面をアップロード",
     "songTitle": "曲名",
     "artists": "アーティスト",
-    "charter": "憲章名",
+    "charter": "譜面制作者名",
     "level": "レベル",
     "description": "説明（任意）",
     "tags": "タグ（カンマ区切り）",
@@ -321,8 +321,8 @@
     "placeholderTitle": "例：Bad Apple!!",
     "placeholderArtist": "例：Alstroemeria Records",
     "placeholderCharter": "あなたのユーザー名",
-    "placeholderLevel": "例: 28",
-    "placeholderTags": "例: 東方Project、ボーカロイド",
+    "placeholderLevel": "例:28",
+    "placeholderTags": "例：東方Project,ボーカロイド",
     "placeholderDescription": "意見や詳細など",
     "artistPreview": "アーティスト名",
     "charterPreview": "譜面制作者名"
@@ -340,7 +340,8 @@
     "step3Desc": "チケットが発行されたら、DMCA申請の詳細を記入してください。以下の情報を含めてください。",
     "step3Item1": "UntitledChartsに掲載されている著作権保護されたコンテンツへのリンク。",
     "step3Item2": "元の所有権を証明する書類、または所有者に代わって行動する権限を証明する書類。",
-    "step3Item3": "侵害行為を詳細に記した明確な声明。"
+    "step3Item3": "侵害行為を詳細に記した明確な声明。",
+    "falseClaims": "虚偽のDMCA申し立て、または本手続きの悪用があった場合、1週間の利用停止処分となります。"
   },
   "uploadPolicy": {
     "back": "戻る",
