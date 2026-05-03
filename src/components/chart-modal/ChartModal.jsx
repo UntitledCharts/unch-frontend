@@ -555,6 +555,7 @@ export default function ChartModal({
                 <li>5. {t('uploadPolicy.rule5')}</li>
                 <li>6. {t('uploadPolicy.rule6')}</li>
                 <li>7. {t('uploadPolicy.rule7')}</li>
+                <li>8. {t('uploadPolicy.rule8')}</li>
               </ul>
               <div className="mt-2 text-xs opacity-75 flex items-center gap-1">
                 <CheckCircleIcon size={12} />
