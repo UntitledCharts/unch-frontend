@@ -340,7 +340,8 @@
     "step3Desc": "Após a abertura do seu ticket, preencha os detalhes explicando sua solicitação DMCA. Certifique-se de incluir:",
     "step3Item1": "Links para o material protegido por direitos autorais em UntitledCharts.",
     "step3Item2": "Comprovante de propriedade original ou autorização para agir em nome do proprietário.",
-    "step3Item3": "Uma declaração clara detalhando a infração."
+    "step3Item3": "Uma declaração clara detalhando a infração.",
+    "falseClaims": "\tDenúncias falsas de violação de direitos autorais (DMCA) ou qualquer uso indevido deste processo resultarão em uma suspensão de 1 semana."
   },
   "uploadPolicy": {
     "back": "Voltar",
