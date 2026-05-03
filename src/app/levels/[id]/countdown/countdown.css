@@ -43,13 +43,16 @@
 
 .countdown-bg {
     position: absolute;
-    inset: 0;
+    top: -10%;
+    left: -10%;
+    right: -10%;
+    bottom: -10%;
+    width: 120%;
+    height: 120%;
     background-size: cover;
     background-position: center;
     filter: blur(60px) brightness(0.4) saturate(1.2);
-    transform: scale(1.2);
     z-index: -1;
-    overflow: hidden;
 }
 
 .countdown-bg-overlay {

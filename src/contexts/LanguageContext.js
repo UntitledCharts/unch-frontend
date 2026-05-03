@@ -34,13 +34,12 @@ export function LanguageProvider({ children }) {
 
     useEffect(() => {
         fetch("/api/supported")
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw new Error(`supported: ${res.status}`);
+                return res.json();
+            })
             .then((data) => {
-
-
                 setSupportedLangs(data);
-
-
                 const savedLang = localStorage.getItem("language");
                 if (savedLang && data[savedLang]) {
                     setLanguage(savedLang);
@@ -75,10 +74,10 @@ export function LanguageProvider({ children }) {
     }, [language]);
 
     const changeLanguage = useCallback((langCode) => {
-        if (supportedLangs[langCode]) {
-            setLanguage(langCode);
-        }
-    }, [supportedLangs]);
+        if (!langCode) return;
+        setLanguage(langCode);
+        localStorage.setItem('language', langCode);
+    }, []);
 
     const [enTranslations, setEnTranslations] = useState({});
 

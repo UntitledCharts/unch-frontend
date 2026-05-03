@@ -477,6 +477,10 @@ main,
     will-change: auto !important;
   }
 
+  .site-header {
+    will-change: transform !important;
+  }
+
   .bg-shape {
     display: none !important;
   }

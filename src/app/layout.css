@@ -33,7 +33,8 @@
     padding-top: 0;
     box-sizing: border-box;
     position: relative;
-    z-index: 200;
+    z-index: 1;
+    flex: 1;
 }
 
 
@@ -1046,13 +1047,12 @@ body.light-mode .nav-links a.active {
 
 footer {
     width: 100%;
-    margin-top: 60px;
+    margin-top: 0;
     padding: 40px 20px;
     text-align: center;
     color: var(--foreground);
     font-size: 14px;
     background: linear-gradient(to top, var(--background), var(--glass-bg));
-
     border-top: 1px solid var(--glass-border);
     display: flex;
     position: relative;
@@ -1444,12 +1444,13 @@ body:not(.light-mode) .bg-grid-pattern {
 .site-footer {
     position: relative;
     width: 100%;
-    margin-top: 0;
+    margin-top: auto;
     padding: 60px 40px 40px;
     background: linear-gradient(to top, var(--background), var(--glass-bg));
     border-top: 1px solid var(--glass-border);
     overflow: visible;
     z-index: 1;
+    flex-shrink: 0;
 }
 
 .footer-miku {

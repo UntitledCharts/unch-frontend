@@ -414,7 +414,7 @@ function RootLayoutInner({ children }) {
             </Suspense>
             <HeaderContent />
             {isLevelPage ? (
-                <div className="animate-page-enter">
+                <div className="animate-page-enter" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column' }}>
                     {children}
                 </div>
             ) : (
