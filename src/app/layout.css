@@ -265,14 +265,11 @@ body.light-mode .default-avatar {
 }
 
 .user-profile.redesigned-trigger .user-name {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.9rem;
     color: white;
     z-index: 2;
     position: relative;
-    -webkit-text-stroke: 0.5px rgba(0,0,0,0.3);
-    paint-order: stroke fill;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -290,9 +287,16 @@ body.light-mode .default-avatar {
 .trigger-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    
+    background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.5) 0%,
+        rgba(0, 0, 0, 0.25) 100%
+    );
     z-index: 1;
+}
+
+body.light-mode .trigger-overlay {
+    display: none;
 }
 
 
@@ -570,8 +574,7 @@ body.light-mode .user-profile .user-name {
 }
 
 body.light-mode .user-profile.redesigned-trigger .user-name {
-    -webkit-text-stroke: 0.5px rgba(255,255,255,0.5);
-    text-shadow: 0 1px 3px rgba(255,255,255,0.8);
+    color: white;
 }
 
 body.light-mode .header-lang-select {

@@ -57,10 +57,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {assetCdn && <link rel="preconnect" href={assetCdn} crossOrigin="anonymous" />}
+        {assetCdn && <link rel="dns-prefetch" href={assetCdn} />}
         <link rel="preconnect" href="https://ba14959b4680d4b81463a1d708c63691.untitledcharts.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://ba14959b4680d4b81463a1d708c63691.untitledcharts.com" />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1175503001380961"

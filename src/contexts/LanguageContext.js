@@ -22,11 +22,15 @@ export function LanguageProvider({ children }) {
     const [translations, setTranslations] = useState({});
     const [supportedLangs, setSupportedLangs] = useState({});
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const savedLang = localStorage.getItem('language') || 'en';
         const cached = getCachedTranslations(savedLang);
-        if (Object.keys(cached).length > 0) setTranslations(cached);
         const cachedEn = getCachedTranslations('en');
+        if (Object.keys(cached).length > 0) {
+            setTranslations(cached);
+            setLoading(false);
+        }
         if (Object.keys(cachedEn).length > 0) setEnTranslations(cachedEn);
         setLanguage(savedLang);
     }, []);

@@ -12,7 +12,7 @@ import LiquidSelect from '../../../components/liquid-select/LiquidSelect';
 import MarqueeText from '../../../components/marquee-text/MarqueeText';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { useUser } from '../../../contexts/UserContext';
-import { useAudioPlayer } from '../../../contexts/AudioPlayerContext';
+import { useAudioPlayer, useAudioPlayerTime } from '../../../contexts/AudioPlayerContext';
 import NotFound from '../../not-found';
 import "./LevelCard.css";
 
@@ -150,15 +150,13 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
     trackMeta,
     isPlaying,
     isBuffering,
-    currentTime,
-    duration,
     volume,
     setVolume,
-    loadTrack,
     play: ctxPlay,
     togglePlay: ctxTogglePlay,
     seek,
-  } = useAudioPlayer();  const [showMenu, setShowMenu] = useState(false);
+  } = useAudioPlayer();
+  const { currentTime, duration } = useAudioPlayerTime();  const [showMenu, setShowMenu] = useState(false);
   const [showAuthorPopout, setShowAuthorPopout] = useState(false);
   const [authorAnchorRect, setAuthorAnchorRect] = useState(null);
   const authorLinkRef = useRef(null);

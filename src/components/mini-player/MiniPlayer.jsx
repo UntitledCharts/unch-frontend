@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
+import { useAudioPlayer, useAudioPlayerTime } from "../../contexts/AudioPlayerContext";
 import { Play, Pause, X, Volume2, VolumeX, Music } from "lucide-react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
@@ -89,14 +89,13 @@ export default function MiniPlayer() {
         trackMeta,
         isPlaying,
         isBuffering,
-        currentTime,
-        duration,
         volume,
         setVolume,
         togglePlay,
         seek,
         dismiss,
     } = useAudioPlayer();
+    const { currentTime, duration } = useAudioPlayerTime();
 
     const [showVolume, setShowVolume] = useState(false);
     const [visible, setVisible] = useState(false);

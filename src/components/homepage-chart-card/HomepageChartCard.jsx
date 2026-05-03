@@ -13,85 +13,85 @@ function CardVisualizer({ audioRef, isPlaying }) {
     const canvasRef = useRef(null);
     const rafRef = useRef(null);
     const lastHeights = useRef([]);
-    const lastFrameTime = useRef(0);
 
     useEffect(() => {
-        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
         if (!isPlaying) {
-            const canvas = canvasRef.current;
-            if (canvas) canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+            lastHeights.current = [];
             return;
         }
 
-        const setupAndDraw = () => {
-            const audio = audioRef?.current;
+        const audio = audioRef?.current;
+        if (audio && !audio._cardAnalyser) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const source = ctx.createMediaElementSource(audio);
+                const analyser = ctx.createAnalyser();
+                analyser.fftSize = 64;
+                source.connect(analyser);
+                analyser.connect(ctx.destination);
+                audio._cardCtx = ctx;
+                audio._cardAnalyser = analyser;
+            } catch (e) {
+                if (audio._cardCtx?.state === "suspended") audio._cardCtx.resume().catch(() => {});
+            }
+        }
+        if (audio?._cardCtx?.state === "suspended") audio._cardCtx.resume().catch(() => {});
 
-            if (audio && !audio._cardAnalyser) {
-                try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    const source = ctx.createMediaElementSource(audio);
-                    const analyser = ctx.createAnalyser();
-                    analyser.fftSize = 64;
-                    source.connect(analyser);
-                    analyser.connect(ctx.destination);
-                    audio._cardCtx = ctx;
-                    audio._cardAnalyser = analyser;
-                } catch (e) {
-                    if (audio._cardCtx?.state === "suspended") {
-                        audio._cardCtx.resume().catch(() => {});
-                    }
+        const bars = 20;
+        let lastFrame = 0;
+
+        const draw = (timestamp) => {
+            if (timestamp - lastFrame < 33) { rafRef.current = requestAnimationFrame(draw); return; }
+            lastFrame = timestamp;
+
+            const c = canvas.getContext("2d");
+            const w = canvas.width, h = canvas.height;
+            c.clearRect(0, 0, w, h);
+
+            const analyser = audio?._cardAnalyser;
+            const bufLen = analyser?.frequencyBinCount || 16;
+            const data = analyser ? new Uint8Array(bufLen) : null;
+            if (analyser) analyser.getByteFrequencyData(data);
+
+            const barW = (w / bars) - 1.5;
+            let anyActive = false;
+
+            for (let i = 0; i < bars; i++) {
+                const di = Math.floor((i / bars) * (bufLen * 0.75));
+                let bh = 0;
+                if (data && audio && !audio.paused) {
+                    bh = (data[di] / 255) * h;
+                    lastHeights.current[i] = bh;
+                } else if ((lastHeights.current[i] || 0) > 0) {
+                    lastHeights.current[i] *= 0.78;
+                    bh = lastHeights.current[i];
                 }
+                if (bh < 0.5) { lastHeights.current[i] = 0; continue; }
+                anyActive = true;
+                const x = i * (barW + 1.5);
+                const g = c.createLinearGradient(0, h, 0, h - bh);
+                g.addColorStop(0, "rgba(56,189,248,1)");
+                g.addColorStop(1, "rgba(99,102,241,0.7)");
+                c.fillStyle = g;
+                c.beginPath();
+                c.roundRect(x, h - bh, barW, bh, 2);
+                c.fill();
             }
 
-            if (audio?._cardCtx?.state === "suspended") {
-                audio._cardCtx.resume().catch(() => {});
-            }
-
-            const draw = (timestamp) => {
+            if (anyActive || (audio && !audio.paused)) {
                 rafRef.current = requestAnimationFrame(draw);
-                if (timestamp - lastFrameTime.current < 33) return;
-                lastFrameTime.current = timestamp;
-
-                const canvas = canvasRef.current;
-                if (!canvas) return;
-                const a = audioRef?.current;
-                const c = canvas.getContext("2d");
-                const w = canvas.width, h = canvas.height;
-                c.clearRect(0, 0, w, h);
-
-                const analyser = a?._cardAnalyser;
-                const bufLen = analyser?.frequencyBinCount || 16;
-                const data = analyser ? new Uint8Array(bufLen) : null;
-                if (analyser) analyser.getByteFrequencyData(data);
-
-                const bars = 20;
-                const barW = (w / bars) - 1.5;
-                for (let i = 0; i < bars; i++) {
-                    const di = Math.floor((i / bars) * (bufLen * 0.75));
-                    let bh = 0;
-                    if (data && a && !a.paused) {
-                        bh = (data[di] / 255) * h;
-                        lastHeights.current[i] = bh;
-                    } else if (lastHeights.current[i] > 0) {
-                        lastHeights.current[i] *= 0.78;
-                        bh = lastHeights.current[i];
-                    }
-                    if (bh < 0.5) continue;
-                    const x = i * (barW + 1.5);
-                    const g = c.createLinearGradient(0, h, 0, h - bh);
-                    g.addColorStop(0, "rgba(56,189,248,1)");
-                    g.addColorStop(1, "rgba(99,102,241,0.7)");
-                    c.fillStyle = g;
-                    c.beginPath();
-                    c.roundRect(x, h - bh, barW, bh, 2);
-                    c.fill();
-                }
-            };
-            rafRef.current = requestAnimationFrame(draw);
+            } else {
+                rafRef.current = null;
+            }
         };
 
-        setupAndDraw();
-        return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+        rafRef.current = requestAnimationFrame(draw);
+        return () => { if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; } };
     }, [audioRef, isPlaying]);
 
     return <canvas ref={canvasRef} width={280} height={44} className="card-visualizer" />;

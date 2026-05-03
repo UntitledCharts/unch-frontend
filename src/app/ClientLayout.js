@@ -11,7 +11,7 @@ import { ThemeProvider, useTheme } from "../contexts/ThemeContext";
 import { AudioPlayerProvider } from "../contexts/AudioPlayerContext";
 const BackgroundDecorations = dynamic(() => import('../components/background-decorations/BackgroundDecorations'), { ssr: false });
 const MiniPlayer = dynamic(() => import('../components/mini-player/MiniPlayer'), { ssr: false });
-import NavigationProgress from '../components/navigation-progress/NavigationProgress';
+const NavigationProgress = dynamic(() => import('../components/navigation-progress/NavigationProgress'), { ssr: false });
 import { Menu, X, Sun, Moon, Globe, User, LogOut } from "lucide-react";
 import LiquidSelect from "../components/liquid-select/LiquidSelect";
 
@@ -105,7 +105,9 @@ function HeaderContent() {
                                 <div
                                     className="user-profile redesigned-trigger"
                                     onClick={() => setShowDropdown(!showDropdown)}
-                                    style={{
+                                    style={theme === 'light' ? {
+                                        background: 'linear-gradient(135deg, #0f2744 0%, #1e3a5f 40%, #0c1a2e 100%)',
+                                    } : {
                                         backgroundImage: `url(${sonolusUser.banner_hash && assetBaseUrl
                                             ? `${assetBaseUrl}/${sonolusUser.sonolus_id}/banner/${sonolusUser.banner_hash}_webp`
                                             : '/def.webp'})`,
@@ -409,9 +411,7 @@ function RootLayoutInner({ children }) {
     return (
         <>
             <BackgroundDecorations />
-            <Suspense fallback={null}>
-                <NavigationProgress />
-            </Suspense>
+            <NavigationProgress />
             <HeaderContent />
             {isLevelPage ? (
                 <div className="animate-page-enter" style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column' }}>

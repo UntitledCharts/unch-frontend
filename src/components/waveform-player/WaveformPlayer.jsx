@@ -1,12 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 
-// Singleton Web Audio nodes attached to the audio element itself so they
-// survive across component mounts/unmounts (page navigations).
 function getAudioNodes(audio) {
   if (audio._wfCtx && audio._wfCtx.state !== 'closed') {
     return { ctx: audio._wfCtx, analyser: audio._wfAnalyser };
   }
-
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const ctx = new AudioContext();
@@ -15,7 +12,6 @@ function getAudioNodes(audio) {
     analyser.fftSize = 256;
     source.connect(analyser);
     analyser.connect(ctx.destination);
-
     audio._wfCtx = ctx;
     audio._wfAnalyser = analyser;
     return { ctx, analyser };
@@ -34,23 +30,31 @@ export default function WaveformPlayer({ audioRef, isPlaying }) {
     const audio = audioRef.current;
     if (!audio || !canvasRef.current) return;
 
-    // Resume AudioContext on first play interaction
     const handlePlay = async () => {
       const nodes = getAudioNodes(audio);
-      if (nodes?.ctx?.state === 'suspended') {
-        await nodes.ctx.resume().catch(() => {});
-      }
+      if (nodes?.ctx?.state === 'suspended') await nodes.ctx.resume().catch(() => {});
     };
     audio.addEventListener('play', handlePlay);
 
-    const draw = () => {
-      rafRef.current = requestAnimationFrame(draw);
+    if (!isPlaying) {
+      if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
+      const canvas = canvasRef.current;
+      if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      lastHeightsRef.current = [];
+      return () => audio.removeEventListener('play', handlePlay);
+    }
+
+    let lastFrame = 0;
+
+    const draw = (timestamp) => {
+      if (timestamp - lastFrame < 33) { rafRef.current = requestAnimationFrame(draw); return; }
+      lastFrame = timestamp;
+
       const canvas = canvasRef.current;
       if (!canvas) return;
 
       const ctx2d = canvas.getContext('2d');
-      const w = canvas.width;
-      const h = canvas.height;
+      const w = canvas.width, h = canvas.height;
       ctx2d.clearRect(0, 0, w, h);
 
       const nodes = audio._wfCtx && audio._wfCtx.state !== 'closed' ? { analyser: audio._wfAnalyser } : null;
@@ -63,20 +67,20 @@ export default function WaveformPlayer({ audioRef, isPlaying }) {
         nodes.analyser.getByteFrequencyData(dataArray);
       }
 
+      let anyActive = false;
       let x = 0;
       for (let i = 0; i < bufferLength; i++) {
         let barH = 0;
-
         if (dataArray && !audio.paused) {
           barH = (dataArray[i] / 255) * h;
           lastHeightsRef.current[i] = barH;
-        } else if (lastHeightsRef.current[i] > 0) {
+        } else if ((lastHeightsRef.current[i] || 0) > 0) {
           lastHeightsRef.current[i] *= 0.88;
           if (lastHeightsRef.current[i] < 0.5) lastHeightsRef.current[i] = 0;
           barH = lastHeightsRef.current[i];
         }
-
         if (barH > 0) {
+          anyActive = true;
           const grad = ctx2d.createLinearGradient(0, h, 0, h - barH);
           grad.addColorStop(0, 'rgba(56,189,248,0.9)');
           grad.addColorStop(0.5, 'rgba(14,165,233,0.7)');
@@ -84,20 +88,23 @@ export default function WaveformPlayer({ audioRef, isPlaying }) {
           ctx2d.fillStyle = grad;
           ctx2d.fillRect(x, h - barH, barWidth, barH);
         }
-
         x += barWidth + 1;
+      }
+
+      if (anyActive || !audio.paused) {
+        rafRef.current = requestAnimationFrame(draw);
+      } else {
+        rafRef.current = null;
       }
     };
 
-    draw();
+    rafRef.current = requestAnimationFrame(draw);
 
     return () => {
-      // Only cancel the animation frame - never close the AudioContext or
-      // remove the source node, so audio keeps playing across navigations.
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
       audio.removeEventListener('play', handlePlay);
     };
-  }, [audioRef]);
+  }, [audioRef, isPlaying]);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>

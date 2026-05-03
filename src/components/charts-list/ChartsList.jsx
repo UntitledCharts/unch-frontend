@@ -8,7 +8,7 @@ import AudioVisualizer from "../audio-visualizer/AudioVisualizer";
 import LoadingImage from "../loading-image/LoadingImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-import { useAudioPlayer } from "@/contexts/AudioPlayerContext";
+import { useAudioPlayer, useAudioPlayerTime } from "@/contexts/AudioPlayerContext";
 import "./ChartsList.css";
 import { formatRelativeTime } from "@/utils/dateUtils";
 
@@ -109,7 +109,8 @@ const MemoizedChartItem = memo(function ChartItem({
   onDelete,
 }) {
   const { t, tReact } = useLanguage();
-  const { audioRef, trackId, isPlaying, isBuffering, currentTime, duration, play, pause } = useAudioPlayer();
+  const { audioRef, trackId, isPlaying, isBuffering, play, pause } = useAudioPlayer();
+  const { currentTime, duration } = useAudioPlayerTime();
   const isThisPlaying = trackId === post.id && isPlaying;
   const isThisBuffering = trackId === post.id && isBuffering;
   const isThisActive = trackId === post.id && (isPlaying || isBuffering);

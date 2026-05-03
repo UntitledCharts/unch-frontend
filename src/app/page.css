@@ -715,7 +715,7 @@ body.light-mode .searchContainer {
 }
 
 body.light-mode .search-filter-header span {
-    color: rgba(15, 23, 42, 0.45);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 body.light-mode .upload-section { background: rgba(253,253,253,0.8); border-bottom-color: rgba(15,23,42,0.08); }
