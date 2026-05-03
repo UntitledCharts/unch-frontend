@@ -140,13 +140,12 @@ export default async function Image({ params }) {
         const authorPfpData = bufferToBase64(pfpBuffer, 'image/png');
 
         const renderTextWithEmojis = (text, fontSize = 24) => {
-            if (!text) return null;
-            
-            
+            if (!text) return <div style={{ display: 'flex' }}></div>;
+
             if (!/(:[a-zA-Z0-9_]+:)/.test(text)) {
-                return text;
+                return <div style={{ display: 'flex' }}>{text}</div>;
             }
-            
+
             const parts = text.split(/(:[a-zA-Z0-9_]+:)/g).filter(Boolean);
             return (
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -323,7 +322,6 @@ export default async function Image({ params }) {
                             display: 'flex',
                             alignItems: 'center',
                             gap: 8,
-                            zIndex: 20
                         }}>
                             ⭐ Staff Pick
                         </div>
@@ -372,8 +370,7 @@ export default async function Image({ params }) {
                                 padding: '4px 12px',
                                 display: 'flex',
                                 alignItems: 'center',
-                                zIndex: 10
-                            }}>
+                                }}>
                                 Lv. {levelData.rating || '?'}
                             </div>
                         </div>

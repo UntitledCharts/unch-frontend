@@ -8,6 +8,23 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 const defpfpUrl = new URL('../../../../public/defpfp.webp', import.meta.url);
+const logoFileUrl = new URL('../../../../public/636a8f1e76b38cb1b9eb0a3d88d7df6f.png', import.meta.url);
+
+const bufferToBase64 = (buffer, defaultMime = 'image/png') => {
+    if (!buffer) return null;
+    const bytes = new Uint8Array(buffer);
+    let mimeType = defaultMime;
+    if (bytes[0] === 0xFF && bytes[1] === 0xD8) mimeType = 'image/jpeg';
+    else if (bytes[0] === 0x47 && bytes[1] === 0x49) mimeType = 'image/gif';
+    else if (bytes[0] === 0x89 && bytes[1] === 0x50) mimeType = 'image/png';
+    else if (bytes[0] === 0x52 && bytes[1] === 0x49) mimeType = 'image/webp';
+    const CHUNK = 8192;
+    const parts = [];
+    for (let i = 0; i < bytes.length; i += CHUNK) {
+        parts.push(String.fromCharCode(...bytes.subarray(i, i + CHUNK)));
+    }
+    return `data:${mimeType};base64,${btoa(parts.join(''))}`;
+};
 
 export default async function Image({ params }) {
     const { id } = params;
@@ -17,7 +34,10 @@ export default async function Image({ params }) {
     let charts = [];
     let assetBaseUrl = null;
 
-    const logoPromise = fetch(new URL('../../../../public/636a8f1e76b38cb1b9eb0a3d88d7df6f.png', import.meta.url))
+    const logoPromise = fetch(logoFileUrl)
+        .then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
+
+    const defpfpPromise = fetch(defpfpUrl)
         .then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
 
     const handlePromise = fetch(`${apiUrl}/api/accounts/handle/${id}/`)
@@ -32,7 +52,7 @@ export default async function Image({ params }) {
     const directPromise = fetch(`${apiUrl}/api/accounts/${id}`)
         .then(r => r.ok ? r.json() : null).catch(() => null);
 
-    const [logoData, handleResult, directResult] = await Promise.all([logoPromise, handlePromise, directPromise]);
+    const [logoData, defpfpBuffer, handleResult, directResult] = await Promise.all([logoPromise, defpfpPromise, handlePromise, directPromise]);
 
     const data = handleResult || directResult;
     if (data?.account) {
@@ -42,8 +62,9 @@ export default async function Image({ params }) {
     }
 
     const fonts = getDecodedFonts();
+    const defpfpData = bufferToBase64(defpfpBuffer, 'image/webp');
 
-    let pfpUrl = defpfpUrl.toString();
+    let pfpUrl = defpfpData;
     if (accountData?.profile_hash && assetBaseUrl) {
         pfpUrl = `${assetBaseUrl}/${accountData.sonolus_id}/profile/${accountData.profile_hash}`;
     }
