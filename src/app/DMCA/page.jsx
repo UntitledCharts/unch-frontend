@@ -87,7 +87,7 @@ export default function DMCAPage() {
 
                 <div className="dmca-note">
                     <AlertTriangle size={18} />
-                    <span>False DMCA claims or any misuse of this process will result in a 1 week timeout.</span>
+                    <span>{t('dmca.falseClaims', 'False DMCA claims or any misuse of this process will result in a 1 week timeout.')}</span>
                 </div>
             </div>
         </main>

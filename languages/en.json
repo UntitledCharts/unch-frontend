@@ -340,7 +340,8 @@
     "step3Desc": "Once your ticket is open, fill out the details explaining your DMCA request. Please make sure to include:",
     "step3Item1": "Links to the copyrighted material on UntitledCharts.",
     "step3Item2": "Proof of original ownership or authorization to act on behalf of the owner.",
-    "step3Item3": "A clear statement detailing the infringement."
+    "step3Item3": "A clear statement detailing the infringement.",
+    "falseClaims": "False DMCA claims or any misuse of this process will result in a 1 week timeout."
   },
   "uploadPolicy": {
     "back": "Back",
