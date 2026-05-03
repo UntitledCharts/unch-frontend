@@ -76,7 +76,7 @@ function HomeContent() {
   const [drawerCharts, setDrawerCharts] = useState([]);
   const [drawerFetchType, setDrawerFetchType] = useState(null);
 
-  const mapChartData = useCallback((item, baseUrl = "") => {
+  const mapChartData = (item, baseUrl = "") => {
     const authorHash = item.author;
     const authorName = item.author_full || item.author || "Unknown";
 
@@ -120,7 +120,7 @@ function HomeContent() {
       createdAt: item.createdAt || item.created_at,
     };
     return mapped;
-  }, []);
+  };
 
   const fetchHomeData = useCallback(async () => {
     setLoading(true);
@@ -146,7 +146,7 @@ function HomeContent() {
     } finally {
       setLoading(false);
     }
-  }, [mapChartData]);
+  }, []);
 
   const fetchSearchData = useCallback(async () => {
     setLoading(true);
@@ -196,7 +196,7 @@ function HomeContent() {
     } finally {
       setLoading(false);
     }
-  }, [searchType, page, staffPick, searchQuery, sortBy, sortOrder, minRating, maxRating, tags, minLikes, maxLikes, likedBy, titleIncludes, descriptionIncludes, artistsIncludes, mapChartData, sonolusHandleIs]);
+  }, [searchType, page, staffPick, searchQuery, sortBy, sortOrder, minRating, maxRating, tags, minLikes, maxLikes, likedBy, titleIncludes, descriptionIncludes, artistsIncludes, sonolusHandleIs]);
 
   useEffect(() => {
     if (viewMode === 'home') {
@@ -243,12 +243,12 @@ function HomeContent() {
     }
   }, [viewParam]);
 
-  const handleViewAll = useCallback((title, charts, fetchType = null) => {
+  const handleViewAll = (title, charts, fetchType = null) => {
     setDrawerTitle(title);
     setDrawerCharts(charts);
     setDrawerFetchType(fetchType);
     setDrawerOpen(true);
-  }, []);
+  };
 
   const newChartsIcon = (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="14" height="14" rx="3" stroke="currentColor" strokeWidth="2"/><path d="M6 10H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
@@ -260,11 +260,11 @@ function HomeContent() {
 
   const handleViewAllNew = useCallback(() => {
     handleViewAll(t('home.newCharts'), homeData.newCharts, "new");
-  }, [handleViewAll, t, homeData.newCharts]);
+  }, [t, homeData.newCharts]);
 
   const handleViewAllTrending = useCallback(() => {
     handleViewAll(t('home.trendingCharts'), homeData.trending, "trending");
-  }, [handleViewAll, t, homeData.trending]);
+  }, [t, homeData.trending]);
 
   return (
     <div className="home-container">

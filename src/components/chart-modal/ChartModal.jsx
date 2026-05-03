@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Trash2, Upload, X as XIcon, Image as ImageIcon, Music, FileText, Loader2, Play, Pause, Square, Calendar, CheckCircle as CheckCircleIcon, Globe, Link as LinkIcon, Lock, Clock } from "lucide-react";
 import "./ChartModal.css";
