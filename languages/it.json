@@ -192,7 +192,8 @@
     "somethingWentWrong": "Qualcosa è andato storto",
     "errorMessage": "Si è verificato un errore imprevisto. Riprova.",
     "tryAgain": "Riprova",
-    "goHome": "Vai alla home"
+    "goHome": "Vai alla home",
+    "chartNotFound": "Il grafico che stai cercando non è stato trovato. Potrebbe essere necessario effettuare l'accesso per visualizzarlo."
   },
   "common": {
     "brandName": "UntitledCharts",
@@ -272,7 +273,10 @@
     "schedulePublish": "Pubblicazione del programma",
     "confirm": "Confermare",
     "removeSchedule": "Rimuovi la pubblicazione programmata",
-    "scheduledFor": "Previsto per {1}"
+    "scheduledFor": "Previsto per {1}",
+    "schedule": "Programma",
+    "date": "Data",
+    "time": "Tempo"
   },
   "header": {
     "language": "Lingua",
@@ -336,7 +340,8 @@
     "step3Desc": "Una volta aperto il ticket, compila i dettagli che descrivono la tua richiesta DMCA. Assicurati di includere:",
     "step3Item1": "Collegamenti al materiale protetto da copyright su UntitledCharts.",
     "step3Item2": "Prova della proprietà originaria o autorizzazione ad agire per conto del proprietario.",
-    "step3Item3": "Una dichiarazione chiara che descriva dettagliatamente l'infrazione."
+    "step3Item3": "Una dichiarazione chiara che descriva dettagliatamente l'infrazione.",
+    "falseClaims": "Le false denunce DMCA o qualsiasi uso improprio di questa procedura comporteranno un periodo di sospensione di 1 settimana."
   },
   "uploadPolicy": {
     "back": "Indietro",
@@ -350,7 +355,8 @@
     "rule5": "Non sono ammesse carte ufficiali con modifiche minori (solo occasionalmente sono consentite le carte All Flicks o All Traces).",
     "rule6": "Per favore, usate un po' di buon senso.",
     "rule7": "Nessuna mappa incompleta",
-    "relaxedNote": "Le regole 2, 3, 5 e 7 possono essere <strong>ignorate se non elencate</strong>.",
+    "rule8": "I metadati devono essere corretti (comprese le copertine).",
+    "relaxedNote": "Le regole 2, 3, 5, 7 e 8 possono essere <strong>ignorate la mappa non è in elenco</strong>.",
     "fileSizeLimits": "Limiti di dimensione dei file",
     "fileSizeDesc": "Se i tuoi grafici superano il limite di caricamento, puoi <strong>richiedere assistenza</strong>! Non vogliamo limitare le dimensioni dei grafici, quindi ti aiuteremo a caricarli!",
     "shitpostWarning": "I post spazzatura non sono ammessi in questa eccezione. Per favore, riconsidera le tue scelte di vita se carichi post spazzatura di dimensioni superiori ai limiti di file.",
@@ -380,7 +386,8 @@
     "hours": "Ore",
     "mins": "Minuti",
     "secs": "Sezioni",
-    "footerMsg": "Il grafico sarà disponibile al termine del conto alla rovescia."
+    "footerMsg": "Il grafico sarà disponibile al termine del conto alla rovescia.",
+    "previewChart": "Anteprima della pagina della mappa"
   },
   "embed": {
     "likes": "Mi piace",
