@@ -147,6 +147,10 @@ export function LanguageProvider({ children }) {
 
     const locale = supportedLangs[language]?.locale || 'en-US';
 
+    useEffect(() => {
+        document.documentElement.lang = locale;
+    }, [locale]);
+
     const contextValue = useMemo(() => ({
         language, locale, changeLanguage, t, tReact, supportedLangs, loading
     }), [language, locale, changeLanguage, t, tReact, supportedLangs, loading]);

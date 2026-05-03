@@ -1,9 +1,7 @@
 import LevelCard from './LevelCard';
-import CountdownPage from './countdown/page';
 
 const APILink = process.env.NEXT_PUBLIC_API_URL;
 const SONOLUS_SERVER_URL = process.env.NEXT_PUBLIC_SONOLUS_SERVER_URL;
-
 
 async function fetchLevel(rawId) {
   const cleanId = rawId.replace(/^UnCh-/, '');
@@ -13,36 +11,14 @@ async function fetchLevel(rawId) {
   const json = await res.json();
   const data = json.data;
   if (data.status === 'PRIVATE') return null;
-  const base = json.asset_base_url;
-
-  const buildAssetUrl = (hash) =>
-    hash && base && data.author ? `${base}/${data.author}/${data.id}/${hash}` : null;
 
   return {
-    id: data.id,
-    sonolusId: rawId,
     title: data.title || 'Untitled Level',
     description: data.description || 'No description provided.',
-    thumbnail: buildAssetUrl(data.jacket_file_hash),
-    authorId: data.author,
-    authorHandle: data.author_handle || data.author,
     author: data.author_full || data.author || 'Unknown',
     artists: data.artists || 'Unknown Artist',
     rating: data.rating || 0,
-    likes: data.likes || data.like_count || 0,
-    comments: Number.isInteger(data.comments_count) ? data.comments_count : (Number.isInteger(data.comment_count) ? data.comment_count : (Array.isArray(data.comments) ? data.comments.length : 0)),
     createdAt: data.created_at || data.createdAt,
-    asset_base_url: base,
-
-    music_hash: data.music_file_hash || (data.music && data.music.hash),
-    background_file_hash: data.background_file_hash || (data.background && data.background.hash),
-    background_v3_file_hash: data.background_v3_file_hash || (data.backgroundV3 && data.backgroundV3.hash),
-
-    backgroundUrl: buildAssetUrl(data.background_file_hash || (data.background && data.background.hash)),
-    backgroundV3Url: buildAssetUrl(data.background_v3_file_hash || (data.backgroundV3 && data.backgroundV3.hash)),
-
-    scheduled_publish: data.scheduled_publish || null,
-    status: data.status || 'PUBLIC',
   };
 }
 
@@ -52,7 +28,6 @@ async function fetchScheduled(rawId) {
   if (!res.ok) return null;
   return res.json();
 }
-
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -120,26 +95,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-
-export default async function LevelPage({ params, searchParams }) {
+export default async function LevelPage({ params }) {
   const { id } = await params;
-  const { is_preview } = await searchParams;
-
-  let level = null;
-  try {
-    level = await fetchLevel(id);
-  } catch {}
-
-  if (!is_preview) {
-    const shouldCheckSchedule = !level || level.status !== 'PUBLIC';
-
-    if (shouldCheckSchedule) {
-      const scheduled = await fetchScheduled(id);
-      if (scheduled?.data) {
-        return <CountdownPage params={params} chartStatus={level?.status} />;
-      }
-    }
-  }
-
-  return <LevelCard initialLevel={level} id={id} SONOLUS_SERVER_URL={SONOLUS_SERVER_URL} />;
+  return <LevelCard initialLevel={null} id={id} SONOLUS_SERVER_URL={SONOLUS_SERVER_URL} />;
 }

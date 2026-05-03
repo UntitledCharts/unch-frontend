@@ -1,5 +1,5 @@
 "use client";
-import { memo, useState, useRef, useEffect } from "react";
+import { memo, useState, useRef, useEffect, Fragment } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Pencil, Trash2, Globe, Lock, Link as LinkIcon, Heart, Calendar, RefreshCw, Loader2, MessageSquare, MoreVertical, Ban, UserX } from "lucide-react";
@@ -75,7 +75,8 @@ export default function ChartsList({
   sonolusUser,
   onVisibilityChange,
   onEdit,
-  onDelete
+  onDelete,
+  midAd,
 }) {
   if (loading) {
     return (
@@ -87,15 +88,19 @@ export default function ChartsList({
 
   return (
     <ul className="songlist">
-      {posts.map((post) => (
-        <MemoizedChartItem
-          key={post.id}
-          post={post}
-          sonolusUser={sonolusUser}
-          onVisibilityChange={onVisibilityChange}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
+      {posts.map((post, i) => (
+        <Fragment key={post.id}>
+          <MemoizedChartItem
+            post={post}
+            sonolusUser={sonolusUser}
+            onVisibilityChange={onVisibilityChange}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+          {midAd && i === 4 && posts.length >= 10 && (
+            <li style={{ listStyle: 'none', padding: '12px 0' }}>{midAd}</li>
+          )}
+        </Fragment>
       ))}
     </ul>
   );

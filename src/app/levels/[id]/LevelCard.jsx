@@ -14,6 +14,8 @@ import { useLanguage } from '../../../contexts/LanguageContext';
 import { useUser } from '../../../contexts/UserContext';
 import { useAudioPlayer, useAudioPlayerTime } from '../../../contexts/AudioPlayerContext';
 import NotFound from '../../not-found';
+import CountdownPage from './countdown/page';
+import AdBanner from '../../../components/ad-banner/AdBanner';
 import "./LevelCard.css";
 
 const DEFAULT_PFP = "/defpfp.webp";
@@ -143,6 +145,8 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   const [levelData, setLevel] = useState(initialLevel);
   const [loading, setLoading] = useState(!initialLevel);
   const [error, setError] = useState(null);
+  const [showCountdown, setShowCountdown] = useState(false);
+  const [countdownChartStatus, setCountdownChartStatus] = useState(null);
 
   const {
     audioRef,
@@ -353,7 +357,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
               artists: data.artists || 'Unknown Artist',
               rating: data.rating || 0,
               likes: data.likes || data.like_count || 0,
-              comments: Number.isInteger(data.comments_count) ? data.comments_count : (Number.isInteger(data.comment_count) ? data.comment_count : (Array.isArray(data.comments) ? data.comments.length : 0)),
+              comments: data.comment_count || 0,
               createdAt: data.created_at || data.createdAt,
               music_hash: data.music_file_hash || (data.music && data.music.hash),
               backgroundUrl: buildAssetUrl(data.background_file_hash || (data.background && data.background.hash)),
@@ -366,6 +370,19 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
               staffPick: data.staffPick || data.staff_pick || false,
             });
           } else {
+            if (!isPreview) {
+              const cleanId2 = id.replace(/^UnCh-/, '');
+              const schedRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanId2}/scheduled/`);
+              if (schedRes.ok) {
+                const schedJson = await schedRes.json();
+                if (schedJson?.data) {
+                  setCountdownChartStatus(response.status === 403 ? 'PRIVATE' : null);
+                  setShowCountdown(true);
+                  setLoading(false);
+                  return;
+                }
+              }
+            }
             setError('not_found');
           }
         } catch (err) {
@@ -425,6 +442,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   } : null);
 
   if (loading && !effectiveLevel) return (<div className="level-loading" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100dvh - 300px)' }}><div className="loading-spinner"></div></div>);
+  if (showCountdown) return <CountdownPage params={Promise.resolve({ id })} chartStatus={countdownChartStatus} />;
   if (error || !effectiveLevel) return <NotFound message={t('error.chartNotFound')} />;
 
   const level = effectiveLevel;
@@ -547,31 +565,29 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   const [loadingComments, setLoadingComments] = useState(true);
 
   useEffect(() => {
-    const fetchSupplementalInfo = async () => {
-      const rawSonolusId = levelData.sonolusId || '';
-      const cleanChartId = rawSonolusId.replace(/^UnCh-/, '');
+    const rawSonolusId = levelData.sonolusId || '';
+    const cleanChartId = rawSonolusId.replace(/^UnCh-/, '');
+    if (!cleanChartId) return;
 
-      if (!cleanChartId) {
-        console.warn("No valid chartId found for supplemental fetch");
-        return;
-      }
-
+    const fetchInitialData = async () => {
+      setLoadingComments(true);
       try {
+        const [infoRes, trendsRes, commentsRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/trends/`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/comment/?page=0&limit=10`),
+        ]);
 
-        const infoRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/`);
         if (infoRes.ok) {
-          const data = await infoRes.json();
-          const count = data.comment_count !== undefined
-            ? data.comment_count
-            : (data.data && data.data.comment_count !== undefined ? data.data.comment_count : undefined);
-
-          if (count !== undefined) {
+          const infoData = await infoRes.json();
+          const d = infoData.data || infoData;
+          const count = d.comment_count || 0;
+          if (count > 0) {
             setCommentCount(count);
+            setTotalPages(Math.ceil(count / 5) || 1);
           }
         }
 
-
-        const trendsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/trends/`);
         if (trendsRes.ok) {
           const trendsData = await trendsRes.json();
           setTrends({
@@ -579,52 +595,48 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
             comments: Array.isArray(trendsData.comments) ? trendsData.comments : []
           });
         }
+
+        if (commentsRes.ok) {
+          const data = await commentsRes.json();
+          const fullList = Array.isArray(data) ? data : (data.data || []);
+          setComments(fullList.slice(0, 5));
+        } else if (commentsRes.status === 404) {
+          setComments([]);
+        }
       } catch (e) {
-        console.error("Failed to fetch supplemental or trends info", e);
+        console.error("Failed to fetch supplemental data", e);
+      } finally {
+        setLoadingComments(false);
       }
     };
-    fetchSupplementalInfo();
+    fetchInitialData();
   }, [levelData.sonolusId]);
 
   const totalComments = (commentCount > 0 ? commentCount : (levelData.commentsCount || commentCount || 0));
 
   useEffect(() => {
-    const fetchCommentsWithCount = async () => {
-      const rawSonolusId = levelData.sonolusId || '';
-      const cleanChartId = rawSonolusId.replace(/^UnCh-/, '');
-      if (!cleanChartId) return;
+    if (page === 1) return;
+    const rawSonolusId = levelData.sonolusId || '';
+    const cleanChartId = rawSonolusId.replace(/^UnCh-/, '');
+    if (!cleanChartId) return;
 
-      setLoadingComments(true);
-      try {
-        const countRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/`);
-        if (countRes.ok) {
-          const countData = await countRes.json();
-          const d = countData.data || countData;
-          const count = d.comments_count ?? d.comment_count ?? 0;
-          if (count > 0) {
-            setCommentCount(count);
-            setTotalPages(Math.ceil(count / 5) || 1);
-          }
-        }
-
-        const apiPage = Math.floor((page - 1) / 2);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/comment/?page=${apiPage}&limit=10`);
-        if (res.ok) {
-          const data = await res.json();
-          const fullList = Array.isArray(data) ? data : (data.data || []);
-          const isFirstHalf = (page % 2 !== 0);
-          setComments(isFirstHalf ? fullList.slice(0, 5) : fullList.slice(5, 10));
-        } else if (res.status === 404) {
-          setComments([]);
-        }
-      } catch (e) {
-        console.error("Failed to fetch comments", e);
-      } finally {
-        setLoadingComments(false);
-      }
-    };
-    fetchCommentsWithCount();
-  }, [levelData.id, page]);
+    setLoadingComments(true);
+    const apiPage = Math.floor((page - 1) / 2);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/comment/?page=${apiPage}&limit=10`)
+      .then(res => {
+        if (res.ok) return res.json();
+        if (res.status === 404) { setComments([]); return null; }
+        return null;
+      })
+      .then(data => {
+        if (!data) return;
+        const fullList = Array.isArray(data) ? data : (data.data || []);
+        const isFirstHalf = (page % 2 !== 0);
+        setComments(isFirstHalf ? fullList.slice(0, 5) : fullList.slice(5, 10));
+      })
+      .catch(e => console.error("Failed to fetch comments", e))
+      .finally(() => setLoadingComments(false));
+  }, [levelData.sonolusId, page]);
 
 
   useEffect(() => {
@@ -980,6 +992,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
               }
             }}
           />
+          <AdBanner style={{ margin: '20px 0' }} />
           <div className="stats-card">
             <h2 className="stats-title">
               <Star size={18} fill="currentColor" />
@@ -1229,6 +1242,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
               </div>
             )}
           </div>
+          <AdBanner style={{ margin: '20px 0' }} />
           <div className="leaderboard-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px', position: 'relative', zIndex: 10 }}>
               <h3 className="stats-title" style={{ margin: 0 }}>

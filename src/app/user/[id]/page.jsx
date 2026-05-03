@@ -20,6 +20,7 @@ import MarqueeText from "@/components/marquee-text/MarqueeText";
 const EditProfileModal = dynamic(() => import("../../../components/profile/EditProfileModal"), { ssr: false });
 import FormattedText from "../../../components/formatted-text/FormattedText";
 import HomepageChartCard from "../../../components/homepage-chart-card/HomepageChartCard";
+import AdBanner from "../../../components/ad-banner/AdBanner";
 
 export default function UserProfile({ params }) {
     const { id } = use(params);
@@ -31,7 +32,6 @@ export default function UserProfile({ params }) {
     const [assetBaseUrl, setAssetBaseUrl] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [commentCounts, setCommentCounts] = useState({});
 
     const [userStats, setUserStats] = useState({});
     const stats = userStats || {};
@@ -85,6 +85,11 @@ export default function UserProfile({ params }) {
                 router.replace(`/user/${data.account.sonolus_handle}`);
             }
 
+            fetch(`${apiBase}/api/accounts/${data.account.sonolus_id}/stats`)
+              .then(r => r.ok ? r.json() : null)
+              .then(stats => { if (stats) setUserStats(stats); })
+              .catch(e => console.error("Failed to fetch user stats", e));
+
         } catch (err) {
             console.error("Error fetching account:", err);
             setError(err.message);
@@ -99,50 +104,6 @@ export default function UserProfile({ params }) {
         }
     }, [id, fetchAccount]);
 
-
-    useEffect(() => {
-        if (!account?.sonolus_id) return;
-
-        const fetchStats = async () => {
-            try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts/${account.sonolus_id}/stats`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setUserStats(data);
-                }
-            } catch (e) {
-                console.error("Failed to fetch user stats", e);
-            }
-        };
-
-        fetchStats();
-    }, [account?.sonolus_id]);
-
-    
-    useEffect(() => {
-        if (!charts || charts.length === 0) return;
-
-        const fetchCounts = async () => {
-            const counts = {};
-            const apiBase = process.env.NEXT_PUBLIC_API_URL;
-
-            await Promise.all(charts.map(async (chart) => {
-                try {
-                    const chartId = chart.id?.toString().replace('UnCh-', '') || chart.name?.replace('UnCh-', '');
-                    if (!chartId) return;
-                    const res = await fetch(`${apiBase}/api/charts/${chartId}/comment`);
-                    if (res.ok) {
-                        const data = await res.json();
-                        const list = Array.isArray(data) ? data : (data.data || []);
-                        counts[chart.id || chart.name] = list.length;
-                    }
-                } catch (e) { }
-            }));
-            setCommentCounts(counts);
-        };
-
-        fetchCounts();
-    }, [charts]);
 
 
 
@@ -369,6 +330,8 @@ export default function UserProfile({ params }) {
                 </div>
             </div>
 
+            <AdBanner style={{ margin: '20px 0' }} />
+
             <div className="profile-tabs-bar">
                 <button className="profile-tab active">
                     {t('userProfile.charts', 'Popular Charts')}
@@ -397,7 +360,7 @@ export default function UserProfile({ params }) {
                                     coverUrl: thumbUrl,
                                     bgmUrl: musicUrl,
                                     likeCount: chart.likes || chart.like_count || 0,
-                                    commentsCount: commentCounts[chartKey] || 0,
+                                    commentsCount: chart.comment_count || 0,
                                     createdAt: chart.created_at || chart.createdAt,
                                 };
                                 return (

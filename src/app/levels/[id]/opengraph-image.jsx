@@ -59,6 +59,17 @@ export default async function Image({ params }) {
         } catch (e) { console.error("Could not fetch level", e); }
 
         if (!levelData) {
+            try {
+                const res = await fetch(`${apiUrl}/api/charts/${cleanId}/scheduled/`);
+                if (res.ok) {
+                    const json = await res.json();
+                    levelData = json.data;
+                    assetBaseUrl = json.asset_base_url;
+                }
+            } catch (e) {}
+        }
+
+        if (!levelData) {
             const fonts = getDecodedFontDB();
             return new ImageResponse(
                 (
@@ -71,7 +82,7 @@ export default async function Image({ params }) {
         }
 
         const requiredEmojiKeys = new Set();
-        const textsToCheck = [levelData.title, levelData.artists, levelData.author, levelData.author_full, levelData.description];
+        const textsToCheck = [levelData.title, levelData.artists, levelData.author, levelData.author_full];
         Object.keys(emojis).forEach(key => {
             const pattern = `:${key}:`;
             if (textsToCheck.some(t => t && t.includes(pattern))) {
@@ -170,7 +181,6 @@ export default async function Image({ params }) {
         };
 
         const isStaffPick = levelData.staff_pick === 1 || levelData.staff_pick === true || levelData.staff_picked;
-        const hasDescription = levelData.description && levelData.description.trim().length > 0;
 
         
         const FRAME_MARGIN = 30; 
@@ -364,7 +374,6 @@ export default async function Image({ params }) {
                                 fontWeight: 700,
                                 color: '#38bdf8',
                                 background: 'rgba(0,0,0,0.7)',
-                                backdropFilter: 'blur(8px)',
                                 border: '1px solid rgba(255,255,255,0.2)',
                                 borderRadius: 8,
                                 padding: '4px 12px',
@@ -380,7 +389,7 @@ export default async function Image({ params }) {
 
 
                             {}
-                            <div style={{ fontSize: 60, fontWeight: 700, color: 'white', lineHeight: 1.05, marginBottom: 16, display: 'flex', alignItems: 'center', flexWrap: 'wrap', textShadow: '0 4px 12px rgba(0,0,0,0.4)' }}>
+                            <div style={{ fontSize: 60, fontWeight: 700, color: 'white', lineHeight: 1.05, marginBottom: 16, display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                                 {renderTextWithEmojis((levelData.title || 'Untitled').slice(0, 28), 60)}
                             </div>
 
@@ -390,7 +399,7 @@ export default async function Image({ params }) {
                             </div>
 
                             {}
-                            <div style={{ fontSize: 24, color: '#94a3b8', display: 'flex', alignItems: 'center', flexWrap: 'wrap', marginBottom: 28 }}>
+                            <div style={{ fontSize: 24, color: '#94a3b8', display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                                 <div style={{
                                     width: 32,
                                     height: 32,
@@ -405,27 +414,8 @@ export default async function Image({ params }) {
                                 }}>
                                     <img src={authorPfpData || defpfpData} width={32} height={32} style={{ objectFit: 'cover' }} />
                                 </div>
-                                Charted by {renderTextWithEmojis((levelData.author_full || levelData.author || 'Unknown').slice(0, 30), 24)}
+                                <div style={{ display: 'flex', marginRight: 6 }}>Charted by</div>{renderTextWithEmojis((levelData.author_full || levelData.author || 'Unknown').slice(0, 30), 24)}
                             </div>
-
-                            {}
-                            {hasDescription && (
-                                <div style={{
-                                    fontSize: 18,
-                                    color: '#e2e8f0',
-                                    lineHeight: 1.4,
-                                    padding: '18px 24px',
-                                    background: 'rgba(255, 255, 255, 0.08)',
-                                    borderRadius: 16, 
-                                    border: '1px solid rgba(255, 255, 255, 0.4)',
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    alignItems: 'center',
-                                    maxWidth: 660,
-                                }}>
-                                    {renderTextWithEmojis(levelData.description.slice(0, 130), 18)}{levelData.description.length > 130 ? '...' : ''}
-                                </div>
-                            )}
                         </div>
                     </div>
 
@@ -449,10 +439,10 @@ export default async function Image({ params }) {
                         {}
                         <div style={{ display: 'flex', gap: 40, alignItems: 'center' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fca5a5', fontSize: 24, fontWeight: 600 }}>
-                                ❤️ {levelData.likes || levelData.like_count || 0}
+                                ❤️ {levelData.like_count || 0}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#cbd5e1', fontSize: 24, fontWeight: 600 }}>
-                                💬 {levelData.comments_count || levelData.comment_count || 0}
+                                💬 {levelData.comment_count || 0}
                             </div>
                         </div>
 

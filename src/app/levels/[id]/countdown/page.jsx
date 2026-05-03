@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Home, Clock, Calendar, Eye } from "lucide-react";
 import { useLanguage } from "../../../../contexts/LanguageContext";
 import { useUser } from "../../../../contexts/UserContext";
+import AdBanner from "../../../../components/ad-banner/AdBanner";
 import "./countdown.css";
 
 export default function CountdownPage({ params, chartStatus }) {
@@ -252,6 +253,8 @@ export default function CountdownPage({ params, chartStatus }) {
                         )}
                     </div>
                 </div>
+
+                <AdBanner style={{ margin: '24px 0' }} />
 
                 <div className="countdown-timer-section">
                     <div className="timer-label">

@@ -15,6 +15,7 @@ import { useUser } from "../contexts/UserContext";
 import { useSearchParams } from "next/navigation";
 import LiquidSelect from "../components/liquid-select/LiquidSelect";
 import { cachedFetch } from "../utils/fetchCache";
+import AdBanner from "../components/ad-banner/AdBanner";
 
 const ViewAllDrawer = dynamic(() => import("../components/view-all-drawer/ViewAllDrawer"), { ssr: false });
 
@@ -45,36 +46,36 @@ function HomeContent() {
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchType, setSearchType] = useState("newest");
-  const [sortBy, setSortBy] = useState("created_at");
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [searchKey, setSearchKey] = useState(0);
 
-  const [minRating, setMinRating] = useState("");
-  const [maxRating, setMaxRating] = useState("");
-  const [minLikes, setMinLikes] = useState("");
-  const [maxLikes, setMaxLikes] = useState("");
-  const [titleIncludes, setTitleIncludes] = useState("");
-  const [descriptionIncludes, setDescriptionIncludes] = useState("");
-  const [artistsIncludes, setArtistsIncludes] = useState("");
-  const [tags, setTags] = useState("");
-  const [likedBy, setLikedBy] = useState(false);
-  const [staffPick, setStaffPick] = useState(false);
-  const [sonolusHandleIs, setSonolusHandleIs] = useState("");
+  const [filters, setFilters] = useState({
+    searchQuery: "",
+    searchType: "newest",
+    sortBy: "created_at",
+    sortOrder: "desc",
+    minRating: "",
+    maxRating: "",
+    minLikes: "",
+    maxLikes: "",
+    titleIncludes: "",
+    descriptionIncludes: "",
+    artistsIncludes: "",
+    tags: "",
+    likedBy: false,
+    staffPick: false,
+    sonolusHandleIs: "",
+  });
+  const setFilter = (key, value) => setFilters(prev => ({ ...prev, [key]: value }));
 
   useEffect(() => {
     const handle = searchParams.get('sonolus_handle_is');
     if (handle) {
-      setSonolusHandleIs(handle);
-      setSearchType('advanced');
+      setFilters(prev => ({ ...prev, sonolusHandleIs: handle, searchType: 'advanced' }));
       setViewMode('search');
     }
   }, [searchParams]);
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerTitle, setDrawerTitle] = useState("");
-  const [drawerCharts, setDrawerCharts] = useState([]);
-  const [drawerFetchType, setDrawerFetchType] = useState(null);
+  const [drawer, setDrawer] = useState({ open: false, title: "", charts: [], fetchType: null });
 
   const mapChartData = (item, baseUrl = "") => {
     const authorHash = item.author;
@@ -115,7 +116,7 @@ function HomeContent() {
       backgroundUrl: backgroundUrl,
       backgroundV3Url: backgroundV3Url,
       likeCount: item.likeCount ?? item.likes ?? item.like_count ?? 0,
-      commentsCount: item.comment_count ?? item.commentsCount ?? (Array.isArray(item.comments) ? item.comments.length : item.comments) ?? item.comments_count ?? 0,
+      commentsCount: item.comment_count || 0,
       rating: item.rating ?? 0,
       createdAt: item.createdAt || item.created_at,
     };
@@ -152,32 +153,32 @@ function HomeContent() {
     setLoading(true);
     try {
       const queryParams = new URLSearchParams();
-      const actualType = searchType === 'newest' ? 'quick' : searchType;
+      const actualType = filters.searchType === 'newest' ? 'quick' : filters.searchType;
       queryParams.append('type', actualType);
       queryParams.append('page', page.toString());
       queryParams.append('limit', '10');
 
-      if (staffPick && actualType !== 'random') queryParams.append('staff_pick', '1');
-      if (sonolusHandleIs) queryParams.append('sonolus_handle_is', sonolusHandleIs);
+      if (filters.staffPick && actualType !== 'random') queryParams.append('staff_pick', '1');
+      if (filters.sonolusHandleIs) queryParams.append('sonolus_handle_is', filters.sonolusHandleIs);
 
       if (actualType === 'quick') {
-        if (searchQuery) queryParams.append('meta_includes', searchQuery);
-        queryParams.append('sort_by', searchType === 'newest' ? 'created_at' : sortBy);
-        queryParams.append('sort_order', sortOrder);
-      } else if (searchType === 'advanced') {
-        if (titleIncludes) queryParams.append('title_includes', titleIncludes);
-        else if (searchQuery) queryParams.append('title_includes', searchQuery);
-        if (descriptionIncludes) queryParams.append('description_includes', descriptionIncludes);
-        if (artistsIncludes) queryParams.append('artists_includes', artistsIncludes);
-        if (minRating) queryParams.append('minR', minRating);
-        if (maxRating) queryParams.append('maxR', maxRating);
-        if (typeof tags === 'string' && tags.trim()) queryParams.append('tags', tags.trim());
-        else if (Array.isArray(tags) && tags.length > 0) queryParams.append('tags', tags.join(','));
-        if (minLikes) queryParams.append('minL', minLikes);
-        if (maxLikes) queryParams.append('maxL', maxLikes);
-        if (likedBy) queryParams.append('liked_by', '1');
-        queryParams.append('sort_by', sortBy);
-        queryParams.append('sort_order', sortOrder);
+        if (filters.searchQuery) queryParams.append('meta_includes', filters.searchQuery);
+        queryParams.append('sort_by', filters.searchType === 'newest' ? 'created_at' : filters.sortBy);
+        queryParams.append('sort_order', filters.sortOrder);
+      } else if (filters.searchType === 'advanced') {
+        if (filters.titleIncludes) queryParams.append('title_includes', filters.titleIncludes);
+        else if (filters.searchQuery) queryParams.append('title_includes', filters.searchQuery);
+        if (filters.descriptionIncludes) queryParams.append('description_includes', filters.descriptionIncludes);
+        if (filters.artistsIncludes) queryParams.append('artists_includes', filters.artistsIncludes);
+        if (filters.minRating) queryParams.append('minR', filters.minRating);
+        if (filters.maxRating) queryParams.append('maxR', filters.maxRating);
+        if (typeof filters.tags === 'string' && filters.tags.trim()) queryParams.append('tags', filters.tags.trim());
+        else if (Array.isArray(filters.tags) && filters.tags.length > 0) queryParams.append('tags', filters.tags.join(','));
+        if (filters.minLikes) queryParams.append('minL', filters.minLikes);
+        if (filters.maxLikes) queryParams.append('maxL', filters.maxLikes);
+        if (filters.likedBy) queryParams.append('liked_by', '1');
+        queryParams.append('sort_by', filters.sortBy);
+        queryParams.append('sort_order', filters.sortOrder);
       }
 
       const res = await fetch(`${APILink}/api/charts?${queryParams.toString()}`);
@@ -188,7 +189,7 @@ function HomeContent() {
 
       setPosts(uniquePosts);
       const infiniteScrollTypes = ['newest'];
-      setPageCount(json.pages || json.pageCount || (infiniteScrollTypes.includes(searchType) ? (page + 2) : 1));
+      setPageCount(json.pages || json.pageCount || (infiniteScrollTypes.includes(filters.searchType) ? (page + 2) : 1));
       setTotalResults(json.total || (json.items?.length || json.data?.length || 0));
     } catch (err) {
       console.error(err);
@@ -196,7 +197,7 @@ function HomeContent() {
     } finally {
       setLoading(false);
     }
-  }, [searchType, page, staffPick, searchQuery, sortBy, sortOrder, minRating, maxRating, tags, minLikes, maxLikes, likedBy, titleIncludes, descriptionIncludes, artistsIncludes, sonolusHandleIs]);
+  }, [filters, page]);
 
   useEffect(() => {
     if (viewMode === 'home') {
@@ -209,11 +210,12 @@ function HomeContent() {
     } else {
       fetchSearchData();
     }
-  }, [viewMode, fetchHomeData, fetchSearchData]);
+  }, [viewMode, page]);
 
   const handleSearch = (e) => {
     e?.preventDefault();
     setPage(0);
+    setSearchKey(k => k + 1);
     fetchSearchData();
   };
 
@@ -244,10 +246,7 @@ function HomeContent() {
   }, [viewParam]);
 
   const handleViewAll = (title, charts, fetchType = null) => {
-    setDrawerTitle(title);
-    setDrawerCharts(charts);
-    setDrawerFetchType(fetchType);
-    setDrawerOpen(true);
+    setDrawer({ open: true, title, charts, fetchType });
   };
 
   const newChartsIcon = (
@@ -273,6 +272,8 @@ function HomeContent() {
         <div className="home-content animate-fade-in">
           <HeroSection posts={homeData.staffPicks} />
 
+          <AdBanner style={{ margin: '24px 0' }} />
+
           <div className="carousel-section-wrapper">
             <TrendingCarousel
               title={t('home.newCharts')}
@@ -282,6 +283,8 @@ function HomeContent() {
               onViewAll={handleViewAllNew}
             />
           </div>
+
+          <AdBanner style={{ margin: '24px 0' }} />
 
           <div className="carousel-section-wrapper">
             <TrendingCarousel
@@ -294,11 +297,11 @@ function HomeContent() {
           </div>
 
           <ViewAllDrawer
-            isOpen={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
-            title={drawerTitle}
-            initialCharts={drawerCharts}
-            fetchType={drawerFetchType}
+            isOpen={drawer.open}
+            onClose={() => setDrawer(prev => ({ ...prev, open: false }))}
+            title={drawer.title}
+            initialCharts={drawer.charts}
+            fetchType={drawer.fetchType}
             apiBase={APILink}
           />
 
@@ -321,8 +324,8 @@ function HomeContent() {
                 <div className="search-control-group">
                   <label>{t('search.searchType')}</label>
                   <LiquidSelect
-                    value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
+                    value={filters.searchType}
+                    onChange={(e) => setFilter('searchType', e.target.value)}
                     options={[
                       { value: "newest", label: t('search.newest', 'Newest'), icon: Zap },
                       { value: "random", label: t('search.random'), icon: Shuffle },
@@ -332,14 +335,14 @@ function HomeContent() {
                   />
                 </div>
 
-                {searchType !== "random" && searchType !== "newest" && (
+                {filters.searchType !== "random" && filters.searchType !== "newest" && (
                   <>
                     <div className="search-control-group checkbox-group">
                       <input
                         type="checkbox"
                         id="staffPick"
-                        checked={staffPick}
-                        onChange={(e) => setStaffPick(e.target.checked)}
+                        checked={filters.staffPick}
+                        onChange={(e) => setFilter('staffPick', e.target.checked)}
                         className="styled-checkbox"
                       />
                       <label htmlFor="staffPick" className="checkbox-label">{t('search.staffPickOnly')}</label>
@@ -348,8 +351,8 @@ function HomeContent() {
                     <div className="search-control-group">
                       <label>{t('search.sortBy')}</label>
                       <LiquidSelect
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
+                        value={filters.sortBy}
+                        onChange={(e) => setFilter('sortBy', e.target.value)}
                         options={[
                           { value: "created_at", label: t('search.createdDate', 'Created Date'), icon: Clock },
                           { value: "rating", label: "Rating", icon: Star },
@@ -363,8 +366,8 @@ function HomeContent() {
                     <div className="search-control-group">
                       <label>{t('search.order')}</label>
                       <LiquidSelect
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
+                        value={filters.sortOrder}
+                        onChange={(e) => setFilter('sortOrder', e.target.value)}
                         options={[
                           { value: "asc", label: t('search.ascending'), icon: ArrowUp },
                           { value: "desc", label: t('search.descending'), icon: ArrowDown }
@@ -374,52 +377,52 @@ function HomeContent() {
                   </>
                 )}
 
-                {searchType !== "random" && (
+                {filters.searchType !== "random" && (
                   <div className="search-control-group">
                     <label>{t('search.keywords')}</label>
                     <input
                       type="text"
                       placeholder={t('search.keywordsPlaceholder')}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      value={filters.searchQuery}
+                      onChange={(e) => setFilter('searchQuery', e.target.value)}
                       className="liquid-input"
                     />
                   </div>
                 )}
 
-                {searchType === "advanced" && (
+                {filters.searchType === "advanced" && (
                   <>
                     <div className="search-control-group">
                       <label>{t('search.minRating')}</label>
-                      <input type="number" placeholder={t('search.minRatingPlaceholder')} min="1" max="99" value={minRating} onChange={(e) => setMinRating(e.target.value)} className="liquid-input" />
+                      <input type="number" placeholder={t('search.minRatingPlaceholder')} min="1" max="99" value={filters.minRating} onChange={(e) => setFilter('minRating', e.target.value)} className="liquid-input" />
                     </div>
                     <div className="search-control-group">
                       <label>{t('search.maxRating')}</label>
-                      <input type="number" placeholder={t('search.maxRatingPlaceholder')} min="1" max="99" value={maxRating} onChange={(e) => setMaxRating(e.target.value)} className="liquid-input" />
+                      <input type="number" placeholder={t('search.maxRatingPlaceholder')} min="1" max="99" value={filters.maxRating} onChange={(e) => setFilter('maxRating', e.target.value)} className="liquid-input" />
                     </div>
                     <div className="search-control-group">
                       <label>{t('search.descriptionIncludes', 'Description Includes')}</label>
-                      <input type="text" placeholder={t('search.descriptionPlaceholder', 'Search in descriptions...')} value={descriptionIncludes} onChange={(e) => setDescriptionIncludes(e.target.value)} className="liquid-input" />
+                      <input type="text" placeholder={t('search.descriptionPlaceholder', 'Search in descriptions...')} value={filters.descriptionIncludes} onChange={(e) => setFilter('descriptionIncludes', e.target.value)} className="liquid-input" />
                     </div>
                     <div className="search-control-group">
                       <label>{t('search.titleIncludes')}</label>
-                      <input type="text" placeholder={t('search.titlePlaceholder', 'Search in titles...')} value={titleIncludes} onChange={(e) => setTitleIncludes(e.target.value)} className="liquid-input" />
+                      <input type="text" placeholder={t('search.titlePlaceholder', 'Search in titles...')} value={filters.titleIncludes} onChange={(e) => setFilter('titleIncludes', e.target.value)} className="liquid-input" />
                     </div>
                     <div className="search-control-group">
                       <label>{t('search.artistsIncludes')}</label>
-                      <input type="text" placeholder={t('search.artistsPlaceholder', 'Search in artists...')} value={artistsIncludes} onChange={(e) => setArtistsIncludes(e.target.value)} className="liquid-input" />
+                      <input type="text" placeholder={t('search.artistsPlaceholder', 'Search in artists...')} value={filters.artistsIncludes} onChange={(e) => setFilter('artistsIncludes', e.target.value)} className="liquid-input" />
                     </div>
                     <div className="search-control-group">
                       <label>{t('search.tags')}</label>
-                      <input type="text" placeholder={t('search.tagsPlaceholder', 'Comma-separated tags')} value={tags} onChange={(e) => setTags(e.target.value)} className="liquid-input" />
+                      <input type="text" placeholder={t('search.tagsPlaceholder', 'Comma-separated tags')} value={filters.tags} onChange={(e) => setFilter('tags', e.target.value)} className="liquid-input" />
                     </div>
                     <div className="search-control-group">
                       <label>{t('search.authorHandle', 'Author Handle')}</label>
-                      <input type="text" placeholder={t('search.authorHandlePlaceholder', 'e.g. 78302')} value={sonolusHandleIs} onChange={(e) => setSonolusHandleIs(e.target.value)} className="liquid-input" />
+                      <input type="text" placeholder={t('search.authorHandlePlaceholder', 'e.g. 78302')} value={filters.sonolusHandleIs} onChange={(e) => setFilter('sonolusHandleIs', e.target.value)} className="liquid-input" />
                     </div>
                     {sonolusUser && (
                     <div className="search-control-group checkbox-group">
-                      <input type="checkbox" id="likedByMe" checked={likedBy} onChange={(e) => setLikedBy(e.target.checked)} className="styled-checkbox" />
+                      <input type="checkbox" id="likedByMe" checked={filters.likedBy} onChange={(e) => setFilter('likedBy', e.target.checked)} className="styled-checkbox" />
                       <label htmlFor="likedByMe" className="checkbox-label">{t('search.likedByMe', 'Liked by me')}</label>
                     </div>
                     )}
@@ -431,19 +434,26 @@ function HomeContent() {
             </form>
           </div>
 
+          {posts.length > 0 && <AdBanner key={`search-top-${searchKey}-${page}`} style={{ margin: '16px 0' }} />}
+
           <div style={{ position: 'relative', zIndex: 1 }}>
             <ChartsList
               posts={posts}
               loading={loading}
               sonolusUser={sonolusUser}
+              midAd={<AdBanner key={`search-mid-${searchKey}-${page}`} />}
             />
           </div>
 
-          {searchType === "random" ? (
+          {posts.length === 0 && !loading && <AdBanner key={`search-empty-${searchKey}-${page}`} style={{ margin: '16px 0' }} />}
+
+          {posts.length > 0 && <AdBanner key={`search-bottom-${searchKey}-${page}`} style={{ margin: '16px 0' }} />}
+
+          {filters.searchType === "random" ? (
             <button
               className="search-btn"
               style={{ marginTop: '24px', width: '100%' }}
-              onClick={(e) => { e.preventDefault(); fetchSearchData(); }}
+              onClick={(e) => { e.preventDefault(); setSearchKey(k => k + 1); fetchSearchData(); }}
             >
               {t('search.reroll', 'Reroll')}
             </button>

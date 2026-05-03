@@ -4,7 +4,6 @@ import { createPortal } from "react-dom";
 import { Play, Heart, Info, User, Music, Calendar, MessageSquare, ArrowDown } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { cachedFetch } from "../../utils/fetchCache";
 import MarqueeText from "../marquee-text/MarqueeText";
 import "./HeroSection.css";
 
@@ -64,7 +63,6 @@ function HeroAuthorPopout({ data, anchorRect }) {
 export default memo(function HeroSection({ posts = [] }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { t, tReact } = useLanguage();
-    const [commentCounts, setCommentCounts] = useState({});
     const [showAuthorPopout, setShowAuthorPopout] = useState(false);
     const [authorPopoutData, setAuthorPopoutData] = useState(null);
     const [authorAnchorRect, setAuthorAnchorRect] = useState(null);
@@ -115,27 +113,6 @@ export default memo(function HeroSection({ posts = [] }) {
         setAuthorPopoutData(null);
     };
 
-    useEffect(() => {
-        if (!posts || posts.length === 0) return;
-
-        const fetchCounts = async () => {
-            const counts = {};
-            const apiBase = process.env.NEXT_PUBLIC_API_URL;
-
-            await Promise.all(posts.map(async (post) => {
-                try {
-                    const cleanId = post.id.toString().replace('UnCh-', '');
-                    const data = await cachedFetch(`${apiBase}/api/charts/${cleanId}/comment`);
-                    const list = Array.isArray(data) ? data : (data.data || []);
-                    counts[post.id] = list.length;
-                } catch (e) {
-                }
-            }));
-            setCommentCounts(prev => ({ ...prev, ...counts }));
-        };
-
-        fetchCounts();
-    }, [posts]);
 
     
     useEffect(() => {
@@ -267,7 +244,7 @@ export default memo(function HeroSection({ posts = [] }) {
                             </div>
                             <div className="hero-meta-item">
                                 <MessageSquare size={16} className="text-blue-400" style={{ color: '#60a5fa' }} />
-                                <span>{commentCounts[currentPost.id] !== undefined ? commentCounts[currentPost.id] : (currentPost.commentsCount || 0)}</span>
+                                <span>{currentPost.commentsCount || 0}</span>
                             </div>
                         </div>
 

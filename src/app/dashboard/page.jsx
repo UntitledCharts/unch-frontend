@@ -25,6 +25,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguage } from "../../contexts/LanguageContext";
 import LiquidSelect from "../../components/liquid-select/LiquidSelect";
 import DashboardSkeleton from "../../components/dashboard-skeleton/DashboardSkeleton";
+import AdBanner from "../../components/ad-banner/AdBanner";
 import { formatBytes } from "../../utils/byteUtils";
 import dynamic from "next/dynamic";
 import { memo } from "react";
@@ -115,17 +116,19 @@ function DashboardContent() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const [staffPick, setStaffPick] = useState(false);
-  const [sortBy, setSortBy] = useState("created_at");
-  const [sortOrder, setSortOrder] = useState("desc");
-  const [minRating, setMinRating] = useState("");
-  const [maxRating, setMaxRating] = useState(99);
-  const [descriptionIncludes, setDescriptionIncludes] = useState("");
-  const [titleIncludes, setTitleIncludes] = useState("");
-  const [artistsIncludes, setArtistsIncludes] = useState("");
-  const [tags, setTags] = useState("");
+  const [filters, setFilters] = useState({
+    searchQuery: "",
+    staffPick: false,
+    sortBy: "created_at",
+    sortOrder: "desc",
+    minRating: "",
+    maxRating: 99,
+    descriptionIncludes: "",
+    titleIncludes: "",
+    artistsIncludes: "",
+    tags: "",
+  });
+  const setFilter = (key, value) => setFilters(prev => ({ ...prev, [key]: value }));
   const [filtersExpanded, setFiltersExpanded] = useState(true);
 
   const sonolusHandleIs = searchParams.get('sonolus_handle_is');
@@ -224,17 +227,17 @@ function DashboardContent() {
       queryParams.append("status", "ALL");
 
       if (sonolusHandleIs) queryParams.append("sonolus_handle_is", sonolusHandleIs);
-      if (staffPick) queryParams.append("staff_pick", "1");
-      if (minRating) queryParams.append("min_rating", minRating);
-      if (maxRating) queryParams.append("max_rating", maxRating);
-      if (tags) queryParams.append("tags", tags);
-      if (titleIncludes) queryParams.append("title_includes", titleIncludes);
-      if (descriptionIncludes) queryParams.append("description_includes", descriptionIncludes);
-      if (artistsIncludes) queryParams.append("artists_includes", artistsIncludes);
-      if (searchQuery) queryParams.append("meta_includes", searchQuery);
+      if (filters.staffPick) queryParams.append("staff_pick", "1");
+      if (filters.minRating) queryParams.append("min_rating", filters.minRating);
+      if (filters.maxRating) queryParams.append("max_rating", filters.maxRating);
+      if (filters.tags) queryParams.append("tags", filters.tags);
+      if (filters.titleIncludes) queryParams.append("title_includes", filters.titleIncludes);
+      if (filters.descriptionIncludes) queryParams.append("description_includes", filters.descriptionIncludes);
+      if (filters.artistsIncludes) queryParams.append("artists_includes", filters.artistsIncludes);
+      if (filters.searchQuery) queryParams.append("meta_includes", filters.searchQuery);
 
-      queryParams.append("sort_by", sortBy);
-      queryParams.append("sort_order", sortOrder);
+      queryParams.append("sort_by", filters.sortBy);
+      queryParams.append("sort_order", filters.sortOrder);
 
       const res = await fetch(`${apiBase}/api/charts?${queryParams.toString()}`, {
         headers: { Authorization: `${session}` },
@@ -291,11 +294,7 @@ function DashboardContent() {
           previewUrl,
           backgroundUrl,
           likeCount: item.like_count ?? item.likes ?? 0,
-          commentsCount:
-            item.comment_count ??
-            item.comments_count ??
-            (Array.isArray(item.comments) ? item.comments.length : item.comments) ??
-            0,
+          commentsCount: item.comment_count || 0,
           createdAt: item.created_at,
           publishedAt: item.published_at,
           createdAt: item.created_at,
@@ -323,16 +322,7 @@ function DashboardContent() {
     APILink,
     currentPage,
     session,
-    staffPick,
-    searchQuery,
-    sortBy,
-    sortOrder,
-    minRating,
-    maxRating,
-    tags,
-    titleIncludes,
-    descriptionIncludes,
-    artistsIncludes,
+    filters,
     sonolusHandleIs,
     clearExpiredSession,
   ]);
@@ -354,7 +344,7 @@ function DashboardContent() {
       fetchCharts();
       fetchLimits();
     }
-  }, [isClient, sessionReady, currentPage, fetchCharts]);
+  }, [isClient, sessionReady, currentPage]);
 
   const openUpload = () => {
     setMode("upload");
@@ -740,8 +730,8 @@ function DashboardContent() {
               <input
                 type="text"
                 placeholder={t("dashboard.searchPlaceholder", "Search Chart")}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={filters.searchQuery}
+                onChange={(e) => setFilter('searchQuery', e.target.value)}
               />
             </div>
 
@@ -751,6 +741,8 @@ function DashboardContent() {
             </button>
           </div>
         </div>
+
+        <AdBanner style={{ margin: '16px 0' }} />
 
         {loading && posts.length === 0 ? (
           <DashboardSkeleton />
@@ -780,8 +772,8 @@ function DashboardContent() {
                       <input
                         type="checkbox"
                         id="staffPick"
-                        checked={staffPick}
-                        onChange={(e) => setStaffPick(e.target.checked)}
+                        checked={filters.staffPick}
+                        onChange={(e) => setFilter('staffPick', e.target.checked)}
                         className="styled-checkbox"
                       />
                       <label
@@ -795,8 +787,8 @@ function DashboardContent() {
                     <div className="search-control-group">
                       <label>{t("search.sortBy")}</label>
                       <LiquidSelect
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
+                        value={filters.sortBy}
+                        onChange={(e) => setFilter('sortBy', e.target.value)}
                         options={[
                           { value: "created_at", label: t("search.createdDate", "Created Date"), icon: Clock },
                           { value: "rating", label: "Rating", icon: Star },
@@ -810,8 +802,8 @@ function DashboardContent() {
                     <div className="search-control-group">
                       <label>{t("search.order")}</label>
                       <LiquidSelect
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
+                        value={filters.sortOrder}
+                        onChange={(e) => setFilter('sortOrder', e.target.value)}
                         options={[
                           { value: "asc", label: t("search.ascending"), icon: ArrowUp },
                           { value: "desc", label: t("search.descending"), icon: ArrowDown },
@@ -826,8 +818,8 @@ function DashboardContent() {
                         min="-999"
                         max="20"
                         placeholder="-999"
-                        value={minRating}
-                        onChange={(e) => setMinRating(e.target.value)}
+                        value={filters.minRating}
+                        onChange={(e) => setFilter('minRating', e.target.value)}
                         onWheel={(e) => e.target.blur()}
                         className="liquid-input"
                       />
@@ -837,8 +829,8 @@ function DashboardContent() {
                       <input
                         type="number"
                         placeholder={t("search.maxRatingPlaceholder")}
-                        value={maxRating}
-                        onChange={(e) => setMaxRating(e.target.value)}
+                        value={filters.maxRating}
+                        onChange={(e) => setFilter('maxRating', e.target.value)}
                         onWheel={(e) => e.target.blur()}
                         className="liquid-input"
                       />
@@ -849,8 +841,8 @@ function DashboardContent() {
                       <input
                         type="text"
                         placeholder={t("search.descriptionPlaceholder", "Search in descriptions...")}
-                        value={descriptionIncludes}
-                        onChange={(e) => setDescriptionIncludes(e.target.value)}
+                        value={filters.descriptionIncludes}
+                        onChange={(e) => setFilter('descriptionIncludes', e.target.value)}
                         className="liquid-input"
                       />
                     </div>
@@ -860,8 +852,8 @@ function DashboardContent() {
                       <input
                         type="text"
                         placeholder={t("search.titleIncludesPlaceholder")}
-                        value={titleIncludes}
-                        onChange={(e) => setTitleIncludes(e.target.value)}
+                        value={filters.titleIncludes}
+                        onChange={(e) => setFilter('titleIncludes', e.target.value)}
                         className="liquid-input"
                       />
                     </div>
@@ -871,8 +863,8 @@ function DashboardContent() {
                       <input
                         type="text"
                         placeholder={t("search.artistsIncludesPlaceholder")}
-                        value={artistsIncludes}
-                        onChange={(e) => setArtistsIncludes(e.target.value)}
+                        value={filters.artistsIncludes}
+                        onChange={(e) => setFilter('artistsIncludes', e.target.value)}
                         className="liquid-input"
                       />
                     </div>
@@ -882,8 +874,8 @@ function DashboardContent() {
                       <input
                         type="text"
                         placeholder={t("search.tagsPlaceholder")}
-                        value={tags}
-                        onChange={(e) => setTags(e.target.value)}
+                        value={filters.tags}
+                        onChange={(e) => setFilter('tags', e.target.value)}
                         className="liquid-input"
                       />
                     </div>
@@ -900,7 +892,7 @@ function DashboardContent() {
               {filteredPosts.length === 0 ? (
                 <div className="empty-state">
                   <div className="empty-icon">🎵</div>
-                  {posts.length > 0 || searchQuery ? (
+                  {posts.length > 0 || filters.searchQuery ? (
                     <h3>{t("dashboard.noResults", "No Results")}</h3>
                   ) : (
                     <>
@@ -1199,6 +1191,8 @@ function DashboardContent() {
           </div>
           );
         })()}
+
+        <AdBanner style={{ margin: '24px 0 40px' }} />
 
         <ChartModal
           isOpen={isOpen}
