@@ -737,6 +737,8 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
         </button>
       </div>
 
+      <AdBanner style={{ margin: '16px 0' }} />
+
       <div className="level-detail-container">
         <div className="level-top-section">
           <div className="level-image-container" style={{ position: 'relative' }}>
@@ -1004,7 +1006,6 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
               }
             }}
           />
-          <AdBanner style={{ margin: '20px 0' }} />
           <div className="stats-card">
             <h2 className="stats-title">
               <Star size={18} fill="currentColor" />

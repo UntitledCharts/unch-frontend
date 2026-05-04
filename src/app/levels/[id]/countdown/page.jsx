@@ -181,6 +181,8 @@ export default function CountdownPage({ params, chartStatus }) {
                 </Link>
             </nav>
 
+            <AdBanner style={{ margin: '16px 0' }} />
+
             {showConfetti && confettiPieces.map(piece => (
                 <div
                     key={piece.id}
@@ -299,7 +301,6 @@ export default function CountdownPage({ params, chartStatus }) {
                     {t('countdown.footerMsg')}
                 </p>
 
-                <AdBanner style={{ margin: '24px 0' }} />
             </div>
         </main>
     );

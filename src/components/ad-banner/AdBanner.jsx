@@ -20,7 +20,7 @@ export default function AdBanner({ format = "auto", fullWidthResponsive = true, 
   if (!ADS_ENABLED) return null;
 
   return (
-    <div style={{ width: '100%', ...style }}>
+    <div style={{ width: '100%', textAlign: 'center', ...style }}>
       <ins
         ref={adRef}
         className="adsbygoogle"
