@@ -350,7 +350,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
               }
             }
 
-            if (data.scheduled_publish && data.status !== 'PUBLIC') {
+            if (!isPreview && data.scheduled_publish && data.status !== 'PUBLIC') {
               setCountdownChartStatus(data.status);
               setShowCountdown(true);
               setLoading(false);
