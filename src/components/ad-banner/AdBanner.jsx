@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 
 const AD_CLIENT = "ca-pub-1175503001380961";
 const AD_SLOT = "1154203131"; // responsive horizontal display ad unit
-const ADS_ENABLED = false;
+const ADS_ENABLED = true;
 
 export default function AdBanner({ format = "auto", fullWidthResponsive = true, style }) {
   const adRef = useRef(null);
