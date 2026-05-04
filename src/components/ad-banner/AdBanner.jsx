@@ -18,15 +18,17 @@ export default function AdBanner({ format = "auto", fullWidthResponsive = true, 
 
   return (
     <div style={{ width: '100%', display: 'flex', justifyContent: 'center', ...style }}>
-      <ins
-        ref={adRef}
-        className="adsbygoogle"
-        style={{ display: "block" }}
-        data-ad-client={AD_CLIENT}
-        data-ad-slot={AD_SLOT}
-        data-ad-format={format}
-        data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
-      />
+      <div>
+        <ins
+          ref={adRef}
+          className="adsbygoogle"
+          style={{ display: "block" }}
+          data-ad-client={AD_CLIENT}
+          data-ad-slot={AD_SLOT}
+          data-ad-format={format}
+          data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
+        />
+      </div>
     </div>
   );
 }
