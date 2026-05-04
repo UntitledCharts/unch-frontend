@@ -441,7 +441,6 @@ function HomeContent() {
               posts={posts}
               loading={loading}
               sonolusUser={sonolusUser}
-              midAd={<AdBanner key={`search-mid-${searchKey}-${page}`} />}
             />
           </div>
 

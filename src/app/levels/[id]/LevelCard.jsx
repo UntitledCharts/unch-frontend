@@ -184,6 +184,14 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   const [leaderboardTotalPages, setLeaderboardTotalPages] = useState(1);
   const [leaderboardType, setLeaderboardType] = useState('arcade_score_speed');
 
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [commentPage, setCommentPage] = useState(1);
+  const [trends, setTrends] = useState({ likes: [], comments: [] });
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(true);
+
   const updateVisibility = async (newStatus) => {
     try {
       const cleanId = id.replace(/^UnCh-/, '');
@@ -441,22 +449,18 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
     id: null,
   } : null);
 
-  if (loading && !effectiveLevel) return (<div className="level-loading" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100dvh - 300px)' }}><div className="loading-spinner"></div></div>);
-  if (showCountdown) return <CountdownPage params={Promise.resolve({ id })} chartStatus={countdownChartStatus} />;
-  if (error || !effectiveLevel) return <NotFound message={t('error.chartNotFound')} />;
-
-  const level = effectiveLevel;
+  const level = effectiveLevel || {};
 
   const getSonolusLink = () => {
     if (!SONOLUS_SERVER_URL) return '';
     const serverWithoutSchema = SONOLUS_SERVER_URL.replace(/^https?:\/\//, '');
-    const sonolusId = levelData.sonolusId || `UnCh-${levelData.id}`;
+    const sonolusId = levelData?.sonolusId || `UnCh-${levelData.id}`;
     return `https://open.sonolus.com/${serverWithoutSchema}/levels/${sonolusId}`;
   };
 
   const handleCopyEmbed = async () => {
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    const embedUrl = `${origin}/embed/${levelData.sonolusId || 'UnCh-' + levelData.id}`;
+    const embedUrl = `${origin}/embed/${levelData?.sonolusId || 'UnCh-' + levelData.id}`;
     const embedCode = `<iframe src="${embedUrl}" width="450" height="240" style="border:none;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.4);" title="${levelData.title} - UntitledCharts" loading="lazy"></iframe>`;
     try {
       await navigator.clipboard.writeText(embedCode);
@@ -532,7 +536,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
 
   useEffect(() => {
     if (isThisTrackLoaded && level.title && trackMeta && trackMeta.title !== level.title) {
-      loadTrack(id, proxiedBgmUrl || '', {
+      ctxPlay(id, proxiedBgmUrl || '', {
         title: level.title,
         thumbnail: level.thumbnail,
         href: `/levels/${id}`,
@@ -553,19 +557,12 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   };
 
   const DESC_LIMIT = 300;
-  const descText = levelData.description || '';
+  const descText = levelData?.description || '';
   const descNeedsExpand = descText.length > DESC_LIMIT;
 
-  const [showFullDesc, setShowFullDesc] = useState(false);
-  const [commentCount, setCommentCount] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [page, setPage] = useState(1);
-  const [trends, setTrends] = useState({ likes: [], comments: [] });
-  const [comments, setComments] = useState([]);
-  const [loadingComments, setLoadingComments] = useState(true);
 
   useEffect(() => {
-    const rawSonolusId = levelData.sonolusId || '';
+    const rawSonolusId = levelData?.sonolusId || '';
     const cleanChartId = rawSonolusId.replace(/^UnCh-/, '');
     if (!cleanChartId) return;
 
@@ -610,18 +607,18 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
       }
     };
     fetchInitialData();
-  }, [levelData.sonolusId]);
+  }, [levelData?.sonolusId]);
 
-  const totalComments = (commentCount > 0 ? commentCount : (levelData.commentsCount || commentCount || 0));
+  const totalComments = (commentCount > 0 ? commentCount : (levelData?.commentsCount || commentCount || 0));
 
   useEffect(() => {
-    if (page === 1) return;
-    const rawSonolusId = levelData.sonolusId || '';
+    if (commentPage === 1) return;
+    const rawSonolusId = levelData?.sonolusId || '';
     const cleanChartId = rawSonolusId.replace(/^UnCh-/, '');
     if (!cleanChartId) return;
 
     setLoadingComments(true);
-    const apiPage = Math.floor((page - 1) / 2);
+    const apiPage = Math.floor((commentPage - 1) / 2);
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanChartId}/comment/?page=${apiPage}&limit=10`)
       .then(res => {
         if (res.ok) return res.json();
@@ -631,17 +628,17 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
       .then(data => {
         if (!data) return;
         const fullList = Array.isArray(data) ? data : (data.data || []);
-        const isFirstHalf = (page % 2 !== 0);
+        const isFirstHalf = (commentPage % 2 !== 0);
         setComments(isFirstHalf ? fullList.slice(0, 5) : fullList.slice(5, 10));
       })
       .catch(e => console.error("Failed to fetch comments", e))
       .finally(() => setLoadingComments(false));
-  }, [levelData.sonolusId, page]);
+  }, [levelData?.sonolusId, commentPage]);
 
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      const rawSonolusId = levelData.sonolusId || '';
+      const rawSonolusId = levelData?.sonolusId || '';
       const cleanChartId = rawSonolusId.replace(/^UnCh-/, '');
       if (!cleanChartId) return;
 
@@ -671,10 +668,10 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
       }
     };
 
-    if (levelData.sonolusId) {
+    if (levelData?.sonolusId) {
       fetchLeaderboard();
     }
-  }, [levelData.sonolusId, leaderboardPage, leaderboardType]);
+  }, [levelData?.sonolusId, leaderboardPage, leaderboardType]);
 
 
 
@@ -687,7 +684,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
 
   const likesHistory = (trends.likes && trends.likes.length > 0)
     ? trends.likes
-    : [0, 0, 0, 0, 0, 0, levelData.likes || 0];
+    : [0, 0, 0, 0, 0, 0, levelData?.likes || 0];
 
 
   const commentsVal = loadingComments ? totalComments : (commentCount || 0);
@@ -696,6 +693,10 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
     : [0, 0, 0, 0, 0, 0, commentsVal];
 
 
+
+  if (loading && !effectiveLevel) return (<div className="level-loading" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100dvh - 300px)' }}><div className="loading-spinner"></div></div>);
+  if (showCountdown) return <CountdownPage params={Promise.resolve({ id })} chartStatus={countdownChartStatus} />;
+  if (error || !effectiveLevel) return <NotFound message={t('error.chartNotFound')} />;
 
   return (
     <main className="level-detail-wrapper animate-fade-in">
@@ -1183,19 +1184,19 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                 borderRadius: '12px'
               }}>
                 <button
-                  disabled={page === 1}
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={commentPage === 1}
+                  onClick={() => setCommentPage(p => Math.max(1, p - 1))}
                   className="pagination-btn"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
                     padding: '8px 12px',
-                    background: page === 1 ? 'rgba(255,255,255,0.05)' : 'rgba(56, 189, 248, 0.15)',
+                    background: commentPage === 1 ? 'rgba(255,255,255,0.05)' : 'rgba(56, 189, 248, 0.15)',
                     border: '1px solid rgba(255,255,255,0.1)',
                     borderRadius: '10px',
-                    color: page === 1 ? '#64748b' : '#38bdf8',
-                    cursor: page === 1 ? 'not-allowed' : 'pointer',
+                    color: commentPage === 1 ? '#64748b' : '#38bdf8',
+                    cursor: commentPage === 1 ? 'not-allowed' : 'pointer',
                     fontWeight: '600',
                     fontSize: '0.85rem',
                     transition: 'all 0.2s',
@@ -1214,22 +1215,22 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
                   borderRadius: '8px',
                   whiteSpace: 'nowrap'
                 }}>
-                  {page} / {totalPages}
+                  {commentPage} / {totalPages}
                 </span>
                 <button
-                  disabled={page >= totalPages}
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={commentPage >= totalPages}
+                  onClick={() => setCommentPage(p => Math.min(totalPages, p + 1))}
                   className="pagination-btn"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
                     padding: '8px 12px',
-                    background: page >= totalPages ? 'rgba(255,255,255,0.05)' : 'rgba(56, 189, 248, 0.15)',
+                    background: commentPage >= totalPages ? 'rgba(255,255,255,0.05)' : 'rgba(56, 189, 248, 0.15)',
                     border: '1px solid rgba(255,255,255,0.1)',
                     borderRadius: '10px',
-                    color: page >= totalPages ? '#64748b' : '#38bdf8',
-                    cursor: page >= totalPages ? 'not-allowed' : 'pointer',
+                    color: commentPage >= totalPages ? '#64748b' : '#38bdf8',
+                    cursor: commentPage >= totalPages ? 'not-allowed' : 'pointer',
                     fontWeight: '600',
                     fontSize: '0.85rem',
                     transition: 'all 0.2s',
