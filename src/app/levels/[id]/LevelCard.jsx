@@ -350,6 +350,13 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
               }
             }
 
+            if (data.scheduled_publish && data.status !== 'PUBLIC') {
+              setCountdownChartStatus(data.status);
+              setShowCountdown(true);
+              setLoading(false);
+              return;
+            }
+
             const base = json.asset_base_url;
             const buildAssetUrl = (hash) => hash && base && data.author ? `${base}/${data.author}/${data.id}/${hash}` : null;
 
@@ -382,13 +389,10 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
               const cleanId2 = id.replace(/^UnCh-/, '');
               const schedRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/charts/${cleanId2}/scheduled/`);
               if (schedRes.ok) {
-                const schedJson = await schedRes.json();
-                if (schedJson?.data) {
-                  setCountdownChartStatus(response.status === 403 ? 'PRIVATE' : null);
-                  setShowCountdown(true);
-                  setLoading(false);
-                  return;
-                }
+                setCountdownChartStatus(null);
+                setShowCountdown(true);
+                setLoading(false);
+                return;
               }
             }
             setError('not_found');
