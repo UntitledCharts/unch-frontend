@@ -3,18 +3,21 @@ import { useEffect, useRef } from "react";
 
 const AD_CLIENT = "ca-pub-1175503001380961";
 const AD_SLOT = "1154203131"; // responsive horizontal display ad unit
+const ADS_ENABLED = false;
 
 export default function AdBanner({ format = "auto", fullWidthResponsive = true, style }) {
   const adRef = useRef(null);
   const pushed = useRef(false);
 
   useEffect(() => {
-    if (pushed.current) return;
+    if (!ADS_ENABLED || pushed.current) return;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       pushed.current = true;
     } catch (e) {}
   }, []);
+
+  if (!ADS_ENABLED) return null;
 
   return (
     <div style={{ width: '100%', display: 'flex', justifyContent: 'center', ...style }}>
