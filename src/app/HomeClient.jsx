@@ -189,7 +189,7 @@ function HomeContent() {
 
       setPosts(uniquePosts);
       const infiniteScrollTypes = ['newest'];
-      setPageCount(json.pages || json.pageCount || (infiniteScrollTypes.includes(filters.searchType) ? (page + 2) : 1));
+      setPageCount(uniquePosts.length === 0 ? 1 : (json.pages || json.pageCount || (infiniteScrollTypes.includes(filters.searchType) ? (page + 2) : 1)));
       setTotalResults(json.total || (json.items?.length || json.data?.length || 0));
     } catch (err) {
       console.error(err);
@@ -272,7 +272,7 @@ function HomeContent() {
         <div className="home-content animate-fade-in">
           <HeroSection posts={homeData.staffPicks} />
 
-          <div className="carousel-section-wrapper"><AdBanner style={{ margin: '0' }} /></div>
+          <div className="carousel-section-wrapper"><AdBanner fullWidthResponsive={false} style={{ margin: '0' }} /></div>
 
           <div className="carousel-section-wrapper">
             <TrendingCarousel
@@ -284,7 +284,7 @@ function HomeContent() {
             />
           </div>
 
-          <div className="carousel-section-wrapper"><AdBanner style={{ margin: '0' }} /></div>
+          <div className="carousel-section-wrapper"><AdBanner fullWidthResponsive={false} style={{ margin: '0' }} /></div>
 
           <div className="carousel-section-wrapper">
             <TrendingCarousel
@@ -444,7 +444,14 @@ function HomeContent() {
             />
           </div>
 
-          {posts.length === 0 && !loading && <AdBanner key={`search-empty-${searchKey}-${page}`} style={{ margin: '16px 0' }} />}
+          {posts.length === 0 && !loading && (
+            <>
+              <p style={{ textAlign: 'center', color: 'var(--text-secondary, #94a3b8)', padding: '40px 0' }}>
+                {t('search.noResults')}
+              </p>
+              <AdBanner key={`search-empty-${searchKey}-${page}`} style={{ margin: '16px 0' }} />
+            </>
+          )}
 
           {posts.length > 0 && <AdBanner key={`search-bottom-${searchKey}-${page}`} style={{ margin: '16px 0' }} />}
 
