@@ -272,7 +272,7 @@ function HomeContent() {
         <div className="home-content animate-fade-in">
           <HeroSection posts={homeData.staffPicks} />
 
-          <AdBanner style={{ maxWidth: 1400, margin: '24px auto', padding: '0 20px' }} />
+          <div className="carousel-section-wrapper"><AdBanner style={{ margin: '0' }} /></div>
 
           <div className="carousel-section-wrapper">
             <TrendingCarousel
@@ -284,7 +284,7 @@ function HomeContent() {
             />
           </div>
 
-          <AdBanner style={{ maxWidth: 1400, margin: '24px auto', padding: '0 20px' }} />
+          <div className="carousel-section-wrapper"><AdBanner style={{ margin: '0' }} /></div>
 
           <div className="carousel-section-wrapper">
             <TrendingCarousel

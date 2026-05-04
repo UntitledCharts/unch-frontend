@@ -254,8 +254,6 @@ export default function CountdownPage({ params, chartStatus }) {
                     </div>
                 </div>
 
-                <AdBanner style={{ margin: '24px 0' }} />
-
                 <div className="countdown-timer-section">
                     <div className="timer-label">
                         <Clock size={18} />
@@ -300,6 +298,8 @@ export default function CountdownPage({ params, chartStatus }) {
                 <p className="countdown-footer-msg">
                     {t('countdown.footerMsg')}
                 </p>
+
+                <AdBanner style={{ margin: '24px 0' }} />
             </div>
         </main>
     );
