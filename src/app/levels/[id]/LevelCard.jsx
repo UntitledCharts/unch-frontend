@@ -148,6 +148,13 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
   const [showCountdown, setShowCountdown] = useState(false);
   const [countdownChartStatus, setCountdownChartStatus] = useState(null);
 
+  useEffect(() => {
+    setLevel(null);
+    setShowCountdown(false);
+    setLoading(true);
+    setError(null);
+  }, [isPreview]);
+
   const {
     audioRef,
     trackId,
@@ -407,7 +414,7 @@ export default function LevelCard({ initialLevel, id, SONOLUS_SERVER_URL }) {
 
       fetchLevelClient();
     }
-  }, [id, levelData, session]);
+  }, [id, levelData, session, isPreview]);
 
   const handleDeleteComment = async (commentId) => {
     try {
