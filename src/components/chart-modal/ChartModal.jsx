@@ -228,7 +228,7 @@ export default function ChartModal({
 
         <div className="modal-content">
           <div className="meta-form" hidden={mode !== "edit"}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={onSubmit}>
               <ModalInput id="title_edit" label={`${t('modal.songTitle', 'Song Title')} * `} value={form.title} onChange={onUpdate("title")} maxLength={limits?.text?.title || 50} placeholder={t('modal.placeholderTitle')} required />
               <ModalInput id="artists_edit" label={`${t('modal.artists', 'Artist(s)')} * `} value={form.artists} onChange={onUpdate("artists")} maxLength={limits?.text?.artist || 50} placeholder={t('modal.placeholderArtist')} required />
               <ModalInput id="author_edit" label={`${t('modal.charter', 'Charter Name')} * `} value={form.author} onChange={onUpdate("author")} maxLength={limits?.text?.author || 50} placeholder={t('modal.placeholderCharter')} required />
@@ -589,7 +589,7 @@ export default function ChartModal({
                 <span dangerouslySetInnerHTML={{ __html: t('uploadPolicy.relaxedNote') }} />
               </div>
             </div >
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={onSubmit}>
               <ModalInput id="title_up" label={`${t('modal.songTitle', 'Song Title')} * `} value={form.title} onChange={onUpdate("title")} maxLength={limits?.text?.title || 50} placeholder={t('modal.placeholderTitle')} required />
               <ModalInput id="artists_up" label={`${t('modal.artists', 'Artist(s)')} * `} value={form.artists} onChange={onUpdate("artists")} maxLength={limits?.text?.artist || 50} placeholder={t('modal.placeholderArtist')} required />
               <div className="preview-text text-sm text-gray-400 mt-1">
