@@ -343,11 +343,25 @@ body.light-mode .file-preview {
 
 .edit-save-btn:disabled,
 .upload-save-btn:disabled {
-    background: #64748b;
+    background: linear-gradient(135deg, #1e40af, #1d4ed8);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
-    opacity: 0.7;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.upload-save-btn:disabled .animate-spin,
+.edit-save-btn:disabled .animate-spin {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .modal-reminders {
@@ -483,4 +497,55 @@ body.light-mode .modal-reminders ul {
         bottom: 20px;
         z-index: 50;
     }
+}
+/*Will make this work eventually*/
+.modal-uploading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.88);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-uploading-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+}
+
+.modal-uploading-spinner {
+    width: 52px;
+    height: 52px;
+    border: 3px solid rgba(56, 189, 248, 0.2);
+    border-top-color: #38bdf8;
+    border-radius: 50%;
+    animation: modal-spin 0.75s linear infinite;
+}
+
+@keyframes modal-spin {
+    to { transform: rotate(360deg); }
+}
+
+.modal-uploading-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    letter-spacing: -0.01em;
+}
+
+.modal-uploading-sub {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.45);
+    max-width: 240px;
+    line-height: 1.5;
+}
+
+.close-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }

@@ -130,7 +130,7 @@ export default function ChartModal({
   editData = null,
   limits = null
 }) {
-  const { t, loading: langLoading } = useLanguage();
+  const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -193,10 +193,32 @@ export default function ChartModal({
   };
 
   if (!isOpen || !mounted) return null;
+ //Loading Overlay, will make this work eventually...
+  if (loading) {
+    return createPortal(
+      <div className="modal-overlay">
+        <div className="edit-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '260px' }} onClick={(e) => e.stopPropagation()}>
+          <div className="modal-uploading-inner">
+            <div className="modal-uploading-spinner" />
+            <span className="modal-uploading-text">
+              {mode === 'upload'
+                ? t('modal.uploading', 'Uploading...')
+                : t('modal.saving', 'Saving...')}
+            </span>
+            <span className="modal-uploading-sub">
+              {t('modal.uploadingHint', 'Please wait, do not close this window')}
+            </span>
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+  }
 
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="edit-container" onClick={(e) => e.stopPropagation()}>
+
         <div className="modal-header">
           <strong>{mode === 'upload' ? t('modal.upload', 'Upload Chart') : t('modal.edit', 'Edit Chart')}</strong>
           <button className="close-btn" onClick={onClose}>
@@ -206,7 +228,7 @@ export default function ChartModal({
 
         <div className="modal-content">
           <div className="meta-form" hidden={mode !== "edit"}>
-            <form onSubmit={onSubmit}>
+            <form onSubmit={handleSubmit}>
               <ModalInput id="title_edit" label={`${t('modal.songTitle', 'Song Title')} * `} value={form.title} onChange={onUpdate("title")} maxLength={limits?.text?.title || 50} placeholder={t('modal.placeholderTitle')} required />
               <ModalInput id="artists_edit" label={`${t('modal.artists', 'Artist(s)')} * `} value={form.artists} onChange={onUpdate("artists")} maxLength={limits?.text?.artist || 50} placeholder={t('modal.placeholderArtist')} required />
               <ModalInput id="author_edit" label={`${t('modal.charter', 'Charter Name')} * `} value={form.author} onChange={onUpdate("author")} maxLength={limits?.text?.author || 50} placeholder={t('modal.placeholderCharter')} required />
@@ -536,7 +558,12 @@ export default function ChartModal({
               </div>
 
               <button className="edit-save-btn" type="submit" disabled={loading}>
-                {loading ? t('modal.saving', 'Saving...') : t('modal.saveChanges', 'Save Changes')}
+                {loading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    {t('modal.saving', 'Saving...')}
+                  </>
+                ) : t('modal.saveChanges', 'Save Changes')}
               </button>
             </form >
           </div >
@@ -562,7 +589,7 @@ export default function ChartModal({
                 <span dangerouslySetInnerHTML={{ __html: t('uploadPolicy.relaxedNote') }} />
               </div>
             </div >
-            <form onSubmit={onSubmit}>
+            <form onSubmit={handleSubmit}>
               <ModalInput id="title_up" label={`${t('modal.songTitle', 'Song Title')} * `} value={form.title} onChange={onUpdate("title")} maxLength={limits?.text?.title || 50} placeholder={t('modal.placeholderTitle')} required />
               <ModalInput id="artists_up" label={`${t('modal.artists', 'Artist(s)')} * `} value={form.artists} onChange={onUpdate("artists")} maxLength={limits?.text?.artist || 50} placeholder={t('modal.placeholderArtist')} required />
               <div className="preview-text text-sm text-gray-400 mt-1">

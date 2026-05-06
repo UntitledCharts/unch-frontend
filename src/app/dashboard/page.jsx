@@ -410,6 +410,7 @@ function DashboardContent() {
   }, []);
 
   const closePanel = () => {
+    if (submitting) return;
     setIsOpen(false);
     setMode(null);
     setEditData(null);
@@ -612,7 +613,7 @@ function DashboardContent() {
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -1201,7 +1202,7 @@ function DashboardContent() {
           onClose={closePanel}
           onSubmit={onSubmit}
           onUpdate={update}
-          loading={loading}
+          loading={submitting}
           editData={editData}
           limits={limits}
           isDark={true}
