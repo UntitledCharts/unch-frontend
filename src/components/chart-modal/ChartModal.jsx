@@ -128,7 +128,8 @@ export default function ChartModal({
   onUpdate,
   loading = false,
   editData = null,
-  limits = null
+  limits = null,
+  error = null
 }) {
   const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
@@ -557,6 +558,8 @@ export default function ChartModal({
                 )}
               </div>
 
+              {error && <div className="modal-error">{error}</div>}
+
               <button className="edit-save-btn" type="submit" disabled={loading}>
                 {loading ? (
                   <>
@@ -754,6 +757,8 @@ export default function ChartModal({
                   </div>
                 )}
               </div>
+
+              {error && <div className="modal-error">{error}</div>}
 
               <button
                 className="upload-save-btn"

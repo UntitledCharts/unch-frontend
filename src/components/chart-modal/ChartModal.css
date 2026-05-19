@@ -341,6 +341,16 @@ body.light-mode .file-preview {
     filter: brightness(1.1);
 }
 
+.modal-error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 12px;
+}
+
 .edit-save-btn:disabled,
 .upload-save-btn:disabled {
     background: linear-gradient(135deg, #1e40af, #1d4ed8);
@@ -443,6 +453,12 @@ body.light-mode .modal-reminders h4 {
 
 body.light-mode .modal-reminders ul {
     color: #4b5563;
+}
+
+body.light-mode .modal-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(220, 38, 38, 0.4);
+    color: #dc2626;
 }
 
 @media (max-width: 640px) {

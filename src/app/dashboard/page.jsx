@@ -1205,6 +1205,7 @@ function DashboardContent() {
           loading={submitting}
           editData={editData}
           limits={limits}
+          error={error}
           isDark={true}
         />
 
