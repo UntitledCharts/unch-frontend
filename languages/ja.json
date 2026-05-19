@@ -17,7 +17,7 @@
     "doesNotExist": "このユーザープロファイルは存在しません。",
     "backHome": "ホームに戻る",
     "editProfile": "プロフィールを編集",
-    "viewAllCharts": "すべてのチャートを表示",
+    "viewAllCharts": "すべての譜面を表示",
     "stats": "統計",
     "totalCharts": "譜面",
     "charts_singular": "{1} 譜面",
@@ -47,10 +47,10 @@
     "deleteAccountData": "アカウントデータを削除する"
   },
   "home": {
-    "newCharts": "新しい譜面",
+    "newCharts": "新規譜面",
     "trendingCharts": "トレンド譜面",
     "viewAll": "すべて表示",
-    "exploreAll": "すべてのレベルを探索する",
+    "exploreAll": "すべての譜面を探索する",
     "staffPicks": "スタッフのおすすめ"
   },
   "hero": {
@@ -92,7 +92,7 @@
     "artistsIncludes": "アーティスト",
     "artistsIncludesPlaceholder": "アーティストを検索...",
     "tags": "タグ",
-    "tagsPlaceholder": "カンマ区切り",
+    "tagsPlaceholder": "「,」区切り",
     "staffPickOnly": "スタッフのおすすめのみ",
     "search": "検索",
     "showingCharts": "{1}個の譜面を表示しています",
@@ -163,7 +163,7 @@
     "makeStaffPick": "スタッフのおすすめにする",
     "removeStaffPick": "スタッフのおすすめを削除",
     "editConstant": "難易度を編集",
-    "deleteChart": "チャートを削除",
+    "deleteChart": "譜面を削除",
     "staffPick": "スタッフのおすすめ"
   },
   "viewAll": {
@@ -237,11 +237,11 @@
     "visibility": "可視性",
     "status": "状態",
     "public": "公開",
-    "private": "プライベート",
-    "unlisted": "非公開",
+    "private": "非公開",
+    "unlisted": "限定公開",
     "makePublic": "公開する",
-    "makeUnlisted": "非公開にする",
-    "makePrivate": "プライベートにする",
+    "makeUnlisted": "限定公開にする",
+    "makePrivate": "非公開にする",
     "sortBy": "並べ替え",
     "sortNewest": "最新",
     "sortOldest": "最古",
@@ -286,7 +286,7 @@
   },
   "background": {
     "untitled": "無題",
-    "charts": "チャート",
+    "charts": "譜面",
     "community": "コミュニティ"
   },
   "modal": {
@@ -297,12 +297,12 @@
     "charter": "譜面制作者名",
     "level": "レベル",
     "description": "説明（任意）",
-    "tags": "タグ（カンマ区切り）",
+    "tags": "タグ（「,」区切り）",
     "visibility": "可視性",
-    "coverImage": "カバー画像",
-    "audio": "オーディオ",
-    "chartFile": "チャートファイル",
-    "previewAudio": "音声プレビュー（任意）",
+    "coverImage": "ジャケット（画像）",
+    "audio": "音源",
+    "chartFile": "譜面ファイル",
+    "previewAudio": "プレビュー音源（任意）",
     "backgroundImage": "背景画像（任意）",
     "saveChanges": "変更を保存",
     "saving": "保存中...",
@@ -377,7 +377,7 @@
   "countdown": {
     "loading": "読み込み中…",
     "home": "ホーム",
-    "backToChart": "チャートに戻る",
+    "backToChart": "譜面に戻る",
     "premieres": "プレミア {1}",
     "countdownLabel": "カウントダウン",
     "getReady": "準備してください！",
