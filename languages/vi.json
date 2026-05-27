@@ -108,6 +108,7 @@
     "reroll": "Quay lại"
   },
   "time": {
+    "second_singular": "{1} giây trước",
     "second_plural": "{1} giây trước",
     "minute_singular": "{1} phút trước",
     "minute_plural": "{1} phút trước",
