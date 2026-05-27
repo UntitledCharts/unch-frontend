@@ -34,7 +34,7 @@
     "moderator": "Người kiểm duyệt viên",
     "administrator": "Người quản trị viên",
     "chartsLiked": "Lượt thích Chart",
-    "chartLiked_singular": "Chart được yêu thích nhất",
+    "chartLiked_singular": "Chart được yêu thích",
     "commentsMade": "Bình luận đã được đăng",
     "commentMade_singular": "Bình luận đã được đăng",
     "adminActions": "Hành động của đội ngữ",
@@ -356,13 +356,13 @@
     "rule6": "Không được phép đăng tải các chart chưa hoàn thiện lên \"Công Khai\".",
     "rule7": "Hãy thực sự đưa ra quyết định hợp lý cho chart của bạn.",
     "rule8": "Hãy đảm bảo bạn phải đăng tải các tệp file đúng cách, tránh bị lỗi trong quá trình đăng lên.",
-    "relaxedNote": "Các quy tắc 2, 3, 5 và 6 có thể được bỏ qua nếu không được liệt kê.",
+    "relaxedNote": "Các quy tắc 2, 3, 5 và 6 có thể được bỏ qua nếu chart không \"Công khai\".",
     "fileSizeLimits": "Giới hạn kích thước của tệp file",
     "fileSizeDesc": "Nếu chart của bạn lớn hơn giới hạn đó, bạn có thể <strong>yêu cầu hỗ trợ đội ngũ</strong>! Chúng tôi sẽ giúp bạn đăng chart lên!",
     "shitpostWarning": "Những bài đăng nhảm nhí không được cho phép trong trường hợp này. Vui lòng xem xét và lựa chọn lại cho mình.",
     "supportedFileTypes": "Các loại tệp file được hỗ trợ",
     "fileTypesNote": "<strong>Lưu ý:</strong> Các tính năng mở rộng cực kỳ chi tiết chỉ có trong LevelData. Bạn có thể mở tệp file .usc trong trình editer để thực hiện chỉnh sửa.</strong>",
-    "openEditor": "Mở Trình Editer \"Next Sekai\""
+    "openEditor": "Mở editer \"Next Sekai\""
   },
   "emojis": {
     "title": "Biểu tượng cảm xúc",
@@ -387,7 +387,7 @@
     "mins": "Phút",
     "secs": "Giây",
     "footerMsg": "Chart sẽ được hiển thị khi thời gian đếm ngược hết.",
-    "previewChart": "Trang xem trước chart"
+    "previewChart": "Xem trước chart"
   },
   "embed": {
     "likes": "Lượt thích",
