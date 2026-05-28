@@ -337,10 +337,10 @@
     "step2Title": "Tạo phiếu khiếu nại",
     "step2Desc": "Truy cập kênh <strong>#tickets</strong> và tạo yêu cầu khiếu nại.",
     "step3Title": "Cung cấp thông tin",
-    "step3Desc": "Sau khi yêu cầu, bạn hãy đưa ra \"bằng chứng\" và giải thích lý do mà mình muốn tố cáo. Cần chắc chắn rằng, bạn đã cung cấp:",
+    "step3Desc": "Sau khi yêu cầu, bạn hãy giải thích lý do mà bạn muốn tố cáo và đưa ra \"bằng chứng\" chính đáng. Cần chắc chắn rằng, bạn đã cung cấp:",
     "step3Item1": "Các tài liệu liên quan đến bản quyền trên UntitledCharts.",
     "step3Item2": "Bằng chứng rõ ràng về quyền sở hữu ban đầu hoặc giấy ủy quyền của chủ sở hữu.",
-    "step3Item3": "Tuyên bố lý do, nêu chi tiết về hành vi vi phạm mà muốn tố cáo.",
+    "step3Item3": "Tuyên bố lý do, nêu chi tiết về hành vi vi phạm.",
     "falseClaims": "LƯU Ý: Việc đưa ra các khiếu nại sai sự thật hoặc bất kỳ hành vi lạm dụng nào sẽ có thể bị cấm tài khoản trong 1 tuần."
   },
   "uploadPolicy": {
