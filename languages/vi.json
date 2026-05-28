@@ -17,7 +17,7 @@
     "doesNotExist": "Hồ sơ người dùng này không tồn tại.",
     "backHome": "Quay lại về Trang chủ",
     "editProfile": "Chỉnh sửa",
-    "viewAllCharts": "Hiện thị tất cả Chart",
+    "viewAllCharts": "Hiển thị tất cả Chart",
     "stats": "Thống kê",
     "totalCharts": "Chart",
     "charts_singular": "{1} Chart",
@@ -49,7 +49,7 @@
   "home": {
     "newCharts": "Chart mới nhất",
     "trendingCharts": "Xu hướng Chart",
-    "viewAll": "Hiện thị tất cả",
+    "viewAll": "Hiển thị tất cả",
     "exploreAll": "Khám phá tất cả màn chơi",
     "staffPicks": "Được bình chọn bởi đội ngũ"
   },
@@ -59,7 +59,7 @@
     "playNow": "Chơi Ngay!",
     "by": "Nghệ sĩ {1}",
     "chartedBy": "Được tạo bởi {1}",
-    "more": "Hiện thị thêm"
+    "more": "Hiển thị thêm"
   },
   "search": {
     "title": "Tìm kiếm",
@@ -169,7 +169,7 @@
   "viewAll": {
     "filterPlaceholder": "Lọc Chart...",
     "noResults": "Không tìm thấy chart nào phù hợp.",
-    "loadMore": "Hiện thị thêm",
+    "loadMore": "Hiển thị thêm",
     "remaining": "Còn lại"
   },
   "footer": {
@@ -205,8 +205,8 @@
     "unknown": "Không rõ",
     "next": "Kế tiếp",
     "prev": "Trước",
-    "loadMore": "Hiện thị thêm",
-    "more": "Hiện thị thêm",
+    "loadMore": "Hiển thị thêm",
+    "more": "Hiển thị thêm",
     "total": "Tổng cộng",
     "readMore": "Đọc thêm",
     "readLess": "Đọc ít hơn",
@@ -234,7 +234,7 @@
     "myCharts": "Chart của bạn",
     "edit": "Chỉnh sửa",
     "delete": "Xóa bỏ",
-    "visibility": "Khả năng hiện thị",
+    "visibility": "Khả năng hiển thị",
     "status": "Trạng thái",
     "public": "Công khai",
     "private": "Riêng tư",
@@ -249,7 +249,7 @@
     "sortMostCommented": "Được bình luận nhiều nhất",
     "stats": "Thống kê",
     "recentComments": "Bình luận gần đây",
-    "updateFailed": "Không thể cập nhật khả năng hiện thị",
+    "updateFailed": "Không thể cập nhật khả năng hiển thị",
     "confirmDelete": "Bạn có chắc chắn muốn gỡ bỏ chart này không?",
     "cancel": "Hủy bỏ",
     "save": "Lưu",
@@ -298,7 +298,7 @@
     "level": "Cấp độ",
     "description": "Mô tả (Tùy chọn)",
     "tags": "Thẻ (ngăn cách bằng dấu phẩy)",
-    "visibility": "Khả năng hiện thị",
+    "visibility": "Khả năng hiển thị",
     "coverImage": "Ảnh bìa",
     "audio": "Âm thanh",
     "chartFile": "Tệp file Chart",
@@ -386,7 +386,7 @@
     "hours": "Giờ",
     "mins": "Phút",
     "secs": "Giây",
-    "footerMsg": "Chart sẽ được hiện thị khi hết thời gian đếm ngược.",
+    "footerMsg": "Chart sẽ được hiển thị khi hết thời gian đếm ngược.",
     "previewChart": "Xem trước chart"
   },
   "embed": {
