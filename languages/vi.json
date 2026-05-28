@@ -47,11 +47,11 @@
     "deleteAccountData": "Xóa dữ liệu tài khoản"
   },
   "home": {
-    "newCharts": "Tạo mới",
-    "trendingCharts": "Xếp hạng Chart",
+    "newCharts": "Chart mới nhất",
+    "trendingCharts": "Xu hướng Chart",
     "viewAll": "Hiện thị tất cả",
     "exploreAll": "Khám phá tất cả màn chơi",
-    "staffPicks": "Được bình chọn bởi đội ngữ"
+    "staffPicks": "Được bình chọn bởi đội ngũ"
   },
   "hero": {
     "viewChart": "Xem Chart",
@@ -149,9 +149,9 @@
     "comments_plural": "{1} Bình luận",
     "linkCopied": "Đã sao chép link!",
     "failedToCopy": "Không thể sao chép",
-    "embedCopied": "Mã nhúng đã được sao chép!",
+    "embedCopied": "Đã sao chép mã nhúng",
     "poweredBy": "Được cung cấp bởi {1}",
-    "last7Days": "7 Ngày qua",
+    "last7Days": "7 ngày qua",
     "premieringIn": "Dự kiến ​​phát hành vào",
     "viewFullCountdown": "Xem bộ đếm ngược (toàn màn hình)",
     "days": "Ngày",
@@ -193,7 +193,7 @@
     "errorMessage": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.",
     "tryAgain": "Thử lại",
     "goHome": "Về Trang chủ",
-    "chartNotFound": "Chart bạn đang tìm kiếm không có sẵn. Có thể bạn cần đăng nhập để xem chart."
+    "chartNotFound": "Chart bạn đang tìm kiếm không tìm thấy. Có thể bạn cần đăng nhập để xem chart."
   },
   "common": {
     "brandName": "UntitledCharts",
@@ -380,7 +380,7 @@
     "backToChart": "Quay lại về chart",
     "premieres": "Công chiếu {1}",
     "countdownLabel": "Đếm ngược",
-    "getReady": "SẴM SÀNG!",
+    "getReady": "SẴN SÀNG!",
     "almostThere": "Sắp đến nơi rồi...",
     "days": "Ngày",
     "hours": "Giờ",
