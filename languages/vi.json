@@ -234,7 +234,7 @@
     "myCharts": "Chart của bạn",
     "edit": "Chỉnh sửa",
     "delete": "Xóa bỏ",
-    "visibility": "Khả năng hiển thị",
+    "visibility": "Khả năng hiện thị",
     "status": "Trạng thái",
     "public": "Công khai",
     "private": "Riêng tư",
@@ -249,7 +249,7 @@
     "sortMostCommented": "Được bình luận nhiều nhất",
     "stats": "Thống kê",
     "recentComments": "Bình luận gần đây",
-    "updateFailed": "Không thể cập nhật khả năng hiển thị",
+    "updateFailed": "Không thể cập nhật khả năng hiện thị",
     "confirmDelete": "Bạn có chắc chắn muốn gỡ bỏ chart này không?",
     "cancel": "Hủy bỏ",
     "save": "Lưu",
@@ -298,7 +298,7 @@
     "level": "Cấp độ",
     "description": "Mô tả (Tùy chọn)",
     "tags": "Thẻ (ngăn cách bằng dấu phẩy)",
-    "visibility": "Khả năng hiển thị",
+    "visibility": "Khả năng hiện thị",
     "coverImage": "Ảnh bìa",
     "audio": "Âm thanh",
     "chartFile": "Tệp file Chart",
@@ -341,7 +341,7 @@
     "step3Item1": "Các tài liệu liên quan đến bản quyền trên UntitledCharts.",
     "step3Item2": "Bằng chứng rõ ràng về quyền sở hữu ban đầu hoặc giấy ủy quyền của chủ sở hữu.",
     "step3Item3": "Tuyên bố lý do, nêu chi tiết về hành vi vi phạm.",
-    "falseClaims": "LƯU Ý: Việc đưa ra các khiếu nại sai sự thật hoặc bất kỳ hành vi lạm dụng nào sẽ có thể bị cấm tài khoản trong 1 tuần."
+    "falseClaims": "LƯU Ý: Việc đưa ra các khiếu nại sai sự thật hoặc bất kỳ hành vi lạm dụng nào sẽ có thể bị đình chỉ tài khoản trong 1 tuần."
   },
   "uploadPolicy": {
     "back": "Quay lại",
@@ -386,7 +386,7 @@
     "hours": "Giờ",
     "mins": "Phút",
     "secs": "Giây",
-    "footerMsg": "Chart sẽ được hiển thị khi hết thời gian đếm ngược.",
+    "footerMsg": "Chart sẽ được hiện thị khi hết thời gian đếm ngược.",
     "previewChart": "Xem trước chart"
   },
   "embed": {
