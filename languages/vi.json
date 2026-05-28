@@ -361,8 +361,8 @@
     "fileSizeDesc": "Nếu chart của bạn lớn hơn giới hạn đó, bạn có thể <strong>yêu cầu hỗ trợ đội ngũ</strong>! Chúng tôi sẽ giúp bạn đăng chart lên!",
     "shitpostWarning": "Những bài đăng nhảm nhí không được cho phép trong trường hợp này. Vui lòng xem xét và lựa chọn lại cho mình.",
     "supportedFileTypes": "Các loại tệp file được hỗ trợ",
-    "fileTypesNote": "<strong>Lưu ý:</strong> Các tính năng mở rộng cực kỳ chi tiết chỉ có trong LevelData. Bạn có thể mở tệp file .usc trong trình editer để thực hiện chỉnh sửa.</strong>",
-    "openEditor": "Mở editer \"Next Sekai\""
+    "fileTypesNote": "<strong>Lưu ý:</strong> Các tính năng mở rộng cực kỳ chi tiết chỉ có trong LevelData. Bạn có thể mở tệp file .usc trong trình editor để thực hiện chỉnh sửa.</strong>",
+    "openEditor": "Mở editor \"Next Sekai\""
   },
   "emojis": {
     "title": "Biểu tượng cảm xúc",
@@ -386,7 +386,7 @@
     "hours": "Giờ",
     "mins": "Phút",
     "secs": "Giây",
-    "footerMsg": "Chart sẽ được hiển thị khi thời gian đếm ngược hết.",
+    "footerMsg": "Chart sẽ được hiển thị khi hết thời gian đếm ngược.",
     "previewChart": "Xem trước chart"
   },
   "embed": {
