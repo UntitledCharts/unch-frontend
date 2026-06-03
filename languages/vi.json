@@ -15,7 +15,7 @@
     "loading": "Đang tải Hồ sơ...",
     "notFound": "Người dùng này không tồn tại",
     "doesNotExist": "Hồ sơ người dùng này không tồn tại.",
-    "backHome": "Quay lại về Trang chủ",
+    "backHome": "Quay lại Trang chủ",
     "editProfile": "Chỉnh sửa",
     "viewAllCharts": "Hiển thị tất cả Chart",
     "stats": "Thống kê",
@@ -47,7 +47,7 @@
     "deleteAccountData": "Xóa dữ liệu tài khoản"
   },
   "home": {
-    "newCharts": "Chart mới nhất",
+    "newCharts": "Mới nhất",
     "trendingCharts": "Xu hướng Chart",
     "viewAll": "Hiển thị tất cả",
     "exploreAll": "Khám phá tất cả màn chơi",
@@ -71,8 +71,8 @@
     "keywordsPlaceholder": "Tìm kiếm...",
     "sortBy": "Sắp xếp theo",
     "order": "Theo hướng",
-    "ascending": "Đi lên",
-    "descending": "Đi xuống",
+    "ascending": "Tăng dần",
+    "descending": "Giảm dần",
     "createdDate": "Ngày tạo",
     "rating": "Cấp độ",
     "likes": "Lượt thích",
@@ -91,7 +91,7 @@
     "titleIncludesPlaceholder": "Tìm kiếm theo tiêu đề...",
     "artistsIncludes": "Nghệ sĩ",
     "artistsIncludesPlaceholder": "Tìm kiếm theo nghệ sĩ...",
-    "tags": "Thẻ",
+    "tags": "Tag",
     "tagsPlaceholder": "Ngăn cách bằng dấu phẩy",
     "staffPickOnly": "Chỉ những chart bình chọn",
     "search": "Tìm kiếm",
@@ -129,7 +129,7 @@
   "levelDetail": {
     "back": "Quay lại",
     "by": "Nghệ sĩ {1}",
-    "chartedBy": "Người làm Chart bởi {1}",
+    "chartedBy": "Được tạo bởi {1}",
     "level": "Lv. {1}",
     "openViaSonolus": "Mở bằng {1}",
     "share": "Chia sẻ",
@@ -141,7 +141,7 @@
     "leaderboard": "Bảng xếp hạng",
     "loadingLeaderboard": "Đang tải bảng xếp hạng...",
     "loadingComments": "Đang tải bình luận...",
-    "noComments": "Không có bình luận nào.",
+    "noComments": "Chưa có bình luận nào.",
     "noRecords": "Chưa có gì. Hãy trở thành người đầu tiên nắm giữ!!",
     "comments": "Bình luận",
     "comment": "Bình luận",
@@ -169,7 +169,7 @@
   "viewAll": {
     "filterPlaceholder": "Lọc Chart...",
     "noResults": "Không tìm thấy chart nào phù hợp.",
-    "loadMore": "Hiển thị thêm",
+    "loadMore": "Xem thêm",
     "remaining": "Còn lại"
   },
   "footer": {
@@ -193,7 +193,7 @@
     "errorMessage": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại.",
     "tryAgain": "Thử lại",
     "goHome": "Về Trang chủ",
-    "chartNotFound": "Chart bạn đang tìm kiếm không tìm thấy. Có thể bạn cần đăng nhập để xem chart."
+    "chartNotFound": "Không tìm thấy Chart bạn đang tìm kiếm."
   },
   "common": {
     "brandName": "UntitledCharts",
@@ -269,7 +269,7 @@
     "uploaded": "Đã xuất bản",
     "view": "Xem",
     "publicOptions": "Các lựa chọn công khai",
-    "publicNow": "Công khai nào!",
+    "publicNow": "Công khai ngay!",
     "schedulePublish": "Lịch trình công khai",
     "confirm": "Xác nhận",
     "removeSchedule": "Xóa lịch trình công khai",
@@ -297,7 +297,7 @@
     "charter": "Tên người làm Chart",
     "level": "Cấp độ",
     "description": "Mô tả (Tùy chọn)",
-    "tags": "Thẻ (ngăn cách bằng dấu phẩy)",
+    "tags": "Tag (ngăn cách bằng dấu phẩy)",
     "visibility": "Chế độ hiển thị",
     "coverImage": "Ảnh đĩa nhạc",
     "audio": "Nhạc nền",
@@ -325,10 +325,10 @@
     "placeholderTags": "Ví dụ: \"Touhou\", \"Vocaloid\"",
     "placeholderDescription": "Mọi ý kiến ​​hoặc chi tiết khác...",
     "artistPreview": "Tên Nghệ sĩ",
-    "charterPreview": "Tên người làm chart"
+    "charterPreview": "Tên người làm Chart"
   },
   "dmca": {
-    "backToHome": "Quay lại về Trang chủ",
+    "backToHome": "Quay lại Trang chủ",
     "title": "Quy trình khiếu nại về luật DMCA (Quốc tế)",
     "subtitle": "Hãy làm theo các bước sau để gửi yêu cầu khiếu nại qua Server Discord của chúng tôi.",
     "step1Title": "Tham gia Server Discord của chúng tôi",
@@ -345,23 +345,23 @@
   },
   "uploadPolicy": {
     "back": "Quay lại",
-    "title": "Đăng tải Chính sách",
+    "title": "Chính sách đăng tải",
     "subtitle": "Vui lòng đọc kỹ các quy tắc trước khi đăng tải chart.",
     "rulesTitle": "Quy tắc bao gồm",
     "rule1": "Không có lời lẽ xúc phạm, phân biệt chủng tộc, chính trị, nội dung quá phản cảm, quảng cáo, v.v.",
     "rule2": "Không được đăng tải các chart nhảm nhí chất lượng thấp (trừ khi chart đó được nhiều người yêu thích và khen ngợi)",
     "rule3": "Không được phép sử dụng bài hát Arcaea hoặc Taiko no Tatsujin lên \"Công Khai\"",
     "rule4": "Không được phép lạm dụng dịch vụ của chúng tôi nhằm mục đích phá hoại.",
-    "rule5": "Bảng xếp hạng chính thức có thể bị xóa nếu bạn thay đổi cấu trúc về \"Tệp file chart\" (Bạn được phép thay đổi tất cả các Note thành All Flick hoặc All Trace trong một số trường hợp nhất định).",
+    "rule5": "Không được phép đăng các chart gốc PJSK (nếu chỉ thay đổi cấu trúc chart không đáng kể)",
     "rule6": "Không được phép đăng tải các chart chưa hoàn thiện lên \"Công Khai\".",
     "rule7": "Hãy thực sự đưa ra quyết định hợp lý cho chart của bạn.",
-    "rule8": "Hãy đảm bảo bạn phải đăng tải các tệp file đúng cách, tránh bị lỗi trong quá trình đăng lên.",
+    "rule8": "Hãy đảm bảo bạn đã cung cấp thông chart chính xác (như \"Tên Nghệ sĩ\", \"Ảnh đĩa nhạc\",...)",
     "relaxedNote": "Các quy tắc 2, 3, 5 và 6 có thể được bỏ qua nếu chart không \"Công khai\".",
     "fileSizeLimits": "Giới hạn kích thước của tệp file",
     "fileSizeDesc": "Nếu chart của bạn lớn hơn giới hạn đó, bạn có thể <strong>yêu cầu hỗ trợ đội ngũ</strong>! Chúng tôi sẽ giúp bạn đăng chart lên!",
     "shitpostWarning": "Những bài đăng nhảm nhí không được cho phép trong trường hợp này. Vui lòng xem xét và lựa chọn lại cho mình.",
     "supportedFileTypes": "Các loại tệp file được hỗ trợ",
-    "fileTypesNote": "<strong>Lưu ý:</strong> Các tính năng mở rộng cực kỳ chi tiết chỉ có trong LevelData. Bạn có thể mở tệp file .usc trong trình editor để thực hiện chỉnh sửa.</strong>",
+    "fileTypesNote": "<strong>Lưu ý:</strong> Các tính năng mở rộng rất nâng cao chỉ có trong LevelData. Bạn có thể mở tệp file .usc trong trình editor để thực hiện chỉnh sửa.</strong>",
     "openEditor": "Mở editor \"Next Sekai\""
   },
   "emojis": {
@@ -381,7 +381,7 @@
     "premieres": "Công chiếu {1}",
     "countdownLabel": "Đếm ngược",
     "getReady": "SẴN SÀNG!",
-    "almostThere": "Sắp đến nơi rồi...",
+    "almostThere": "Sắp tới rồi...",
     "days": "Ngày",
     "hours": "Giờ",
     "mins": "Phút",
