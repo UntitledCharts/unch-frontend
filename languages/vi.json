@@ -59,7 +59,7 @@
     "playNow": "Chơi Ngay!",
     "by": "Nghệ sĩ {1}",
     "chartedBy": "Được tạo bởi {1}",
-    "more": "Hiển thị thêm"
+    "more": "Xem thêm"
   },
   "search": {
     "title": "Tìm kiếm",
@@ -205,8 +205,8 @@
     "unknown": "Không rõ",
     "next": "Kế tiếp",
     "prev": "Quay về",
-    "loadMore": "Hiển thị thêm",
-    "more": "Hiển thị thêm",
+    "loadMore": "Xem thêm",
+    "more": "Xem thêm",
     "total": "Tổng cộng",
     "readMore": "Đọc thêm",
     "readLess": "Đọc ít hơn",
