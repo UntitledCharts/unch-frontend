@@ -17,7 +17,7 @@
     "doesNotExist": "Hồ sơ người dùng này không tồn tại.",
     "backHome": "Quay lại Trang chủ",
     "editProfile": "Chỉnh sửa",
-    "viewAllCharts": "Hiển thị tất cả Chart",
+    "viewAllCharts": "Xem tất cả",
     "stats": "Thống kê",
     "totalCharts": "Chart",
     "charts_singular": "{1} Chart",
@@ -48,9 +48,9 @@
   },
   "home": {
     "newCharts": "Mới nhất",
-    "trendingCharts": "Xu hướng Chart",
+    "trendingCharts": "Xu hướng",
     "viewAll": "Hiển thị tất cả",
-    "exploreAll": "Khám phá tất cả màn chơi",
+    "exploreAll": "Khám phá tất cả",
     "staffPicks": "Được bình chọn bởi đội ngũ"
   },
   "hero": {
@@ -208,8 +208,8 @@
     "loadMore": "Xem thêm",
     "more": "Xem thêm",
     "total": "Tổng cộng",
-    "readMore": "Đọc thêm",
-    "readLess": "Đọc ít hơn",
+    "readMore": "Xem thêm",
+    "readLess": "Xem ít hơn",
     "select": "Lựa chọn...",
     "undo": "Hoàn tác",
     "preview": "Xem trước:",
