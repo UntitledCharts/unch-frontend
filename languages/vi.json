@@ -40,9 +40,9 @@
     "adminActions": "Hành động của đội ngũ",
     "banUser": "Cấm người dùng",
     "unbanUser": "Gỡ lệnh cấm người dùng",
-    "makeMod": "Thêm Người kiểm duyệt viên",
+    "makeMod": "Thêm người kiểm duyệt viên",
     "unmodUser": "Xóa người kiểm duyệt viên",
-    "makeAdmin": "Thêm Người quản trị viên",
+    "makeAdmin": "Thêm người quản trị viên",
     "unadminUser": "Xóa quản trị viên",
     "deleteAccountData": "Xóa dữ liệu tài khoản"
   },
@@ -291,7 +291,7 @@
   },
   "modal": {
     "editTitle": "Chỉnh sửa Chart",
-    "uploadTitle": "Đăng Chart mới lên",
+    "uploadTitle": "Đăng chart mới lên",
     "songTitle": "Tên bài hát",
     "artists": "Tên Nghệ sĩ",
     "charter": "Tên người làm chart",
