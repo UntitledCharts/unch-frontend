@@ -54,6 +54,12 @@ function Authorize({ session, params }) {
                     scope: scope || "",
                     response_type: params.get("response_type") || "code",
                 });
+
+                // public clients are rejected without it, so it has to go on the GET too
+                if (codeChallenge) {
+                    query.set("code_challenge", codeChallenge);
+                }
+
                 const res = await fetch(`${APILink}/api/oauth/authorize/?${query}`, {
                     headers: { Authorization: session },
                 });
@@ -72,7 +78,7 @@ function Authorize({ session, params }) {
 
         load();
         return () => { stale = true; };
-    }, [clientId, redirectUri, scope, session, params, t]);
+    }, [clientId, redirectUri, scope, codeChallenge, session, params, t]);
 
     const onAuthorize = async () => {
         setSubmitting(true);
