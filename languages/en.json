@@ -33,9 +33,11 @@
     "revokeFailed": "Couldn't revoke that app.",
     "loadFailed": "Couldn't load your authorized apps.",
     "scopes": {
+      "chart_read": "List and open all of your charts, including the unlisted and private ones.",
       "chart_upload": "Upload new charts as you.",
       "chart_edit": "Replace the files (chart, audio, jacket, background, preview) of your charts.",
       "chart_metadata": "Edit the metadata (title, artists, tags, rating, description) of your charts.",
+      "chart_visibility": "Publish, unlist, or hide your charts, and schedule them to publish.",
       "chart_delete": "Delete your charts.",
       "user_read": "Read your account information."
     }
