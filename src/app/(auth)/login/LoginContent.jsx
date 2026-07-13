@@ -22,15 +22,23 @@ export default function LoginContent() {
         sessionReady,
     } = useUser();
 
+    const nextUrl = (() => {
+        const next = searchParams.get('next');
+
+        return next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+    })();
+
     useEffect(() => {
         if (!sessionReady) return;
 
-        if (sonolusUser && isSessionValid()) {
-            router.push("/dashboard");
+        // a valid session is enough: waiting on sonolusUser stranded logged in users
+        // here whenever the account request failed or was slow
+        if (isSessionValid()) {
+            router.replace(nextUrl);
         } else {
             setIsWaiting(false);
         }
-    }, [sessionReady, sonolusUser, isSessionValid, router]);
+    }, [sessionReady, sonolusUser, isSessionValid, router, nextUrl]);
 
     useEffect(() => {
         const reason = searchParams.get('reason');
@@ -104,14 +112,14 @@ export default function LoginContent() {
                     window.dispatchEvent(new CustomEvent('authChange'));
 
                     setIsWaiting(false);
-                    router.push("/dashboard");
+                    router.replace(nextUrl);
                 }
             } catch (e) {
             }
         }, 200);
 
         return () => clearInterval(interval);
-    }, [isWaiting, externalLoginId, apiUrl, router]);
+    }, [isWaiting, externalLoginId, apiUrl, router, nextUrl]);
 
     return (
         <div className="login-box glass-card animate-scale-in">

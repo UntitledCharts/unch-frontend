@@ -12,7 +12,7 @@ import { AudioPlayerProvider } from "../contexts/AudioPlayerContext";
 const BackgroundDecorations = dynamic(() => import('../components/background-decorations/BackgroundDecorations'), { ssr: false });
 const MiniPlayer = dynamic(() => import('../components/mini-player/MiniPlayer'), { ssr: false });
 const NavigationProgress = dynamic(() => import('../components/navigation-progress/NavigationProgress'), { ssr: false });
-import { Menu, X, Sun, Moon, Globe, User, LogOut } from "lucide-react";
+import { Menu, X, Sun, Moon, Globe, User, LogOut, ShieldCheck } from "lucide-react";
 import LiquidSelect from "../components/liquid-select/LiquidSelect";
 
 function HeaderContent() {
@@ -144,6 +144,14 @@ function HeaderContent() {
                                             <User size={16} />
                                             {t('nav.profile', 'Profile')}
                                         </Link>
+                                        <Link
+                                            href="/oauth"
+                                            className="dropdown-item"
+                                            onClick={() => setShowDropdown(false)}
+                                        >
+                                            <ShieldCheck size={16} />
+                                            {t('nav.authorizedApps', 'Authorized Apps')}
+                                        </Link>
                                         <button
                                             className="dropdown-item logout-btn"
                                             onClick={handleLogout}
@@ -259,18 +267,29 @@ function HeaderContent() {
                                         </span>
                                     </div>
 
-                                    <div style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '8px' }}>
+                                    <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <Link
+                                                href={`/user/${sonolusUser.sonolus_handle || sonolusUser.sonolus_id}`}
+                                                className="mobile-logout-btn"
+                                                style={{ flex: 1, background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', textDecoration: 'none', justifyContent: 'center', border: '1px solid rgba(56, 189, 248, 0.3)', display: 'flex', alignItems: 'center', padding: '10px', borderRadius: '8px', fontWeight: '600' }}
+                                                onClick={() => setMobileMenuOpen(false)}
+                                            >
+                                                {t('nav.profile', 'Profile')}
+                                            </Link>
+                                            <button onClick={handleLogout} className="mobile-logout-btn" style={{ flex: 1, justifyContent: 'center', background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'center', padding: '10px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>
+                                                {t('nav.logout')}
+                                            </button>
+                                        </div>
                                         <Link
-                                            href={`/user/${sonolusUser.sonolus_handle || sonolusUser.sonolus_id}`}
+                                            href="/oauth"
                                             className="mobile-logout-btn"
-                                            style={{ flex: 1, background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', textDecoration: 'none', justifyContent: 'center', border: '1px solid rgba(56, 189, 248, 0.3)', display: 'flex', alignItems: 'center', padding: '10px', borderRadius: '8px', fontWeight: '600' }}
+                                            style={{ background: 'rgba(148, 163, 184, 0.15)', color: 'var(--foreground)', textDecoration: 'none', justifyContent: 'center', border: '1px solid rgba(148, 163, 184, 0.25)', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px', borderRadius: '8px', fontWeight: '600' }}
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
-                                            {t('nav.profile', 'Profile')}
+                                            <ShieldCheck size={16} />
+                                            {t('nav.authorizedApps', 'Authorized Apps')}
                                         </Link>
-                                        <button onClick={handleLogout} className="mobile-logout-btn" style={{ flex: 1, justifyContent: 'center', background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'flex', alignItems: 'center', padding: '10px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>
-                                            {t('nav.logout')}
-                                        </button>
                                     </div>
                                 </div>
                             ) : (

@@ -104,10 +104,12 @@ function DashboardContent() {
   }, []);
 
   useEffect(() => {
-    if (sessionReady && (!sonolusUser || !isSessionValid() || !localStorage.getItem("session"))) {
+    // keyed on the session alone, same as the login page, so the two can't bounce
+    // the user back and forth while the account request is failing
+    if (sessionReady && !isSessionValid()) {
       router.push("/login");
     }
-  }, [sessionReady, sonolusUser, isSessionValid, router]);
+  }, [sessionReady, isSessionValid, router]);
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);

@@ -151,7 +151,12 @@ export function UserProvider({ children }) {
       return false;
     }
 
-    return !!sessionValue;
+    let expiryTime = parseInt(expiry, 10);
+    if (expiryTime < 100000000000) {
+      expiryTime *= 1000;
+    }
+
+    return !isNaN(expiryTime) && expiryTime > Date.now();
   }, [isClient]);
 
   useEffect(() => {
