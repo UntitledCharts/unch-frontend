@@ -1,7 +1,8 @@
 .oauth-container {
     display: flex;
     justify-content: center;
-    padding: 48px 20px 80px;
+    /* .site-header is fixed and ends at 80px; clear it the way .dashboard-container does. */
+    padding: 120px 20px 80px;
     width: 100%;
 }
 
@@ -273,6 +274,13 @@ body.light-mode .oauth-app-item {
     font-size: 0.78rem;
     color: var(--foreground-subtle);
     margin: 0;
+}
+
+/* the header goes full-width and flush to the top here, so it needs less clearance */
+@media (max-width: 900px) {
+    .oauth-container {
+        padding-top: 90px;
+    }
 }
 
 @media (max-width: 600px) {
