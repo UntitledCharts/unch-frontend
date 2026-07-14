@@ -170,12 +170,12 @@ function HomeContent() {
         else if (filters.searchQuery) queryParams.append('title_includes', filters.searchQuery);
         if (filters.descriptionIncludes) queryParams.append('description_includes', filters.descriptionIncludes);
         if (filters.artistsIncludes) queryParams.append('artists_includes', filters.artistsIncludes);
-        if (filters.minRating) queryParams.append('minR', filters.minRating);
-        if (filters.maxRating) queryParams.append('maxR', filters.maxRating);
+        if (filters.minRating) queryParams.append('min_rating', filters.minRating);
+        if (filters.maxRating) queryParams.append('max_rating', filters.maxRating);
         if (typeof filters.tags === 'string' && filters.tags.trim()) queryParams.append('tags', filters.tags.trim());
         else if (Array.isArray(filters.tags) && filters.tags.length > 0) queryParams.append('tags', filters.tags.join(','));
-        if (filters.minLikes) queryParams.append('minL', filters.minLikes);
-        if (filters.maxLikes) queryParams.append('maxL', filters.maxLikes);
+        if (filters.minLikes) queryParams.append('min_likes', filters.minLikes);
+        if (filters.maxLikes) queryParams.append('max_likes', filters.maxLikes);
         if (filters.likedBy) queryParams.append('liked_by', '1');
         queryParams.append('sort_by', filters.sortBy);
         queryParams.append('sort_order', filters.sortOrder);
