@@ -6,7 +6,8 @@
     "login": "Se connecter",
     "logout": "Déconnexion",
     "profile": "Profil",
-    "authorizedApps": "Applications autorisées"
+    "authorizedApps": "Applications autorisées",
+    "search": "Recherche"
   },
   "oauth": {
     "authorizeTitle": "Autoriser {app}",
@@ -32,10 +33,17 @@
     "revokeFailed": "Impossible de révoquer cette demande.",
     "loadFailed": "Impossible de charger vos applications autorisées.",
     "scopes": {
+      "chart_read": "Affichez et ouvrez tous vos niveaux, y compris ceux qui ne sont pas répertoriés et ceux qui sont privés.",
+      "chart_upload": "Publier de nouveaux niveaux en tant que vous-même.",
+      "chart_edit": "Remplacer les fichiers (graphique, audio, pochette, arrière-plan, aperçu) de vos niveaux.",
+      "chart_metadata": "Modifier les métadonnées (titre, artistes, tags, note, description) de vos classements.",
+      "chart_visibility": "Publiez, retirez de la liste ou masquez vos niveaux, et programmez leur publication.",
+      "chart_delete": "Supprimez vos niveaux.",
       "user_read": "Veuillez consulter les informations de votre compte."
     }
   },
   "userProfile": {
+    "back": "Arrière",
     "charts": "Classements populaires",
     "noCharts": "Cet utilisateur n'a pas encore créé de graphiques :<",
     "loading": "Chargement du profil...",
@@ -60,6 +68,7 @@
     "moderator": "Modérateur",
     "administrator": "Administrateur",
     "chartsLiked": "Graphiques appréciés",
+    "chartLiked_singular": "Niveau apprecié",
     "commentsMade": "Commentaires publiés",
     "commentMade_singular": "Commentaire publié",
     "adminActions": "Actions du personnel",
@@ -72,18 +81,22 @@
     "deleteAccountData": "Supprimer les données du compte"
   },
   "home": {
+    "newCharts": "Nouveaux niveaux",
     "trendingCharts": "Graphiques tendances",
     "viewAll": "Afficher tout",
     "exploreAll": "Explorez tous les niveaux",
     "staffPicks": "Sélection de l'équipe"
   },
   "hero": {
+    "viewChart": "Voir le niveau",
     "viewDetails": "Voir les détails",
     "playNow": "Jouez maintenant",
     "by": "par {1}",
+    "chartedBy": "Niveau réalisé par {1}",
     "more": "Plus"
   },
   "search": {
+    "title": "Recherche",
     "searchType": "Type de recherche",
     "random": "Aléatoire",
     "quick": "Rapide",
@@ -114,6 +127,7 @@
     "artistsIncludesPlaceholder": "Recherche parmi les artistes...",
     "tags": "Étiquettes",
     "tagsPlaceholder": "Séparés par des virgules",
+    "staffPickOnly": "Sélection du Staff uniquement",
     "search": "Recherche",
     "showingCharts": "Affichage des graphiques {1}",
     "pageOf": "Page {1} de {2}",
@@ -154,6 +168,7 @@
     "openViaSonolus": "Ouvrir via {1}",
     "share": "Partager",
     "statistics": "Statistiques",
+    "likes": "Likes",
     "like": "Comme",
     "likes_singular": "{1} J'aime",
     "likes_plural": "{1} J'aime",
@@ -211,9 +226,11 @@
     "somethingWentWrong": "Quelque chose s'est mal passé",
     "errorMessage": "Une erreur inattendue s'est produite. Veuillez réessayer.",
     "tryAgain": "Essayer à nouveau",
-    "goHome": "Rentrez chez vous"
+    "goHome": "Rentrez chez vous",
+    "chartNotFound": "Le niveau que vous recherchez est introuvable. Vous devrez peut-être vous connecter pour le consulter."
   },
   "common": {
+    "brandName": "Niveau sans titre",
     "loading": "Chargement...",
     "error": "Une erreur s'est produite.",
     "noResults": "Aucun résultat trouvé",
@@ -242,7 +259,9 @@
     "title": "Tableau de bord",
     "welcome": "Accueillir",
     "searchPlaceholder": "Recherche",
+    "chartNotFound": "Niveau introuvable",
     "newChart": "Nouveau graphique",
+    "startUpload": "Téléchargez votre premier niveau pour commencer !",
     "uploadFirst": "Télécharger maintenant",
     "create": "Créer",
     "uploadNew": "Télécharger une nouvelle",
@@ -265,9 +284,13 @@
     "stats": "Statistiques",
     "recentComments": "Commentaires récents",
     "updateFailed": "Échec de la mise à jour de la visibilité",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce niveau ?",
     "cancel": "Annuler",
     "save": "Sauvegarder",
+    "loading": "Chargement des niveaux...",
+    "noCharts": "Pas encore de niveaux",
     "noResults": "Aucun résultat",
+    "createFirst": "Créez votre premier niveau pour commencer !",
     "totalLikes": "Nombre total de J'aime",
     "totalLike": "J'aime totalement",
     "likes_singular": "{1} J'aime",
@@ -301,6 +324,8 @@
     "community": "COMMUNAUTÉ"
   },
   "modal": {
+    "editTitle": "Modifier le niveau",
+    "uploadTitle": "Publier un nouveau niveau",
     "songTitle": "Titre de la chanson",
     "artists": "Artiste(s)",
     "charter": "Nom de la charte",
@@ -310,6 +335,7 @@
     "visibility": "Visibilité",
     "coverImage": "Image de couverture",
     "audio": "Audio",
+    "chartFile": "Fichier du niveau",
     "previewAudio": "Aperçu audio (facultatif)",
     "backgroundImage": "Image de fond (facultatif)",
     "saveChanges": "Enregistrer les modifications",
@@ -332,7 +358,8 @@
     "placeholderLevel": "par exemple 28",
     "placeholderTags": "Par exemple, Touhou, Vocaloid",
     "placeholderDescription": "Des commentaires ou des détails...",
-    "artistPreview": "Nom de l'artiste"
+    "artistPreview": "Nom de l'artiste",
+    "charterPreview": "Nom du créateur"
   },
   "dmca": {
     "backToHome": "Retour à l'accueil",
@@ -340,7 +367,10 @@
     "subtitle": "Suivez ces étapes pour soumettre une demande DMCA via notre serveur Discord.",
     "step1Title": "Rejoignez notre serveur Discord",
     "step1Desc": "Tout d'abord, vous devez rejoindre le serveur Discord officiel d'UntitledCharts où notre équipe de modération traite les demandes.",
+    "joinDiscord": "Rejoindre le Discord",
+    "step2Title": "Créer un billet",
     "step2Desc": "Accédez au canal <strong>#tickets</strong> et créez un nouveau ticket d'assistance.",
+    "step3Title": "Envoyez votre demande",
     "step3Desc": "Une fois votre demande ouverte, veuillez compléter les détails expliquant votre requête DMCA. Assurez-vous d'inclure :",
     "step3Item1": "Liens vers le contenu protégé par le droit d'auteur sur UntitledCharts.",
     "step3Item2": "Preuve de propriété originale ou autorisation d'agir au nom du propriétaire.",
@@ -348,6 +378,7 @@
     "falseClaims": "Toute fausse déclaration relative au DMCA ou toute utilisation abusive de cette procédure entraînera une suspension d'une semaine."
   },
   "uploadPolicy": {
+    "back": "Arrière",
     "title": "Politique de téléchargement",
     "subtitle": "Veuillez lire les règles suivantes avant de télécharger vos graphiques.",
     "rulesTitle": "Règles",
@@ -357,11 +388,15 @@
     "rule4": "N'abusez pas de nos services par simple plaisir d'en abuser.",
     "rule5": "Aucune carte officielle avec des modifications mineures (les cartes All Flicks ou All Traces ne sont autorisées qu'occasionnellement).",
     "rule6": "Faites preuve de bon sens, s'il vous plaît.",
+    "rule7": "Aucun niveau incomplet",
     "rule8": "Vos métadonnées doivent être correctes (y compris les jaquettes).",
     "relaxedNote": "Les règles 2, 3, 5, 7 et 8 peuvent être <strong>ignorées si non répertoriées</strong>.",
     "fileSizeLimits": "Limites de taille des fichiers",
+    "fileSizeDesc": "Si vos niveaux dépassent la limite de publication, vous pouvez <strong>demander de l'aide</strong> ! Nous ne souhaitons pas limiter les vrai niveaux ; nous vous aiderons donc à les publier !",
+    "shitpostWarning": "Les niveaux de mauvaise qualité ne sont pas autorisés dans le cadre de cette exception. Reconsiderez <strong> SÉRIEUSEMENT </strong> vos choix de vie si vous publiez des niveaux de mauvaise qualitée qui dépasse la limite de publication.",
     "supportedFileTypes": "Types de fichiers pris en charge",
-    "fileTypesNote": "<strong>Remarque :</strong> Les fonctionnalités étendues les plus avancées ne sont disponibles que dans LevelData ! Vous pouvez ouvrir le fichier .usc dans l’éditeur pour continuer à travailler."
+    "fileTypesNote": "<strong>Remarque :</strong> Les fonctionnalités étendues les plus avancées ne sont disponibles que dans LevelData ! Vous pouvez ouvrir le fichier .usc dans l’éditeur pour continuer à travailler.",
+    "openEditor": "Ouvrir l'éditeur Next Sekai"
   },
   "emojis": {
     "title": "Émojis",
@@ -376,8 +411,10 @@
   "countdown": {
     "loading": "Chargement...",
     "home": "Maison",
+    "backToChart": "Retour au niveau",
     "premieres": "Premières {1}",
     "countdownLabel": "Compte à rebours",
+    "getReady": "PRÉPAREZ-VOUS!",
     "almostThere": "On y est presque...",
     "days": "Jours",
     "hours": "Heures",
@@ -387,6 +424,7 @@
     "previewChart": "Aperçu de la page du graphique"
   },
   "embed": {
+    "likes": "Likes",
     "comments": "Commentaires"
   },
   "loading": "Chargement..."
