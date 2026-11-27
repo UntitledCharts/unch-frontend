@@ -1,0 +1,217 @@
+import type { Chart } from '../..'
+import { settings } from '../../../settings'
+import type { UscObject } from '../../../usc/objects/schema'
+import { addToGroups } from '../../groups'
+import { addDefaultStageToStages, type Stages } from '../../stages'
+
+export const parseUscChart = (objects: UscObject[]) => {
+    const stages: Stages = new Map()
+    const [stageId] = addDefaultStageToStages(stages)
+
+    const chart: Chart = {
+        initialLife: 1000,
+        isDynamicStages: false,
+        bpms: [],
+        groups: new Map(),
+        stages,
+        cameraEvents: [],
+        stageMaskEvents: [],
+        stagePivotEvents: [],
+        stageStyleEvents: [],
+        stageTransformEvents: [],
+        timeScales: [],
+        slides: [],
+    }
+
+    const timeScaleGroups = objects.filter((object) => object.type === 'timeScaleGroup')
+    const groupIds = [
+        ...Array(Math.max(settings.autoAddGroup ? 2 : 1, timeScaleGroups.length)).keys(),
+    ].map(() => addToGroups(chart.groups)[0])
+
+    const getGroupId = (index: number) => {
+        const id = groupIds[index]
+        if (!id) throw new Error(`Invalid level: group ${index} not found`)
+
+        return id
+    }
+
+    for (const object of objects) {
+        switch (object.type) {
+            case 'bpm':
+                chart.bpms.push({
+                    beat: object.beat,
+                    bpm: object.bpm,
+                })
+                break
+            case 'timeScaleGroup':
+                for (const change of object.changes) {
+                    chart.timeScales.push({
+                        groupId: getGroupId(timeScaleGroups.indexOf(object)),
+                        beat: change.beat,
+                        editorLane: -6,
+                        timeScale: change.timeScale,
+                        skip: 0,
+                        timeScaleEase: 'none',
+                        hideNotes: false,
+                    })
+                }
+                break
+            case 'single':
+                chart.slides.push([
+                    {
+                        groupId: getGroupId(object.timeScaleGroup),
+                        stageId,
+                        beat: object.beat,
+                        noteType: object.trace ? 'trace' : 'default',
+                        isAttached: false,
+                        left: object.lane - object.size,
+                        size: object.size * 2,
+                        isCritical: object.critical,
+                        flickDirection: flickDirections[object.direction ?? 'none'],
+                        isFake: false,
+                        sfx: 'default',
+                        isConnectorSeparator: false,
+                        connectorType: 'active',
+                        connectorEase: 'linear',
+                        connectorIsFake: false,
+                        connectorActiveIsCritical: object.critical,
+                        connectorGuideColor: 'green',
+                        connectorGuideAlpha: 1,
+                        connectorLayer: 'top',
+                        connectorIsPassThrough: false,
+                        connectorPresentation: 'default',
+                    },
+                ])
+                break
+            case 'slide':
+                chart.slides.push(
+                    object.connections.map((connection) => ({
+                        groupId: getGroupId(connection.timeScaleGroup ?? 0),
+                        stageId,
+                        beat: connection.beat,
+                        noteType:
+                            connection.type === 'start' || connection.type === 'end'
+                                ? noteTypes[connection.judgeType]
+                                : connection.critical === undefined
+                                  ? 'anchor'
+                                  : 'default',
+                        isAttached: connection.type === 'attach',
+                        left: connection.type === 'attach' ? 0 : connection.lane - connection.size,
+                        size: connection.type === 'attach' ? 0 : connection.size * 2,
+                        isCritical: connection.critical ?? object.critical,
+                        flickDirection:
+                            connection.type === 'end'
+                                ? flickDirections[connection.direction ?? 'none']
+                                : 'none',
+                        isFake: false,
+                        sfx: 'default',
+                        isConnectorSeparator: false,
+                        connectorType: 'active',
+                        connectorEase:
+                            connection.type === 'start' || connection.type === 'tick'
+                                ? connectorEases[connection.ease]
+                                : 'linear',
+                        connectorIsFake: false,
+                        connectorActiveIsCritical: object.critical,
+                        connectorGuideColor: 'green',
+                        connectorGuideAlpha: 1,
+                        connectorLayer: 'top',
+                        connectorIsPassThrough: false,
+                        connectorPresentation: 'default',
+                    })),
+                )
+                break
+            case 'guide':
+                chart.slides.push(
+                    object.midpoints.map((midpoint, i) => ({
+                        groupId: getGroupId(midpoint.timeScaleGroup),
+                        stageId,
+                        beat: midpoint.beat,
+                        noteType: 'anchor',
+                        isAttached: false,
+                        left: midpoint.lane - midpoint.size,
+                        size: midpoint.size * 2,
+                        isCritical: false,
+                        flickDirection: 'none',
+                        isFake: false,
+                        sfx: 'default',
+                        isConnectorSeparator: false,
+                        connectorType: 'guide',
+                        connectorEase: connectorEases[midpoint.ease],
+                        connectorIsFake: false,
+                        connectorActiveIsCritical: false,
+                        connectorGuideColor: object.color,
+                        connectorGuideAlpha: (i === 0
+                            ? connectorGuideAlphaStarts
+                            : connectorGuideAlphaEnds)[object.fade],
+                        connectorLayer: 'top',
+                        connectorIsPassThrough: false,
+                        connectorPresentation: 'default',
+                    })),
+                )
+                break
+            case 'damage':
+                chart.slides.push([
+                    {
+                        groupId: getGroupId(object.timeScaleGroup),
+                        stageId,
+                        beat: object.beat,
+                        noteType: 'damage',
+                        isAttached: false,
+                        left: object.lane - object.size,
+                        size: object.size * 2,
+                        isCritical: false,
+                        flickDirection: 'none',
+                        isFake: false,
+                        sfx: 'default',
+                        isConnectorSeparator: false,
+                        connectorType: 'active',
+                        connectorEase: 'linear',
+                        connectorIsFake: false,
+                        connectorActiveIsCritical: false,
+                        connectorGuideColor: 'green',
+                        connectorGuideAlpha: 1,
+                        connectorLayer: 'top',
+                        connectorIsPassThrough: false,
+                        connectorPresentation: 'default',
+                    },
+                ])
+                break
+        }
+    }
+
+    return chart
+}
+
+const noteTypes = {
+    trace: 'trace',
+    none: 'anchor',
+    normal: 'default',
+} as const
+
+const flickDirections = {
+    up: 'up',
+    left: 'upLeft',
+    right: 'upRight',
+    none: 'none',
+} as const
+
+const connectorEases = {
+    out: 'out',
+    linear: 'linear',
+    in: 'in',
+    inout: 'inOut',
+    outin: 'outIn',
+} as const
+
+const connectorGuideAlphaStarts = {
+    none: 1,
+    out: 1,
+    in: 0,
+} as const
+
+const connectorGuideAlphaEnds = {
+    none: 1,
+    out: 0,
+    in: 1,
+} as const

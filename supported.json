@@ -1,0 +1,9 @@
+{
+    "en": {
+        "country": "us",
+        "name": "English",
+        "english_name": "English",
+        "file": "en.json",
+        "locale": "en-US"
+    }
+}
