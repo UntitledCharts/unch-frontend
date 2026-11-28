@@ -1,0 +1,121 @@
+{
+  "generic": {
+    "save": "Salva",
+    "dashboard": "Pannello di controllo",
+    "cancel": "Cancella",
+    "charts": "Mappe",
+    "staffPick": "Scelta dello staff",
+    "order": "Ordine",
+    "rating": "Valutazione",
+    "likes": "Mi piace",
+    "tags": "Etichette",
+    "newest": "Più recente",
+    "share": "Condividi",
+    "comments": "Commenti",
+    "linkCopied": "Link copiato!",
+    "edit": "Modifica",
+    "loading": "Caricamento...",
+    "error": "Si è verificato un errore",
+    "next": "Prossimo",
+    "undo": "Ritorna Indietro",
+    "by": "di {1}",
+    "visibility": "Visibilità",
+    "sortBy": "Ordina per",
+    "public": "Pubblico",
+    "unlisted": "Non in elenco",
+    "private": "Privato",
+    "language": "Lingua",
+    "saving": "Salvando...",
+    "delete": "Elimina",
+    "uploading": "Caricando...",
+    "back": "Indietro",
+    "revoking": "Revocando...",
+    "authorizing": "Autorizzazione in corso...",
+    "authorize": "Autorizza",
+    "pageOf": "Pagina {1} di {2}"
+  },
+  "nav": {
+    "logout": "Disconnettiti"
+  },
+  "oauth": {
+    "revokeNotice": "È possibile revocare questa autorizzazione in qualsiasi momento dalla sezione App Autorizzate.",
+    "invalidRequest": "Questa richiesta di autorizzazione non è valida.",
+    "connectionFailed": "Impossibile raggiungere il server. Riprova.",
+    "authorizedSubtitle": "Applicazioni a cui hai concesso l'accesso al tuo account. La revoca ha effetto immediato.",
+    "noApps": "Non hai ancora autorizzato alcuna app.",
+    "revokeFailed": "Non è stato possibile revocare quell'app.",
+    "loadFailed": "Impossibile caricare le applicazioni  autorizzate."
+  },
+  "userProfile": {
+    "editProfile": "Modifica profilo",
+    "chartsLiked": "Mappe apprezzate",
+    "commentsMade": "Commenti pubblicati"
+  },
+  "home": {
+    "viewAll": "Visualizza tutto"
+  },
+  "search": {
+    "random": "Casuale",
+    "quick": "Veloce",
+    "advanced": "Avanzato",
+    "ascending": "Ascendente",
+    "descending": "Discendente",
+    "alphabetical": "Alfabetico",
+    "reroll": "Rilancia"
+  },
+  "levelDetail": {
+    "chartedBy": "Creato da {1}",
+    "openViaSonolus": "Apri tramite {1}",
+    "like": "Mi Piace",
+    "leaderboard": "Classifica",
+    "noComments": "Nessun commento ancora",
+    "comment": "Commento",
+    "days": "Giorni",
+    "hours": "Ore",
+    "mins": "Minuti",
+    "secs": "Secondi",
+    "makeStaffPick": "Rendi Scelto dallo Staff",
+    "removeStaffPick": "Rimuovi la scelta dello Staff",
+    "levelLabel": "Livello",
+    "published": "Pubblicato",
+    "uploaded": "Caricato"
+  },
+  "footer": {
+    "openInSonolus": "Apri in Sonolus"
+  },
+  "dashboard": {
+    "status": "Stato",
+    "schedulePublish": "Pubblicazione del programma",
+    "scheduledFor": "Previsto per {1}"
+  },
+  "uploadPolicy": {
+    "title": "Norme di caricamento",
+    "subtitle": "Si prega di leggere le seguenti regole prima di caricare una mappa.",
+    "fileSizeLimits": "Limiti di dimensione dei file",
+    "fileSizeDesc": "Se i tuoi grafici superano il limite di caricamento, puoi <strong>richiedere assistenza</strong>! Non vogliamo limitare le dimensioni dei grafici, quindi ti aiuteremo a caricarli!",
+    "shitpostWarning": "I post spazzatura non sono ammessi in questa eccezione. Per favore, riconsidera le tue scelte di vita se carichi post spazzatura di dimensioni superiori ai limiti di file.",
+    "supportedFileTypes": "Tipi di file supportati",
+    "fileTypesNote": "<strong>Nota:</strong> Le funzionalità estese più avanzate sono disponibili solo in LevelData! Puoi aprire il file .usc nell'editor per continuare a lavorare.",
+    "openEditor": "Apri Next Sekai Editor",
+    "noInappropriate": "Niente insulti, razzismo, politica, contenuti palesemente inappropriati, pubblicità, ecc.",
+    "noAbuse": "Non abusate dei nostri servizi per il gusto di abusarne.",
+    "commonSense": "Per favore, usate un po' di buon senso.",
+    "correctMetadata": "I metadati devono essere corretti (comprese le copertine)."
+  },
+  "countdown": {
+    "getReady": "PREPARATEVI!",
+    "almostThere": "Ci siamo quasi..."
+  },
+  "settings": {
+    "themeLight": "Chiaro",
+    "themeDark": "Scuro"
+  },
+  "browse": {
+    "titlePlaceholder": "Cerca nei titoli...",
+    "artistsPlaceholder": "Cerca tra gli artisti...",
+    "descriptionPlaceholder": "Cerca nelle descrizioni..."
+  },
+  "preview": {
+    "qualityMax": "Massimo"
+  }
+}

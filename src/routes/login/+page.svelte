@@ -1,10 +1,11 @@
 <script lang="ts">
+  import Seo from "$lib/components/seo.svelte";
   import { t } from "$lib/i18n.svelte.js";
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
   import SiteHeader from "$lib/components/site-header.svelte";
   import SiteFooter from "$lib/components/site-footer.svelte";
-  import AwaitingLogin from "$lib/components/awaiting-login.svelte";
+  import LoginPanel from "$lib/components/login-panel.svelte";
   import { session } from "$lib/state/session.svelte";
 
   function safeNext(raw: string | null): string {
@@ -21,9 +22,7 @@
   });
 </script>
 
-<svelte:head>
-  <title>{t("login.logInUntitledcharts")}</title>
-</svelte:head>
+<Seo title={t("generic.logIn")} metaTitle="Log in" />
 
 <SiteHeader />
 
@@ -32,7 +31,7 @@
     <span class="loading loading-spinner text-muted-foreground size-8"></span>
   </main>
 {:else}
-  <AwaitingLogin />
+  <LoginPanel />
 {/if}
 
 <SiteFooter />

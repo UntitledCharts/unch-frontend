@@ -439,7 +439,7 @@
     <h3 class="text-sm font-semibold">{t("preview.previewSettings")}</h3>
     <button type="button" onclick={resetSettings} class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs text-white/60 hover:bg-white/10 hover:text-white">
       <RiRestartLine class="size-3.5" />
-      {t("settings.reset")}
+      {t("generic.reset")}
     </button>
   </div>
 
@@ -574,13 +574,13 @@
   {:else if status === "error"}
     <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-950/70 px-6 text-center text-white">
       <RiErrorWarningLine class="block size-8 text-rose-300" />
-      <p class="text-sm">{t("preview.thisChartSPreviewCouldn")}</p>
+      <p class="text-sm">{t("preview.loadFailed")}</p>
       <button
         type="button"
         onclick={init}
         class="rounded-lg bg-white/15 px-4 py-2 text-sm font-semibold ring-1 ring-white/20 hover:bg-white/25"
       >
-        {t("preview.tryAgain")}
+        {t("generic.tryAgain")}
       </button>
     </div>
   {:else}
@@ -597,7 +597,7 @@
 
     {#if playing && !settingsOpen && !volumeOpen}
       <!-- tapping the picture pauses, the same way tapping it resumes -->
-      <button type="button" onclick={toggle} aria-label={t("preview.pause")} class="absolute inset-0 cursor-pointer"></button>
+      <button type="button" onclick={toggle} aria-label={t("generic.pause")} class="absolute inset-0 cursor-pointer"></button>
     {/if}
 
     {#if volumeOpen}
@@ -636,7 +636,7 @@
       <button
         type="button"
         onclick={toggle}
-        aria-label={playing ? t("preview.pause") : t("preview.play")}
+        aria-label={playing ? t("generic.pause") : t("generic.play")}
         class="grid size-9 shrink-0 place-items-center rounded-full hover:bg-white/15"
       >
         {#if playing}
@@ -687,7 +687,7 @@
           settingsOpen = !settingsOpen;
           volumeOpen = false;
         }}
-        aria-label={t("settings.title")}
+        aria-label={t("generic.settings")}
         aria-expanded={settingsOpen}
         class={cn(
           "grid size-9 shrink-0 place-items-center rounded-full hover:bg-white/15",

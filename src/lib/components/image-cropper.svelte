@@ -102,7 +102,7 @@
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     role="application"
-    aria-label={t("common.dragToRepositionUseThe")}
+    aria-label={t("generic.cropHint")}
     class={`relative mx-auto touch-none overflow-hidden bg-black/50 ${round ? "rounded-full" : "rounded-xl"}`}
     style={`width:${BOX_W}px;height:${boxH}px`}
     onpointerdown={down}
@@ -133,12 +133,12 @@
     max="3"
     step="0.01"
     bind:value={zoom}
-    aria-label={t("common.zoom")}
+    aria-label={t("generic.zoom")}
     class="range range-primary range-sm w-full"
   />
 
   <div class="flex justify-end gap-2">
-    <Button variant="outline" size="sm" onclick={oncancel} class="rounded-full">{t("oauth.cancel")}</Button>
-    <Button size="sm" onclick={apply} class="rounded-full">{t("common.apply")}</Button>
+    <Button variant="outline" size="sm" onclick={oncancel} class="rounded-full">{t("generic.cancel")}</Button>
+    <Button size="sm" onclick={apply} class="rounded-full">{t("generic.apply")}</Button>
   </div>
 </div>

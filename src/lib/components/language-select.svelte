@@ -34,7 +34,7 @@
 
 <details bind:this={root} bind:open class={cn("dropdown", up && "dropdown-top", className)}>
   <summary
-    aria-label={t("header.language")}
+    aria-label={t("generic.language")}
     class="bg-card focus-visible:ring-ring/50 flex h-10 w-full cursor-pointer list-none items-center justify-between gap-2 rounded-xl border px-3 text-sm outline-none select-none focus-visible:ring-2 [&::-webkit-details-marker]:hidden"
   >
     <span class="flex min-w-0 items-center gap-2 truncate">
@@ -46,7 +46,7 @@
 
   <ul
     role="listbox"
-    aria-label={t("header.language")}
+    aria-label={t("generic.language")}
     class={cn(
       "bg-popover/90 dropdown-content menu ring-foreground/10 z-50 max-h-72 w-full min-w-52 flex-nowrap overflow-y-auto rounded-xl p-1 shadow-lg ring-1 backdrop-blur-2xl backdrop-saturate-150",
       up ? "mb-1" : "mt-1",
@@ -66,7 +66,7 @@
           <span class="flex min-w-0 flex-col items-start leading-tight">
             <span class="truncate">{lang.name}</span>
             {#if lang.english_name !== lang.name}
-              <span class="text-muted-foreground text-[11px]">{lang.english_name}</span>
+              <span class="text-[11px] opacity-70">{lang.english_name}</span>
             {/if}
           </span>
           {#if active}<RiCheckLine class="size-4 shrink-0" />{/if}

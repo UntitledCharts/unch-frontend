@@ -52,15 +52,13 @@
 <figure class={compact ? `space-y-1 ${className}` : `space-y-3 ${className}`}>
   <div class={compact ? "flex items-center gap-3 text-[11px]" : "text-muted-foreground flex items-center gap-4 text-xs"}>
     <span class="inline-flex items-center gap-1.5">
-      <span class="size-2 rounded-full bg-teal-400"></span> {t("levelDetail.likes")}
+      <span class="size-2 rounded-full bg-teal-400"></span> {t("generic.likes")}
     </span>
     <span class="inline-flex items-center gap-1.5">
-      <span class="size-2 rounded-full bg-sky-500"></span> {t("levelDetail.comments")}
+      <span class="size-2 rounded-full bg-sky-500"></span> {t("generic.comments")}
     </span>
     {#if compact}
       <span class="ml-auto">{t("levelDetail.activity")}</span>
-    {:else}
-      <span class="ml-auto">{t("levelDetail.activityLong")}</span>
     {/if}
   </div>
 

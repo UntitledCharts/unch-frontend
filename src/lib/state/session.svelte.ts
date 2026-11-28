@@ -1,7 +1,10 @@
-import { API_URL, profileUrl, bannerUrl } from "$lib/data/index.js";
+import { API_URL, bearer, mapAccount, onUnauthorized, profileUrl, bannerUrl } from "$lib/data/index.js";
+import { browser } from "$app/environment";
 import { SONOLUS_HOST } from "$lib/config.js";
 
 export type UserRole = "User" | "Mod" | "Admin";
+
+type NewSession = { key: string; expiresAt: number };
 
 export type SessionUser = {
   sonolus_id: string;
@@ -11,11 +14,19 @@ export type SessionUser = {
   description: string | null;
   handle: number;
   role: UserRole;
+  permissions: string[];
 };
 
-const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const SESSION_KEY = "session";
 const EXPIRY_KEY = "expiry";
+
+// the stored session, readable before the session has loaded (e.g. in load functions); null on the server
+export function storedSessionKey(): string | null {
+  if (!browser) return null;
+  const key = localStorage.getItem(SESSION_KEY);
+  const expiry = Number(localStorage.getItem(EXPIRY_KEY));
+  return key && expiry > Date.now() ? key : null;
+}
 
 class SessionState {
   isLoggedIn = $state(false);
@@ -25,24 +36,22 @@ class SessionState {
   // set while a login is waiting on the Sonolus page; lets the UI reopen it if the browser blocked the popup
   loginUrl = $state<string | null>(null);
   popupBlocked = $state(false);
-  // true while a page shows its own "awaiting verification" state, so the login modal stays hidden
-  inlineLogin = $state(false);
+  // the stored session stopped working; the visitor is logged out and told so until they dismiss it
+  expired = $state(false);
 
   sessionKey: string | null = null;
 
   private loginInterval: ReturnType<typeof setInterval> | null = null;
-  private loginResolve: ((value: string | null) => void) | null = null;
+  private loginResolve: ((value: NewSession | null) => void) | null = null;
 
   init = async () => {
     if (typeof localStorage === "undefined") return;
+    onUnauthorized(this.reject);
     const key = localStorage.getItem(SESSION_KEY);
     const expiry = Number(localStorage.getItem(EXPIRY_KEY));
-    if (!key || !expiry || expiry < Date.now()) {
-      this.clear();
-      this.loading = false;
-      return;
-    }
-    await this.loadUser(key);
+    if (!key || !expiry) this.clear();
+    else if (expiry < Date.now()) this.reject(key);
+    else await this.loadUser(key);
     this.loading = false;
   };
 
@@ -50,22 +59,19 @@ class SessionState {
     if (this.pending || typeof window === "undefined") return;
     this.pending = true;
     try {
-      const res = await fetch(`${API_URL}/api/accounts/session/external/id/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(`${API_URL}/v1/sessions/website/login-requests`, { method: "POST" });
       if (!res.ok) return;
-      const { id } = await res.json();
+      const { id, poll_secret } = (await res.json()) as { id: string; poll_secret: string };
 
       this.loginUrl = `https://open.sonolus.com/external-login/${SONOLUS_HOST}/sonolus/authenticate_external?id=${id}`;
       this.openLoginWindow();
 
-      const key = await this.pollForSession(id);
-      if (!key) return;
+      const session = await this.pollForSession(id, poll_secret);
+      if (!session) return;
 
-      localStorage.setItem(SESSION_KEY, key);
-      localStorage.setItem(EXPIRY_KEY, String(Date.now() + WEEK_MS));
-      await this.loadUser(key);
+      localStorage.setItem(SESSION_KEY, session.key);
+      localStorage.setItem(EXPIRY_KEY, String(session.expiresAt));
+      await this.loadUser(session.key);
     } catch {
     } finally {
       this.pending = false;
@@ -84,6 +90,7 @@ class SessionState {
 
   logout = () => {
     this.clear();
+    this.expired = false;
   };
 
   cancelLogin = () => {
@@ -91,18 +98,19 @@ class SessionState {
     this.pending = false;
   };
 
-  private finishPoll(key: string | null) {
+  private finishPoll(session: NewSession | null) {
     if (this.loginInterval) {
       clearInterval(this.loginInterval);
       this.loginInterval = null;
     }
     if (this.loginResolve) {
-      this.loginResolve(key);
+      this.loginResolve(session);
       this.loginResolve = null;
     }
   }
 
-  pollForSession = (id: string): Promise<string | null> => {
+  // 202 while the login waits in Sonolus, 200 with the session once approved, 404 once it expired
+  pollForSession = (id: string, secret: string): Promise<NewSession | null> => {
     return new Promise((resolve) => {
       this.loginResolve = resolve;
       let tries = 0;
@@ -113,10 +121,14 @@ class SessionState {
           return;
         }
         try {
-          const res = await fetch(`${API_URL}/api/accounts/session/external/get/?id=${id}`);
-          if (res.status === 202) {
-            const { session_key } = await res.json();
-            this.finishPoll(session_key);
+          const res = await fetch(
+            `${API_URL}/v1/sessions/website/login-requests/${encodeURIComponent(id)}?poll_secret=${encodeURIComponent(secret)}`,
+          );
+          if (res.status === 200) {
+            const { session, expires_at } = (await res.json()) as { session: string; expires_at: string };
+            this.finishPoll({ key: session, expiresAt: Date.parse(expires_at) });
+          } else if (res.status === 404) {
+            this.finishPoll(null);
           }
         } catch {
         }
@@ -126,46 +138,42 @@ class SessionState {
 
   loadUser = async (key: string) => {
     try {
-      const res = await fetch(`${API_URL}/api/accounts/session/account/`, {
-        headers: { Authorization: key },
-      });
+      const res = await fetch(`${API_URL}/v1/me`, { headers: bearer(key) });
       if (!res.ok) {
-        if (res.status === 401) this.clear();
+        if (res.status === 401) this.reject(key);
         return;
       }
-      const me = await res.json();
-      const sonolusId = typeof me.sonolus_id === "string" ? me.sonolus_id : "";
-
-      let profileHash: string | null = typeof me.profile_hash === "string" ? me.profile_hash : null;
-      let bannerHash: string | null = typeof me.banner_hash === "string" ? me.banner_hash : null;
-      let description: string | null = typeof me.description === "string" ? me.description : null;
-      if (sonolusId) {
-        try {
-          const p = await fetch(`${API_URL}/api/accounts/${sonolusId}`);
-          if (p.ok) {
-            const pj = await p.json();
-            const acc = pj.account ?? pj;
-            if (typeof acc.profile_hash === "string") profileHash = acc.profile_hash;
-            if (typeof acc.banner_hash === "string") bannerHash = acc.banner_hash;
-            if (typeof acc.description === "string") description = acc.description;
-          }
-        } catch {
-        }
-      }
+      const me = (await res.json()) as { account?: Record<string, unknown> };
+      const account = mapAccount(me.account);
 
       this.sessionKey = key;
       this.user = {
-        sonolus_id: sonolusId,
-        username: me.sonolus_username ?? "User",
-        handle: me.sonolus_handle ?? 0,
-        role: me.admin ? "Admin" : me.mod ? "Mod" : "User",
-        avatar: profileUrl({ sonolus_id: sonolusId, profile_hash: profileHash }),
-        banner: bannerUrl({ sonolus_id: sonolusId, banner_hash: bannerHash }),
-        description,
+        sonolus_id: account.sonolus_id,
+        username: account.sonolus_username,
+        handle: account.sonolus_handle,
+        role: account.admin ? "Admin" : account.mod ? "Mod" : "User",
+        permissions: account.permissions,
+        avatar: profileUrl(account),
+        banner: bannerUrl(account),
+        description: account.description,
       };
       this.isLoggedIn = true;
+      this.expired = false;
     } catch {
     }
+  };
+
+  // only the session this tab or the browser still holds counts, so a deliberate logout never shows the
+  // notice and parallel requests show it once; another tab's newer login is picked up instead
+  private reject = (key: string) => {
+    const stored = localStorage.getItem(SESSION_KEY);
+    if (stored && stored !== key) {
+      if (key === this.sessionKey) void this.loadUser(stored);
+      return;
+    }
+    if (key !== stored && key !== this.sessionKey) return;
+    this.clear();
+    this.expired = true;
   };
 
   clear = () => {

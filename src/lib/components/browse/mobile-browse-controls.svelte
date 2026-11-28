@@ -2,8 +2,9 @@
   import { t } from "$lib/i18n.svelte.js";
   import Select from "$lib/components/select.svelte";
   import { cn } from "$lib/utils.js";
-  import { searchTypes, sortByOptions, orderOptions, activeFilterCount, type Filters } from "$lib/data/index.js";
-  import { RiSearchLine, RiCloseLine, RiEqualizerLine, RiStarFill, RiArrowDownSLine } from "$lib/icons.js";
+  import { searchTypes, browseSortOptions, orderOptions, activeFilterCount, type Filters } from "$lib/data/index.js";
+  import { RiSearchLine, RiCloseLine, RiEqualizerLine, RiStarFill, RiArrowDownSLine, RiHeart3Fill } from "$lib/icons.js";
+  import { session } from "$lib/state/session.svelte";
 
   // Same controls as the desktop filter bar, packed for a phone: search, then type/sort/order as
   // compact dropdowns in one row, with staff picks and the advanced fields behind small chips.
@@ -40,7 +41,7 @@
       type="search"
       inputmode="search"
       enterkeyhint="search"
-      placeholder={t("browse.searchChartsSongsCharters")}
+      placeholder={t("browse.searchPlaceholder")}
       aria-label={t("nav.searchCharts")}
       class="bg-card focus-visible:ring-ring/50 h-11 w-full rounded-2xl border pr-11 pl-11 text-[15px] shadow-sm outline-none focus-visible:ring-2"
     />
@@ -59,8 +60,8 @@
   <div class={cn("grid gap-2", showSort ? "grid-cols-3" : "grid-cols-1")}>
     <Select bind:value={filters.searchType} options={searchTypes} ariaLabel={t("browse.searchType")} compact class="min-w-0" />
     {#if showSort}
-      <Select bind:value={filters.sortBy} options={sortByOptions} ariaLabel={t("dashboard.sortBy")} compact class="min-w-0" />
-      <Select bind:value={filters.sortOrder} options={orderOptions} ariaLabel={t("search.order")} compact class="min-w-0" />
+      <Select bind:value={filters.sortBy} options={browseSortOptions} ariaLabel={t("generic.sortBy")} compact class="min-w-0" />
+      <Select bind:value={filters.sortOrder} options={orderOptions} ariaLabel={t("generic.order")} compact class="min-w-0" />
     {/if}
   </div>
 
@@ -78,8 +79,24 @@
         )}
       >
         <RiStarFill class="size-3.5" />
-        {t("home.staffPicks2")}
+        {t("generic.staffPicks")}
       </button>
+      {#if session.isLoggedIn}
+        <button
+          type="button"
+          onclick={() => (filters.likedByMe = !filters.likedByMe)}
+          aria-pressed={filters.likedByMe}
+          class={cn(
+            chip,
+            filters.likedByMe
+              ? "border-rose-400/40 bg-rose-400/15 text-rose-600 dark:text-rose-300"
+              : "border-border text-muted-foreground",
+          )}
+        >
+          <RiHeart3Fill class="size-3.5" />
+          {t("browse.likedByMe")}
+        </button>
+      {/if}
     {/if}
     {#if isAdvanced}
       <button
@@ -89,7 +106,7 @@
         class={cn(chip, advancedCount > 0 ? "border-primary/40 bg-primary/10 text-primary" : "border-border text-muted-foreground")}
       >
         <RiEqualizerLine class="size-3.5" />
-        {t("dashboard.filters")}
+        {t("generic.filters")}
         {#if advancedCount > 0}<span class="tabular-nums">· {advancedCount}</span>{/if}
         <RiArrowDownSLine class={cn("size-4 transition-transform", moreOpen && "rotate-180")} />
       </button>
@@ -108,24 +125,24 @@
       <input type="number" inputmode="numeric" min="1" max="99" placeholder="32" bind:value={filters.maxRating} class={inputClass} />
     </label>
     <label class="space-y-1">
-      <span class="text-muted-foreground text-xs">{t("browse.authorHandle")}</span>
+      <span class="text-muted-foreground text-xs">{t("browse.charterHandle")}</span>
       <input type="text" inputmode="numeric" placeholder="78302" bind:value={filters.authorHandle} class={inputClass} />
     </label>
     <label class="space-y-1">
-      <span class="text-muted-foreground text-xs">{t("search.tags")}</span>
-      <input type="text" placeholder={t("browse.commaSeparatedTags")} bind:value={filters.tags} class={inputClass} />
+      <span class="text-muted-foreground text-xs">{t("generic.tags")}</span>
+      <input type="text" placeholder={t("generic.commaSeparatedTags")} bind:value={filters.tags} class={inputClass} />
     </label>
     <label class="col-span-2 space-y-1">
       <span class="text-muted-foreground text-xs">{t("browse.titleIncludes")}</span>
-      <input type="text" placeholder={t("browse.searchInTitles")} bind:value={filters.titleIncludes} class={inputClass} />
+      <input type="text" placeholder={t("browse.titlePlaceholder")} bind:value={filters.titleIncludes} class={inputClass} />
     </label>
     <label class="col-span-2 space-y-1">
       <span class="text-muted-foreground text-xs">{t("browse.artistsIncludes")}</span>
-      <input type="text" placeholder={t("browse.searchInArtists")} bind:value={filters.artistsIncludes} class={inputClass} />
+      <input type="text" placeholder={t("browse.artistsPlaceholder")} bind:value={filters.artistsIncludes} class={inputClass} />
     </label>
     <label class="col-span-2 space-y-1">
       <span class="text-muted-foreground text-xs">{t("browse.descriptionIncludes")}</span>
-      <input type="text" placeholder={t("browse.searchInDescriptions")} bind:value={filters.descriptionIncludes} class={inputClass} />
+      <input type="text" placeholder={t("browse.descriptionPlaceholder")} bind:value={filters.descriptionIncludes} class={inputClass} />
     </label>
   </div>
 {/if}

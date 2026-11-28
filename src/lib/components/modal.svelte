@@ -6,8 +6,10 @@
   let {
     open = $bindable(false),
     class: className,
+    labelledby,
+    describedby,
     children,
-  }: { open?: boolean; class?: string; children?: Snippet } = $props();
+  }: { open?: boolean; class?: string; labelledby?: string; describedby?: string; children?: Snippet } = $props();
 
   let dialog = $state<HTMLDialogElement>();
 
@@ -19,7 +21,13 @@
   });
 </script>
 
-<dialog bind:this={dialog} class="modal" onclose={() => (open = false)}>
+<dialog
+  bind:this={dialog}
+  class="modal"
+  aria-labelledby={labelledby}
+  aria-describedby={describedby}
+  onclose={() => (open = false)}
+>
   <div
     class={cn(
       "modal-box text-popover-foreground bg-popover w-[calc(100vw-2rem)] max-w-md rounded-2xl border",
@@ -29,6 +37,6 @@
     {@render children?.()}
   </div>
   <form method="dialog" class="modal-backdrop">
-    <button aria-label={t("common.close2")}>{t("common.close")}</button>
+    <button aria-label={t("generic.close")}>{t("generic.close")}</button>
   </form>
 </dialog>

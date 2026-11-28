@@ -6,11 +6,12 @@
   import ChartSection from "$lib/components/chart-section.svelte";
   import ChartSkeleton from "$lib/components/chart-skeleton.svelte";
   import Seo from "$lib/components/seo.svelte";
+  import AdSlot from "$lib/components/ad-slot.svelte";
 
   let { data } = $props();
 </script>
 
-<Seo image="/og" />
+<Seo />
 
 {#snippet skeletonRow(title: string)}
   <section class="space-y-5">
@@ -30,22 +31,25 @@
 <main class="mx-auto max-w-7xl space-y-14 px-4 py-10 sm:px-6">
   <FeaturedHero charts={data.featured} />
 
-  <ChartSection title={t("home.staffPicks2")} charts={data.staffPicks} href="/browse?staff=1" carousel />
+  <AdSlot fullWidth={false} />
+
+  <ChartSection title={t("generic.staffPicks")} charts={data.staffPicks} href="/browse?staff=1" carousel />
 
   {#await data.trending}
     {@render skeletonRow(t("home.trendingNow"))}
   {:then trending}
-    <ChartSection title={t("home.trendingNow")} charts={trending} href="/browse" carousel />
+    <ChartSection title={t("home.trendingNow")} charts={trending} href="/browse?sort=decaying_likes:desc" carousel />
   {/await}
 
+  <AdSlot fullWidth={false} />
+
   {#await data.newest}
-    {@render skeletonRow(t("home.newOnUnch"))}
+    {@render skeletonRow(t("home.newCharts"))}
   {:then newest}
     <ChartSection
-      title={t("home.newOnUnch")}
+      title={t("home.newCharts")}
       charts={newest}
-      href="/browse?sort=created_at:desc"
-      hrefLabel={t("home.seeNewest")}
+      href="/browse?sort=published_at:desc"
     />
   {/await}
 </main>

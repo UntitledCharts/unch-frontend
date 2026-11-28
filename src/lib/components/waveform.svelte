@@ -149,7 +149,7 @@
     type="button"
     onclick={toggle}
     disabled={!src || (visible && !ready)}
-    aria-label={playing ? t("preview.pause") : t("preview.play")}
+    aria-label={playing ? t("generic.pause") : t("generic.play")}
     aria-pressed={playing}
     class={cn(
       "grid shrink-0 place-items-center rounded-full bg-primary text-primary-foreground shadow-sm transition-transform active:scale-90 disabled:opacity-50 motion-reduce:active:scale-100",

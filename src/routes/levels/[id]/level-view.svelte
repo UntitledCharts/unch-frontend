@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goBack } from "$lib/navigation.js";
   import { t, i18n } from "$lib/i18n.svelte.js";
   import SiteHeader from "$lib/components/site-header.svelte";
   import SiteFooter from "$lib/components/site-footer.svelte";
@@ -6,7 +7,8 @@
   import LevelBadge from "$lib/components/level-badge.svelte";
   import TrendsChart from "$lib/components/trends-chart.svelte";
   import LeaderboardTable from "$lib/components/leaderboard-table.svelte";
-  import CommentList from "$lib/components/comment-list.svelte";
+  import CommentThread from "$lib/components/comment-thread.svelte";
+  import CommentComposer from "$lib/components/comment-composer.svelte";
   import Pager from "$lib/components/pager.svelte";
   import ChartPreview from "$lib/components/chart-preview.svelte";
   import Waveform from "$lib/components/waveform.svelte";
@@ -14,7 +16,9 @@
   import ChartSkeleton from "$lib/components/chart-skeleton.svelte";
   import StaffChartPanel from "$lib/components/staff-chart-panel.svelte";
   import FormattedText from "$lib/components/formatted-text.svelte";
+  import ClampedText from "$lib/components/clamped-text.svelte";
   import Seo from "$lib/components/seo.svelte";
+  import AdSlot from "$lib/components/ad-slot.svelte";
   import { levelEmbed } from "$lib/discord-embed.js";
   import { levelStatusId, levelFooter } from "$lib/activity-id.js";
   import { page } from "$app/state";
@@ -27,6 +31,8 @@
     fetchComments,
     compact,
     relativeTime,
+    chartDate,
+    fullDate,
     parseDescriptionMeta,
     LEADERBOARD_TYPES,
     leaderboardMeta,
@@ -52,8 +58,9 @@
     RiEditLine,
     RiTimeLine,
   } from "$lib/icons.js";
-  import { session } from "$lib/state/session.svelte";
-  import { sonolusOpenUrl, SITE_URL } from "$lib/config.js";
+  import { session, storedSessionKey } from "$lib/state/session.svelte";
+  import { hoverCard } from "$lib/state/author-card.svelte.js";
+  import { sonolusOpenUrl, SITE_URL, ogChartUrl } from "$lib/config.js";
   import type { PageData } from "./$types";
 
   // the full level page; +page.svelte swaps in the countdown while a scheduled release is pending
@@ -156,7 +163,7 @@
     const id = chart.id;
     const mine = ++lbToken;
     lbLoading = true;
-    fetchLeaderboard(fetch, id, type, p - 1, PERPAGE).then((r) => {
+    fetchLeaderboard(fetch, id, type, p - 1, PERPAGE, storedSessionKey()).then((r) => {
       if (mine !== lbToken) return;
       lb = r;
       lbLoading = false;
@@ -171,18 +178,32 @@
     const id = chart.id;
     const mine = ++cmToken;
     cmLoading = true;
-    fetchComments(fetch, id, p - 1, PERPAGE).then((r) => {
+    fetchComments(fetch, id, p - 1, storedSessionKey()).then((r) => {
       if (mine !== cmToken) return;
       cm = r;
       cmLoading = false;
     });
   });
+
+  let commentCount = $derived(chart.comment_count);
+
+  // newest first, so a new comment goes on top of the first page
+  function commentPosted(comment: Comment) {
+    commentCount += 1;
+    if (cPage === 1) cm.data = [comment, ...cm.data];
+    else cPage = 1;
+  }
+
+  function commentDeleted() {
+    commentCount = Math.max(0, commentCount - 1);
+    if (!cm.data.length && cPage > 1) cPage -= 1;
+  }
 </script>
 
 <Seo
   title={chart.title}
   description={`${chart.artists} · Lv.${chart.rating} · charted by ${chart.chart_design}`}
-  image={`/og/level/UnCh-${chart.id}`}
+  image={ogChartUrl(chart.id)}
   discord={levelEmbed(chart, SITE_URL)}
   oembed={`/oembed?author=${encodeURIComponent(chart.chart_design.replace(/:([a-zA-Z0-9_]+):/g, "").trim())}&handle=${chart.author_handle}&title=${encodeURIComponent(chart.title.replace(/:([a-zA-Z0-9_]+):/g, "").trim())}&page=${encodeURIComponent(`/levels/UnCh-${chart.id}`)}&footer=${encodeURIComponent(levelFooter(chart.rating, chart.like_count, chart.comment_count))}`}
   activity={levelStatusId(chart.id) ? `/users/${chart.author_handle}/statuses/${levelStatusId(chart.id)}` : null}
@@ -193,20 +214,23 @@
 
 <div class={cn(ambient && "ambient")} style={ambientStyle(ambient)}>
 <main class="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
-  <a
-    href="/browse"
+  <button
+    type="button"
+    onclick={goBack}
     class="text-muted-foreground hover:text-foreground group inline-flex items-center gap-1.5 text-sm transition-colors"
   >
     <RiArrowLeftLine class="size-4 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none" />
-    {t("nav.browse")}
-  </a>
+    {t("generic.back")}
+  </button>
 
-  {#if data.scheduled}
+  {#if data.scheduled && data.hasAccess}
     <p class="border-primary/30 bg-primary/10 text-primary flex items-center gap-2 rounded-2xl border px-4 py-3 text-sm">
       <RiTimeLine class="size-4 shrink-0" />
-      {t("levelDetail.ownerPreviewScheduled", [new Date(data.scheduled.at).toLocaleString(i18n.locale, { dateStyle: "medium", timeStyle: "short" })])}
+      {chart.status === "UNLISTED" ? t("levelDetail.scheduledUnlistedNotice") : t("levelDetail.scheduledPrivateNotice")}
     </p>
   {/if}
+
+  <AdSlot />
 
   <section class="bg-card overflow-hidden rounded-3xl border">
     <div class="relative h-32 sm:h-48">
@@ -244,7 +268,7 @@
               <span
                 class="inline-flex items-center gap-1 rounded-md border border-amber-400/40 bg-amber-400/15 px-2 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-300"
               >
-                <RiStarFill class="block size-3" /> {t("levelDetail.staffPick")}
+                <RiStarFill class="block size-3" /> {t("generic.staffPick")}
               </span>
             {/if}
             {#if chart.status !== "PUBLIC"}
@@ -258,7 +282,8 @@
           </h1>
           <p class="text-muted-foreground text-sm sm:text-base"><FormattedText text={chart.artists} /></p>
           <a
-            href={`/creators/${chart.author_handle}`}
+            href={`/users/${chart.author_handle}`}
+            {@attach hoverCard(chart.author)}
             class="bg-muted/60 hover:bg-muted flex w-full items-center justify-center gap-2 rounded-full border py-1 pr-3.5 pl-1 transition-colors sm:inline-flex sm:w-auto sm:max-w-full sm:justify-start sm:py-0.5 sm:pl-0.5"
           >
             {#await data.author}
@@ -293,16 +318,16 @@
             class="hover:bg-muted inline-flex h-11 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-colors"
           >
             <RiShareLine class="block size-4" />
-            <span>{copied ? t("levelDetail.linkCopied") : t("levelDetail.share")}</span>
+            <span>{copied ? t("generic.linkCopied") : t("generic.share")}</span>
           </button>
           {#if isOwner}
             <a
               href={`/dashboard/edit/UnCh-${chart.id}`}
-              aria-label={t("levelDetail.editChart")}
+              aria-label={t("generic.editChart")}
               class="hover:bg-muted inline-flex h-11 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-colors"
             >
               <RiEditLine class="block size-4" />
-              <span class="hidden sm:inline">{t("levelDetail.edit")}</span>
+              <span class="hidden sm:inline">{t("generic.edit")}</span>
             </a>
           {/if}
         </div>
@@ -312,7 +337,7 @@
         <div class="bg-muted/40 flex items-center gap-3 rounded-2xl border px-3 py-2">
           <Waveform id={chart.id} src={bgmProxyUrl(chart)} variant="compact" height={36} class="min-w-0 flex-1" />
           {#if songBpm}
-            <span class="text-muted-foreground shrink-0 text-xs font-semibold tabular-nums">{t("common.bpm", [songBpm])}</span>
+            <span class="text-muted-foreground shrink-0 text-xs font-semibold tabular-nums">{t("generic.bpm", [songBpm])}</span>
           {/if}
         </div>
 
@@ -322,19 +347,19 @@
             <dd class="font-heading text-lg font-bold tabular-nums">{chart.rating}</dd>
           </div>
           <div class="bg-card px-4 py-2.5">
-            <dt class="text-muted-foreground text-xs">{chart.like_count === 1 ? t("levelDetail.like") : t("levelDetail.likes")}</dt>
+            <dt class="text-muted-foreground text-xs">{chart.like_count === 1 ? t("levelDetail.like") : t("generic.likes")}</dt>
             <dd class="font-heading inline-flex items-center gap-1.5 text-lg font-bold tabular-nums">
               <RiHeart3Fill class="block size-4 text-rose-400" />{compact(chart.like_count)}
             </dd>
           </div>
           <div class="bg-card px-4 py-2.5">
-            <dt class="text-muted-foreground text-xs">{chart.comment_count === 1 ? t("levelDetail.comment") : t("levelDetail.comments")}</dt>
+            <dt class="text-muted-foreground text-xs">{chart.comment_count === 1 ? t("levelDetail.comment") : t("generic.comments")}</dt>
             <dd class="font-heading text-lg font-bold tabular-nums">{compact(chart.comment_count)}</dd>
           </div>
           <div class="bg-card px-4 py-2.5">
-            <dt class="text-muted-foreground text-xs">{t("levelDetail.published")}</dt>
-            <dd class="font-heading text-base leading-snug font-bold sm:text-lg" title={new Date(chart.published_at).toLocaleString()}>
-              {relativeTime(chart.published_at)}
+            <dt class="text-muted-foreground text-xs">{chart.status === "PUBLIC" ? t("levelDetail.published") : t("levelDetail.uploaded")}</dt>
+            <dd class="font-heading text-base leading-snug font-bold sm:text-lg" title={fullDate(chartDate(chart))}>
+              {relativeTime(chartDate(chart))}
             </dd>
           </div>
         </dl>
@@ -364,11 +389,13 @@
 
       <section class="bg-card relative rounded-3xl border p-5 lg:min-h-0">
         <div class={cn("space-y-4", chartFileProxyUrl(chart) && "lg:absolute lg:inset-5 lg:overflow-y-auto lg:pr-1 lg:[scrollbar-width:thin]")}>
-          <h2 class="text-base font-semibold tracking-tight">{t("levelDetail.description")}</h2>
+          <h2 class="text-base font-semibold tracking-tight">{t("generic.description")}</h2>
           {#if chart.description}
-            <p class="text-foreground/85 text-sm leading-relaxed wrap-break-word whitespace-pre-line">
-              <FormattedText text={chart.description} linkify />
-            </p>
+            {#key chart.id}
+              <ClampedText lines={15} class="text-foreground/85 text-sm leading-relaxed wrap-break-word whitespace-pre-line">
+                <FormattedText text={chart.description} linkify />
+              </ClampedText>
+            {/key}
           {:else}
             <p class="text-muted-foreground text-sm">{t("levelDetail.noDescription")}</p>
           {/if}
@@ -396,7 +423,7 @@
         <button
           type="button"
           onclick={() => scrollTypes(-1)}
-          aria-label={t("common.scrollLeft")}
+          aria-label={t("generic.scrollLeft")}
           disabled={!canLeft}
           class="text-muted-foreground hover:text-foreground grid size-7 shrink-0 place-items-center rounded-full border transition-opacity disabled:pointer-events-none disabled:opacity-0"
         >
@@ -426,7 +453,7 @@
         <button
           type="button"
           onclick={() => scrollTypes(1)}
-          aria-label={t("common.scrollRight")}
+          aria-label={t("generic.scrollRight")}
           disabled={!canRight}
           class="text-muted-foreground hover:text-foreground grid size-7 shrink-0 place-items-center rounded-full border transition-opacity disabled:pointer-events-none disabled:opacity-0"
         >
@@ -456,12 +483,16 @@
       {/if}
     </section>
 
+    <AdSlot />
+
     <section class="bg-card space-y-4 rounded-3xl border p-4 sm:p-6">
       <h2 class="inline-flex items-center gap-2 text-lg font-semibold tracking-tight">
         <RiChat3Line class="text-primary block size-5" />
-        {chart.comment_count === 1 ? t("levelDetail.comment") : t("levelDetail.comments")}
-        <span class="text-muted-foreground font-normal tabular-nums">{chart.comment_count}</span>
+        {commentCount === 1 ? t("levelDetail.comment") : t("generic.comments")}
+        <span class="text-muted-foreground font-normal tabular-nums">{commentCount}</span>
       </h2>
+
+      <CommentComposer chartId={chart.id} onposted={commentPosted} />
 
       {#if cmLoading}
         <div class="space-y-5">
@@ -480,10 +511,10 @@
         <div class="bg-muted/30 flex flex-col items-center gap-1.5 rounded-2xl px-4 py-8 text-center">
           <img src="/miku-sitting.png" alt="" aria-hidden="true" class="mb-2 block w-24" />
           <p class="text-sm font-medium">{t("levelDetail.noComments")}</p>
-          <p class="text-muted-foreground text-xs">{t("levelDetail.firstComment")}</p>
+          <p class="text-muted-foreground text-xs">{t("levelDetail.beFirstToComment")}</p>
         </div>
       {:else}
-        <CommentList comments={cm.data} />
+        <CommentThread bind:comments={cm.data} chartId={chart.id} charterHandle={chart.author_handle} ondeleted={commentDeleted} />
         <Pager count={cm.pageCount * PERPAGE} perPage={PERPAGE} bind:page={cPage} />
       {/if}
     </section>
@@ -505,8 +536,8 @@
       <ChartSection
         title={t("levelDetail.moreFrom", [charterName])}
         charts={moreFromCharter}
-        href={`/creators/${chart.author_handle}`}
-        hrefLabel={t("levelDetail.viewProfile")}
+        href={`/users/${chart.author_handle}`}
+        hrefLabel={t("generic.viewProfile")}
         carousel
       />
     {/if}

@@ -22,6 +22,7 @@ export { default as RiDashboardLine } from "remixicon-icon/dashboard-line.svelte
 export { default as RiDashboardFill } from "remixicon-icon/dashboard-fill.svelte";
 export { default as RiDiscordFill } from "remixicon-icon/discord-fill.svelte";
 export { default as RiEditLine } from "remixicon-icon/edit-line.svelte";
+export { default as RiEyeLine } from "remixicon-icon/eye-line.svelte";
 export { default as RiImageEditLine } from "remixicon-icon/image-edit-line.svelte";
 export { default as RiImageAddLine } from "remixicon-icon/image-add-line.svelte";
 export { default as RiEmotionSadLine } from "remixicon-icon/emotion-sad-line.svelte";
@@ -77,3 +78,7 @@ export { default as RiSortDesc } from "remixicon-icon/sort-desc.svelte";
 export { default as RiMoreFill } from "remixicon-icon/more-fill.svelte";
 export { default as RiTimerLine } from "remixicon-icon/timer-line.svelte";
 export { default as RiStackFill } from "remixicon-icon/stack-fill.svelte";
+export { default as RiSendPlaneLine } from "remixicon-icon/send-plane-line.svelte";
+export { default as RiUser3Line } from "remixicon-icon/user-3-line.svelte";
+export { default as RiTiktokFill } from "remixicon-icon/tiktok-fill.svelte";
+export { default as RiYoutubeFill } from "remixicon-icon/youtube-fill.svelte";

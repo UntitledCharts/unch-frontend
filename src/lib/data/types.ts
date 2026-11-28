@@ -1,15 +1,51 @@
 
 
+export type ImageUrls = { url: string; webp_url: string };
+
+// mod and admin are sets of staff permissions: staff.manage makes an admin, any moderation permission a mod
+export const MOD_PERMISSIONS = [
+  "chart.visibility",
+  "chart.delete",
+  "chart.restore",
+  "chart.view_hidden",
+  "chart.rerate",
+  "chart.staff_pick",
+  "comment.delete",
+  "leaderboard.delete",
+  "notification.send",
+] as const;
+export const ADMIN_ONLY_PERMISSIONS = ["account.ban", "account.delete", "staff.manage"] as const;
+
+export type AccountBadge = {
+  badge: string;
+  level: number;
+  image: string;
+  description_key: string;
+};
+
 export type Account = {
   sonolus_id: string;
   sonolus_handle: number;
   sonolus_username: string;
-  profile_hash: string | null;
-  banner_hash: string | null;
+  avatar: ImageUrls | null;
+  banner: ImageUrls | null;
   description: string | null;
+  permissions: string[];
   mod: boolean;
   admin: boolean;
   banned: boolean;
+  badges: AccountBadge[];
+};
+
+// full URLs of the chart's files, as the API sends them; null when the chart has none
+export type ChartFiles = {
+  jacket: string | null;
+  music: string | null;
+  chart: string | null;
+  preview: string | null;
+  background: string | null;
+  background_v1: string | null;
+  background_v3: string | null;
 };
 
 export type Chart = {
@@ -17,7 +53,6 @@ export type Chart = {
   rating: number;
   author: string;
   author_handle: number;
-  author_full: string;
   chart_design: string;
   title: string;
   artists: string;
@@ -30,22 +65,25 @@ export type Chart = {
   created_at: string;
   published_at: string;
   updated_at: string;
-  jacket_file_hash: string;
-  music_file_hash: string;
-  background_file_hash: string;
-  chart_file_hash: string;
-  preview_file_hash: string;
-  custom_background: boolean;
+  files: ChartFiles;
   // set when the charter scheduled a release; the chart stays hidden until then
   scheduled_publish: string | null;
 };
 
+export type ChartViewer = {
+  is_owner: boolean;
+  chart_permissions: string[];
+  staff_permissions: string[];
+};
+
+export type ChartDetails = Chart & { viewer: ChartViewer };
+
 export type Comment = {
   id: number;
-  username: string;
   content: string;
-  created_at: number;
-  deleted_at: number | null;
+  created_at: string;
+  deleted_at: string | null;
+  is_own: boolean;
   account: Account;
 };
 

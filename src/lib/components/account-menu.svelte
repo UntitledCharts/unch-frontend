@@ -10,7 +10,7 @@
   import OptionsMenu, { menuRow } from "./options-menu.svelte";
   import { RiForbidLine, RiShieldUserLine, RiShieldStarLine } from "$lib/icons.js";
 
-  // Account moderation on a creator page, behind its options (⋯). It checks the signed-in role itself:
+  // Account moderation on a profile page, behind its options (⋯). It checks the signed-in role itself:
   // only admins see it, and never on their own page. The API checks again on every action, since each
   // one is sent with the admin's own session. Every action asks once before it runs.
   let { account, class: className }: { account: Account; class?: string } = $props();
@@ -36,7 +36,7 @@
     const res = await accountAction(key, account.sonolus_id, pending.action);
     busy = false;
     confirmOpen = false;
-    message = res.ok ? { ok: true, text: t("staff.saved") } : { ok: false, text: res.error };
+    message = res.ok ? { ok: true, text: t("generic.saved") } : { ok: false, text: res.error };
     if (res.ok) await invalidateAll();
   }
 </script>
@@ -69,7 +69,7 @@
         {pending ? t("staff.confirm", [t(pending.key), account.sonolus_username]) : ""}
       </h2>
       <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-        <Button variant="outline" type="button" class="rounded-full" onclick={() => (confirmOpen = false)}>{t("oauth.cancel")}</Button>
+        <Button variant="outline" type="button" class="rounded-full" onclick={() => (confirmOpen = false)}>{t("generic.cancel")}</Button>
         <Button
           type="button"
           disabled={busy}

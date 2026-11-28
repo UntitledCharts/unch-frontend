@@ -30,6 +30,6 @@
     {@render children?.()}
   </div>
   <form method="dialog" class="modal-backdrop">
-    <button aria-label={t("common.close2")}>{t("common.close")}</button>
+    <button aria-label={t("generic.close")}>{t("generic.close")}</button>
   </form>
 </dialog>

@@ -2,7 +2,7 @@
   import { t } from "$lib/i18n.svelte.js";
   import Button from "./button.svelte";
   import { session } from "$lib/state/session.svelte";
-  import { API_URL } from "$lib/data/index.js";
+  import { API_URL, apiFetch, bearer } from "$lib/data/index.js";
   import { RiCheckLine, RiDeleteBinLine } from "$lib/icons.js";
   import Modal from "./modal.svelte";
 
@@ -24,9 +24,7 @@
     error = null;
     apps = null;
     try {
-      const res = await fetch(`${API_URL}/api/oauth/authorizations/`, {
-        headers: { Authorization: key },
-      });
+      const res = await apiFetch(fetch, `${API_URL}/v1/me/oauth-authorizations`, { headers: bearer(key) });
       if (!res.ok) throw new Error("failed");
       apps = await res.json();
     } catch {
@@ -54,9 +52,9 @@
     if (!key) return;
     revoking = clientId;
     try {
-      const res = await fetch(`${API_URL}/api/oauth/authorizations/${clientId}/`, {
+      const res = await apiFetch(fetch, `${API_URL}/v1/me/oauth-authorizations/${encodeURIComponent(clientId)}`, {
         method: "DELETE",
-        headers: { Authorization: key },
+        headers: bearer(key),
       });
       if (!res.ok) throw new Error("failed");
       await loadApps(key);
@@ -124,7 +122,7 @@
               class="shrink-0 rounded-full"
             >
               <RiDeleteBinLine class="size-4" />
-              {revoking === a.client_id ? t("oauth.revoking2") : t("oauth.revoke2")}
+              {revoking === a.client_id ? t("generic.revoking") : t("generic.revoke")}
             </Button>
           </div>
 
@@ -140,7 +138,7 @@
             {/each}
           </ul>
 
-          <p class="text-muted-foreground/70 text-xs">{t("oauth.authorizedOn2", [formatDate(a.authorized_at)])}</p>
+          <p class="text-muted-foreground/70 text-xs">{t("oauth.authorizedOn", [formatDate(a.authorized_at)])}</p>
         </li>
       {/each}
     </ul>
@@ -154,10 +152,10 @@
       <p id="revoke-body" class="text-muted-foreground text-sm">{t("oauth.revokeBody", [pendingRevoke?.name ?? ""])}</p>
     </div>
     <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-      <Button variant="outline" type="button" class="rounded-full" onclick={() => (revokeOpen = false)}>{t("oauth.cancel")}</Button>
+      <Button variant="outline" type="button" class="rounded-full" onclick={() => (revokeOpen = false)}>{t("generic.cancel")}</Button>
       <Button type="button" class="rounded-full border-rose-600 bg-rose-600 text-white hover:bg-rose-700" onclick={confirmRevoke}>
         <RiDeleteBinLine class="size-4" />
-        {t("oauth.revoke2")}
+        {t("generic.revoke")}
       </Button>
     </div>
   </div>

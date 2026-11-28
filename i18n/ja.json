@@ -1,0 +1,110 @@
+{
+  "generic": {
+    "save": "保存",
+    "home": "ホーム",
+    "dashboard": "ダッシュボード",
+    "cancel": "キャンセル",
+    "charts": "譜面",
+    "staffPick": "スタッフのおすすめ",
+    "order": "順序",
+    "rating": "評価",
+    "likes": "いいね",
+    "tags": "タグ",
+    "newest": "最新",
+    "share": "共有",
+    "comments": "コメント",
+    "linkCopied": "リンクをコピーしました！",
+    "edit": "編集",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "next": "次",
+    "undo": "元に戻す",
+    "by": "作曲者：{1}",
+    "visibility": "可視性",
+    "sortBy": "並べ替え",
+    "public": "公開",
+    "unlisted": "限定公開",
+    "private": "非公開",
+    "language": "言語",
+    "saving": "保存中...",
+    "delete": "消去",
+    "uploading": "アップロード中...",
+    "back": "戻る",
+    "pageOf": "ページ {1} / {2}"
+  },
+  "nav": {
+    "logout": "ログアウト"
+  },
+  "userProfile": {
+    "editProfile": "プロフィールを編集",
+    "chartsLiked": "いいねした譜面",
+    "commentsMade": "コメント投稿"
+  },
+  "home": {
+    "viewAll": "すべて表示"
+  },
+  "search": {
+    "random": "ランダム",
+    "quick": "クイック検索",
+    "advanced": "細部検索",
+    "ascending": "上順",
+    "descending": "下順",
+    "alphabetical": "アルファベット順",
+    "reroll": "再ロール"
+  },
+  "levelDetail": {
+    "chartedBy": "チャート作成者：{1}",
+    "openViaSonolus": "{1}経由で開く",
+    "like": "いいね",
+    "leaderboard": "リーダーボード",
+    "noComments": "まだコメントはありません",
+    "comment": "コメント",
+    "days": "日",
+    "hours": "時間",
+    "mins": "分",
+    "secs": "秒",
+    "makeStaffPick": "スタッフのおすすめにする",
+    "removeStaffPick": "スタッフのおすすめを削除",
+    "levelLabel": "レベル",
+    "published": "公開済み",
+    "uploaded": "アップロード済み"
+  },
+  "footer": {
+    "openInSonolus": "Sonolusで開く"
+  },
+  "dashboard": {
+    "status": "状態",
+    "schedulePublish": "公開スケジュール",
+    "scheduledFor": "予定: {1} "
+  },
+  "uploadPolicy": {
+    "title": "アップロードポリシー",
+    "subtitle": "チャートをアップロードする前に、以下のルールをお読みください。",
+    "fileSizeLimits": "ファイルサイズ制限",
+    "fileSizeDesc": "譜面のサイズがアップロード制限を超える場合は、<strong>サポートに問い合わせてサポートを受けてください</strong>！実際の譜面のサイズを制限するつもりはありませんので、アップロードのお手伝いをいたします！",
+    "shitpostWarning": "この例外規定では、くだらない投稿は認められません。ファイルサイズ制限を超えるくだらない投稿をアップロードしている場合は、人生の選択を再考してください。",
+    "supportedFileTypes": "サポートされているファイル形式",
+    "fileTypesNote": "<strong>注:</strong> 極めて高度な機能はLevelDataでのみ利用可能です。.uscファイルをエディタで開いて作業を続けることができます。",
+    "openEditor": "次のSekaiエディターを開く",
+    "noInappropriate": "中傷、人種差別、政治的な発言、極めて不適切な内容、広告などは禁止です。",
+    "noAbuse": "悪用すること自体を目的として、当社のサービスを悪用しないでください。",
+    "commonSense": "常識を働かせてください",
+    "correctMetadata": "譜面情報は全て正確でなければなりません。もちろん、ジャケット画像もこれに該当します。"
+  },
+  "countdown": {
+    "getReady": "準備してください！",
+    "almostThere": "もうすぐ..."
+  },
+  "settings": {
+    "themeLight": "ライト",
+    "themeDark": "暗い"
+  },
+  "browse": {
+    "titlePlaceholder": "タイトルで検索...",
+    "artistsPlaceholder": "アーティストを検索...",
+    "descriptionPlaceholder": "説明文を検索..."
+  },
+  "preview": {
+    "qualityMax": "最大値"
+  }
+}

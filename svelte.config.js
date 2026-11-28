@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-cloudflare';
+import adapter from '@sveltejs/adapter-node';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -12,7 +12,6 @@ const config = {
 		prebundleSvelteLibraries: true
 	},
 	kit: {
-		// Deployed on Cloudflare Pages; wrangler.toml holds the runtime settings.
 		adapter: adapter(),
 		alias: {
 			'$lib': './src/lib',

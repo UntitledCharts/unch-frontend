@@ -20,14 +20,14 @@
   const cover = $derived(coverUrl(chart));
   const statusLabel = $derived(
     chart.status === "PUBLIC"
-      ? t("dashboard.statusPublic")
+      ? t("generic.public")
       : chart.scheduled_publish
         ? t("dashboard.scheduledFor", [
             new Date(chart.scheduled_publish).toLocaleString(i18n.locale, { dateStyle: "medium", timeStyle: "short" }),
           ])
         : chart.status === "UNLISTED"
-          ? t("dashboard.statusUnlisted")
-          : t("dashboard.statusPrivate"),
+          ? t("generic.unlisted")
+          : t("generic.private"),
   );
   let copied = $state(false);
 
@@ -49,7 +49,7 @@
       chart.staff_pick ? "bg-amber-400 text-amber-950" : "bg-muted text-muted-foreground",
     )}
   >
-    {#if chart.staff_pick}<RiStarFill class="size-2.5" /> {t("common.staff")}{:else}{statusLabel}{/if}
+    {#if chart.staff_pick}<RiStarFill class="size-2.5" /> {t("generic.staff")}{:else}{statusLabel}{/if}
   </span>
 {/snippet}
 
@@ -69,21 +69,21 @@
   <div class={cn("flex items-center gap-1.5", cls)}>
     <a
       href={editHref}
-      aria-label={iconOnly ? t("dashboard.edit") : undefined}
-      title={iconOnly ? t("dashboard.edit") : undefined}
+      aria-label={iconOnly ? t("generic.edit") : undefined}
+      title={iconOnly ? t("generic.edit") : undefined}
       class={cn(
         "bg-primary text-primary-foreground inline-flex items-center justify-center gap-1.5 rounded-full font-semibold transition-[filter] hover:brightness-110",
         iconOnly ? "size-8 shrink-0" : small ? "h-8 flex-1 px-3 text-xs" : "h-9 flex-1 px-4 text-sm",
       )}
     >
       <RiEditLine class="size-4" />
-      {#if !iconOnly}{t("dashboard.edit")}{/if}
+      {#if !iconOnly}{t("generic.edit")}{/if}
     </a>
     <button
       type="button"
       onclick={copyLink}
-      aria-label={t("dashboard.copyLink")}
-      title={copied ? t("levelDetail.linkCopied") : t("dashboard.copyLink")}
+      aria-label={t("generic.copyLink")}
+      title={copied ? t("generic.linkCopied") : t("generic.copyLink")}
       class={cn(
         "bg-secondary text-secondary-foreground hover:bg-muted grid shrink-0 place-items-center rounded-full transition-colors",
         small ? "size-8" : "size-9",

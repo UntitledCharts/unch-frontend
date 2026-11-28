@@ -2,7 +2,7 @@
 
 export const levelPath = (chartId: string) => `/levels/UnCh-${chartId}`;
 
-export const creatorPath = (handle: number | string) => `/creators/${handle}`;
+export const userPath = (handle: number | string) => `/users/${handle}`;
 
 // a replay is named for the chart it was played on and the score's id
 export const replayPath = (replayName: string) => `/replays/${replayName}`;

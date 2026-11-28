@@ -18,5 +18,5 @@
     className,
   )}
 >
-  <span class={cn("text-[0.8em] font-medium", onImage ? "text-white/70" : "text-muted-foreground")}>{t("common.levelShort")}</span>{level ?? "?"}
+  <span class={cn("text-[0.8em] font-medium", onImage ? "text-white/70" : "text-muted-foreground")}>{t("generic.levelShort")}</span>{level ?? "?"}
 </span>

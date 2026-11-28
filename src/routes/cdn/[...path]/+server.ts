@@ -6,7 +6,7 @@ import type { RequestHandler } from "./$types";
 // bare hashes. The extension is dropped before fetching; the real content type comes from the CDN.
 export const GET: RequestHandler = async ({ params, fetch }) => {
   const path = params.path.replace(/\.(png|jpe?g|webp|gif|avif)$/i, "");
-  if (!path || path.includes("..")) return new Response("Not found", { status: 404 });
+  if (!CDN_URL || !path || path.includes("..")) return new Response("Not found", { status: 404 });
 
   const res = await fetch(`${CDN_URL}/${path}`).catch(() => null);
   const type = res?.headers.get("Content-Type") ?? "";

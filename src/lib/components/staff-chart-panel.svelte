@@ -13,9 +13,9 @@
 
   type Status = "PUBLIC" | "UNLISTED" | "PRIVATE";
   const statuses: { value: Status; key: string }[] = [
-    { value: "PUBLIC", key: "dashboard.statusPublic" },
-    { value: "UNLISTED", key: "dashboard.statusUnlisted" },
-    { value: "PRIVATE", key: "dashboard.statusPrivate" },
+    { value: "PUBLIC", key: "generic.public" },
+    { value: "UNLISTED", key: "generic.unlisted" },
+    { value: "PRIVATE", key: "generic.private" },
   ];
 
   let busy = $state(false);
@@ -45,14 +45,14 @@
   </h2>
 
   <div class="space-y-1.5">
-    <p class="text-muted-foreground text-xs">{t("dashboard.visibility")}</p>
+    <p class="text-muted-foreground text-xs">{t("generic.visibility")}</p>
     <div class="flex flex-wrap gap-1.5">
       {#each statuses as s (s.value)}
         <button
           type="button"
           disabled={busy || chart.status === s.value}
           aria-pressed={chart.status === s.value}
-          onclick={() => run((k) => setChartVisibility(k, chart.id, s.value), t("staff.saved"))}
+          onclick={() => run((k) => setChartVisibility(k, chart.id, s.value), t("generic.saved"))}
           class={cn(pill, chart.status === s.value ? "border-primary/50 bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground")}
         >
           {t(s.key)}
@@ -65,7 +65,7 @@
     <button
       type="button"
       disabled={busy}
-      onclick={() => run((k) => setStaffPick(k, chart.id, !chart.staff_pick), t("staff.saved"))}
+      onclick={() => run((k) => setStaffPick(k, chart.id, !chart.staff_pick), t("generic.saved"))}
       class={cn(pill, chart.staff_pick ? "border-amber-400/50 bg-amber-400/15 text-amber-600 dark:text-amber-300" : "text-muted-foreground hover:text-foreground")}
     >
       <RiStarFill class="size-3.5" />
@@ -77,7 +77,7 @@
       onsubmit={(e) => {
         e.preventDefault();
         const n = Number.parseFloat(constant);
-        if (!Number.isNaN(n)) run((k) => setChartConstant(k, chart.id, n), t("staff.saved"));
+        if (!Number.isNaN(n)) run((k) => setChartConstant(k, chart.id, n), t("generic.saved"));
       }}
     >
       <label class="space-y-1">
@@ -88,7 +88,7 @@
           class="bg-background focus-visible:ring-ring/50 h-8 w-20 rounded-full border px-3 text-xs tabular-nums outline-none focus-visible:ring-2"
         />
       </label>
-      <button type="submit" disabled={busy} class={cn(pill, "text-muted-foreground hover:text-foreground")}>{t("staff.save")}</button>
+      <button type="submit" disabled={busy} class={cn(pill, "text-muted-foreground hover:text-foreground")}>{t("generic.save")}</button>
     </form>
 
     <button
@@ -97,7 +97,7 @@
       class={cn(pill, "ml-auto border-rose-500/40 text-rose-500 hover:bg-rose-500/10")}
     >
       <RiDeleteBinLine class="size-3.5" />
-      {t("deleteChart.confirm")}
+      {t("generic.deleteChart")}
     </button>
   </div>
 

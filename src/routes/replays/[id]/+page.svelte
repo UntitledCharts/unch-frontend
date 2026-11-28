@@ -6,7 +6,9 @@
   import CoverArt from "$lib/components/cover-art.svelte";
   import LevelBadge from "$lib/components/level-badge.svelte";
   import FormattedText from "$lib/components/formatted-text.svelte";
+  import AccountBadges from "$lib/components/account-badges.svelte";
   import Seo from "$lib/components/seo.svelte";
+  import AdSlot from "$lib/components/ad-slot.svelte";
   import { cn } from "$lib/utils.js";
   import {
     coverUrl,
@@ -17,7 +19,7 @@
     relativeTime,
   } from "$lib/data/index.js";
   import { RiArrowLeftLine } from "$lib/icons.js";
-  import { sonolusOpenUrl } from "$lib/config.js";
+  import { sonolusOpenUrl, ogChartUrl } from "$lib/config.js";
 
   let { data } = $props();
   const chart = $derived(data.chart);
@@ -26,7 +28,7 @@
   const watchVia = $derived(t("replay.watchVia").split("{1}").map((s) => s.trim()));
 </script>
 
-<Seo title={t("replay.pageTitle", [chart.title])} image={`/og/level/UnCh-${chart.id}`} />
+<Seo title={t("replay.pageTitle", [chart.title])} metaTitle={`Replay of ${chart.title}`} image={ogChartUrl(chart.id)} />
 
 <SiteHeader />
 
@@ -81,24 +83,27 @@
     </div>
   </section>
 
+  <AdSlot />
+
   {#await data.score}
     <div class="bg-card h-48 animate-pulse rounded-3xl border"></div>
   {:then score}
     {#if score}
       <section class="bg-card space-y-5 rounded-3xl border p-5 sm:p-7">
         <div class="flex flex-wrap items-center justify-between gap-4">
-          <a href={`/creators/${score.account.sonolus_handle}`} class="group flex min-w-0 items-center gap-3">
+          <a href={`/users/${score.account.sonolus_handle}`} class="group flex min-w-0 items-center gap-3">
             <img src={profileUrl(score.account)} alt="" class="size-11 shrink-0 rounded-full object-cover" />
             <div class="min-w-0">
               <p class="text-muted-foreground text-xs">{t("replay.playedBy")}</p>
-              <p class="truncate font-semibold group-hover:underline">
-                {score.account.sonolus_username}
-                <span class="text-muted-foreground text-xs font-normal tabular-nums">#{score.account.sonolus_handle}</span>
+              <p class="flex min-w-0 items-center gap-1.5 font-semibold">
+                <span class="truncate group-hover:underline">{score.account.sonolus_username}</span>
+                <AccountBadges badges={score.account.badges} class="size-4" />
+                <span class="text-muted-foreground shrink-0 text-xs font-normal tabular-nums">#{score.account.sonolus_handle}</span>
               </p>
             </div>
           </a>
           <p class="text-muted-foreground text-sm">
-            <time datetime={score.created_at}>{t("replay.setOn", [relativeTime(score.created_at)])}</time>
+            <time datetime={score.created_at}>{t("replay.createdAt", [relativeTime(score.created_at)])}</time>
           </p>
         </div>
 

@@ -5,6 +5,7 @@
   import CoverArt from "./cover-art.svelte";
   import Sheet from "./sheet.svelte";
   import { session } from "$lib/state/session.svelte";
+  import { userPath } from "$lib/data/index.js";
   import {
     RiDashboardLine,
     RiNotification3Line,
@@ -12,15 +13,17 @@
     RiLogoutBoxRLine,
     RiLoginBoxLine,
     RiArrowDownSLine,
+    RiUser3Line,
   } from "$lib/icons.js";
 
   const user = $derived(session.user);
 
-  const menuItems = [
-    { get label() { return t("nav.dashboard"); }, href: "/dashboard", icon: RiDashboardLine },
-    { get label() { return t("notifications.title"); }, href: "/dashboard/notifications", icon: RiNotification3Line },
-    { get label() { return t("settings.title"); }, href: "/dashboard/settings", icon: RiSettings3Line },
-  ];
+  const menuItems = $derived([
+    ...(user ? [{ label: t("nav.myProfile"), href: userPath(user.handle), icon: RiUser3Line }] : []),
+    { label: t("generic.dashboard"), href: "/dashboard", icon: RiDashboardLine },
+    { label: t("generic.notifications"), href: "/dashboard/notifications", icon: RiNotification3Line },
+    { label: t("generic.settings"), href: "/dashboard/settings", icon: RiSettings3Line },
+  ]);
 
   let open = $state(false);
   let sheetOpen = $state(false);
@@ -116,7 +119,7 @@
       class="bg-popover/85 dropdown-content menu ring-foreground/10 z-50 mt-2 w-60 rounded-xl p-1.5 shadow-lg ring-1 backdrop-blur-2xl backdrop-saturate-150"
     >
       <li>
-        <a href={`/creators/${user.handle}`} onclick={close} class="!py-2">
+        <a href={`/users/${user.handle}`} onclick={close} class="!py-2">
           <CoverArt
             id={user.username}
             title={user.username}
@@ -126,7 +129,7 @@
           />
           <div class="min-w-0">
             <p class="text-foreground truncate text-sm font-semibold">{user.username}</p>
-            <p class="text-muted-foreground text-xs">{t("nav.viewProfile")}</p>
+            <p class="text-muted-foreground text-xs">{t("generic.viewProfile")}</p>
           </div>
         </a>
       </li>
@@ -150,7 +153,7 @@
   </button>
   <Sheet bind:open={sheetOpen}>
     <a
-      href={`/creators/${user.handle}`}
+      href={`/users/${user.handle}`}
       onclick={close}
       class="hover:bg-muted/60 mx-2 mt-2 flex items-center gap-3 rounded-xl px-2 py-2 transition-colors"
     >
@@ -163,7 +166,7 @@
       />
       <div class="min-w-0">
         <p class="font-semibold">{user.username}</p>
-        <p class="text-muted-foreground text-sm">{t("nav.viewProfile")}</p>
+        <p class="text-muted-foreground text-sm">{t("generic.viewProfile")}</p>
       </div>
     </a>
     <ul class="menu w-full gap-0.5 px-2 pb-[calc(1rem+env(safe-area-inset-bottom))] text-base">
@@ -173,6 +176,6 @@
 {:else}
   <Button size="sm" class="rounded-full" onclick={() => session.login()}>
     <RiLoginBoxLine class="size-4" />
-    {t("nav.login")}
+    {t("generic.logIn")}
   </Button>
 {/if}

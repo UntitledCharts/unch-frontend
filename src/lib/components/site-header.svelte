@@ -10,9 +10,9 @@
   import { session } from "$lib/state/session.svelte";
 
   const links = $derived([
-    { key: "nav.home", href: "/" },
-    { key: "nav.browse", href: "/browse" },
-    ...(session.isLoggedIn ? [{ key: "nav.dashboard", href: "/dashboard" }] : []),
+    { key: "generic.home", href: "/" },
+    { key: "generic.browse", href: "/browse" },
+    ...(session.isLoggedIn ? [{ key: "generic.dashboard", href: "/dashboard" }] : []),
   ]);
 
   function isActive(href: string) {

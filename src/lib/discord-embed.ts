@@ -19,7 +19,7 @@ function clean(value: string | null | undefined, max = 300): string {
     .replace(/[*_~`|\\[\]#]/g, "")
     .replace(/\s+\n/g, "\n")
     .trim();
-  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+  return text.length > max ? `${text.slice(0, max - 3)}...` : text;
 }
 
 // descriptions are often written one fact per line; joined with dots they still read once flattened
@@ -39,7 +39,7 @@ function absolute(url: string, origin: string) {
 // through /cdn on our own domain (see routes/cdn). Local files like /defpfp.webp already have one.
 function media(url: string | null, origin: string): string | null {
   if (!url) return null;
-  if (!url.startsWith(`${CDN_URL}/`)) return absolute(url, origin);
+  if (!CDN_URL || !url.startsWith(`${CDN_URL}/`)) return absolute(url, origin);
   const path = url.slice(CDN_URL.length + 1);
   return `${origin}/cdn/${path}${path.endsWith("_webp") ? ".webp" : ".png"}`;
 }
@@ -80,7 +80,7 @@ export function levelEmbed(chart: Chart, origin: string) {
 
 function buildLevelEmbed(chart: Chart, origin: string, descriptionLength: number) {
   const page = `${origin}/levels/UnCh-${chart.id}`;
-  const charter = `${origin}/creators/${chart.author_handle}`;
+  const charter = `${origin}/users/${chart.author_handle}`;
   const bpm = parseDescriptionMeta(chart.description).bpm;
   const description = descriptionLength > 0 ? oneLine(chart.description, descriptionLength) : "";
 
@@ -99,7 +99,7 @@ function buildLevelEmbed(chart: Chart, origin: string, descriptionLength: number
   ];
 
   return container(BLUE, [
-    ...thumbnailSection(heading, cover, "Cover"),
+    ...thumbnailSection(heading, cover, "Jacket"),
     description ? text(description) : null,
     { type: 14, divider: true, spacing: 1 },
     text(stats.join(" · ")),
@@ -107,8 +107,8 @@ function buildLevelEmbed(chart: Chart, origin: string, descriptionLength: number
       type: 1,
       components: [
         link("Open in Sonolus", sonolusOpenUrl(`levels/UnCh-${chart.id}`)),
-        link("View Chart", page),
-        link("View Charter Profile", charter),
+        link("View chart", page),
+        link("View charter profile", charter),
       ],
     },
   ]);
@@ -119,12 +119,12 @@ export function userEmbed(
   stats: { chartsPublished: number; likesReceived: number; commentsReceived: number } | null,
   origin: string,
 ) {
-  const page = `${origin}/creators/${account.sonolus_handle}`;
-  const role = account.admin ? " · Admin" : account.mod ? " · Moderator" : "";
+  const page = `${origin}/users/${account.sonolus_handle}`;
+  const role = account.admin ? " · Administrator" : account.mod ? " · Moderator" : "";
   const bio = oneLine(account.description, 220);
 
   return container(MIKU, [
-    account.banner_hash ? gallery([media(bannerUrl(account), origin)!, `${clean(account.sonolus_username, 60)}'s banner`]) : null,
+    account.banner ? gallery([media(bannerUrl(account), origin)!, `${clean(account.sonolus_username, 60)}'s banner`]) : null,
     ...thumbnailSection(
       [text(`**[${clean(account.sonolus_username, 60)}](${page})**`), text(`#${account.sonolus_handle}${role}`)],
       media(profileUrl(account), origin),
@@ -139,8 +139,8 @@ export function userEmbed(
     {
       type: 1,
       components: [
-        link("View Profile", page),
-        link("View Charts", `${origin}/browse?sonolus_handle_is=${account.sonolus_handle}`),
+        link("View profile", page),
+        link("Browse charts", `${origin}/browse?sonolus_handle_is=${account.sonolus_handle}`),
       ],
     },
   ]);

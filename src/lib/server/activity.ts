@@ -4,8 +4,8 @@ import {
   fetchAccountByHandle,
   type Account,
 } from "$lib/data/index.js";
-import { ogProfileUrl } from "$lib/server/og/render.js";
 import { levelStatusId, userStatusId } from "$lib/activity-id.js";
+import { ogAccountUrl, ogChartUrl } from "$lib/config.js";
 
 type Fetch = typeof fetch;
 
@@ -24,6 +24,10 @@ function escapeHtml(value: string): string {
 
 function plain(value: string | null | undefined): string {
   return (value ?? "").replace(/:([a-zA-Z0-9_]+):/g, "").trim();
+}
+
+function avatarUrl(account: Account | null, origin: string): string {
+  return account?.avatar?.url ?? `${origin}/defpfp.png`;
 }
 
 function paragraphs(value: string): string {
@@ -130,17 +134,17 @@ export async function buildStatus(fetchFn: Fetch, ref: StatusRef, origin: string
         userStatusId(chart.author_handle) ?? "0",
         plain(chart.chart_design) || plain(author?.sonolus_username) || "UntitledCharts",
         String(chart.author_handle),
-        ogProfileUrl(chart.author, author?.profile_hash ?? null, origin),
+        avatarUrl(author, origin),
         page,
       ),
-      image: `${origin}/og/level/UnCh-${chart.id}`,
+      image: ogChartUrl(chart.id),
     });
   }
 
   const result = await fetchAccountByHandle(fetchFn, ref.handle);
   if (!result) return null;
   const { account: acc, charts } = result;
-  const page = `${origin}/creators/${acc.sonolus_handle}`;
+  const page = `${origin}/users/${acc.sonolus_handle}`;
   const bio = plain(acc.description);
   const role = acc.admin ? "Admin" : acc.mod ? "Moderator" : "";
   const latest = charts.map((c) => c.published_at).sort().at(-1);
@@ -154,9 +158,9 @@ export async function buildStatus(fetchFn: Fetch, ref: StatusRef, origin: string
       userStatusId(acc.sonolus_handle) ?? "0",
       plain(acc.sonolus_username) || String(acc.sonolus_handle),
       String(acc.sonolus_handle),
-      ogProfileUrl(acc.sonolus_id, acc.profile_hash, origin),
+      avatarUrl(acc, origin),
       page,
     ),
-    image: `${origin}/og/user/${acc.sonolus_handle}`,
+    image: ogAccountUrl(acc.sonolus_id),
   });
 }

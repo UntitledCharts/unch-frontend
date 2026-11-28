@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Seo from "$lib/components/seo.svelte";
   import { t } from "$lib/i18n.svelte.js";
   import { cn } from "$lib/utils.js";
   import { page } from "$app/state";
@@ -8,7 +9,7 @@
   import Button from "$lib/components/button.svelte";
   import CoverArt from "$lib/components/cover-art.svelte";
   import { session } from "$lib/state/session.svelte";
-  import { API_URL } from "$lib/data/index.js";
+  import { API_URL, apiFetch, bearer, jsonBody, readError } from "$lib/data/index.js";
   import { RiErrorWarningLine, RiLoginBoxLine } from "$lib/icons.js";
 
   type Scope = { scope: string; description?: string };
@@ -41,19 +42,27 @@
     const codeChallenge = params.get("code_challenge");
     if (codeChallenge) query.set("code_challenge", codeChallenge);
     try {
-      const res = await fetch(`${API_URL}/api/oauth/authorize/?${query}`, {
-        headers: { Authorization: key },
-      });
-      const data = await res.json();
+      const res = await apiFetch(fetch, `${API_URL}/v1/oauth/authorize?${query}`, { headers: bearer(key) });
       if (!res.ok) {
-        error = data.message || t("oauth.invalidRequest");
+        const failure = await readError(res);
+        error = failure.code ? failure.error : t("oauth.invalidRequest");
         return;
       }
-      app = data;
+      app = await res.json();
     } catch {
       error = t("oauth.connectionFailed");
     }
   }
+
+  // the app name sits inside the sentence in bold, so the text is split around its placeholder
+  const trustParts = $derived(t("oauth.trustConfirm").split("{1}"));
+  const redirectHost = $derived.by(() => {
+    try {
+      return new URL(app?.redirect_uri ?? "").host || (app?.redirect_uri ?? "");
+    } catch {
+      return app?.redirect_uri ?? "";
+    }
+  });
 
   let trustError = $state(false);
   let trustBox = $state<HTMLInputElement | null>(null);
@@ -82,16 +91,15 @@
       body.code_challenge_method = params.get("code_challenge_method") || "S256";
     }
     try {
-      const res = await fetch(`${API_URL}/api/oauth/authorize/`, {
+      const json = jsonBody(body);
+      const res = await apiFetch(fetch, `${API_URL}/v1/oauth/authorize`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: key },
-        body: JSON.stringify(body),
+        headers: { ...json.headers, ...bearer(key) },
+        body: json.body,
       });
-      const data = await res.json().catch(() => ({}) as Record<string, unknown>);
-      const message = typeof data.message === "string" ? data.message : "";
-      const alreadyAuthorized = !res.ok && /already/i.test(message);
       submitting = false;
-      if (res.ok || alreadyAuthorized) {
+      if (res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { redirect_uri?: unknown };
         authorized = true;
         if (typeof data.redirect_uri === "string" && data.redirect_uri) {
           window.location.href = data.redirect_uri;
@@ -100,7 +108,8 @@
         setTimeout(() => goto("/dashboard/settings"), 22000);
         return;
       }
-      error = message || t("oauth.authorizeFailedStatus", [res.status]);
+      const failure = await readError(res);
+      error = failure.code ? failure.error : t("oauth.authorizeFailedStatus", [res.status]);
     } catch {
       error = t("oauth.connectionFailed");
       submitting = false;
@@ -138,9 +147,7 @@
   });
 </script>
 
-<svelte:head>
-  <title>{t("oauth.authorizeAppUntitledcharts")}</title>
-</svelte:head>
+<Seo title={t("oauth.title")} metaTitle="Authorize App" />
 
 <SiteHeader />
 
@@ -157,9 +164,6 @@
         <h1 class="font-heading mt-2 text-xl font-bold tracking-tight">{t("oauth.signInToContinue")}</h1>
       </div>
       <div class="space-y-4 px-6 py-5">
-        <p class="text-muted-foreground text-sm">
-          {t("oauth.logInWithSonolusTo")}
-        </p>
         <Button onclick={() => session.login()} disabled={session.pending} class="w-full rounded-lg">
           <RiLoginBoxLine class="size-4" />
           {session.pending ? t("login.waitingForConfirmation") : t("login.logInWithSonolus")}
@@ -182,8 +186,11 @@
       <div class="px-6 py-6 sm:px-7">
         <h1 class="font-heading text-2xl leading-tight font-bold tracking-tight">{app.name}</h1>
         <p class="text-muted-foreground mt-1 text-sm">
-          {t("oauth.wantsToConnectToYour")}
+          {t("oauth.wantsAccess")}
         </p>
+        {#if app.description}
+          <p class="mt-3 text-sm wrap-break-word">{app.description}</p>
+        {/if}
 
         <div class="mt-4 inline-flex items-center gap-2 rounded-full border py-1 pr-3 pl-1">
           <CoverArt
@@ -199,7 +206,7 @@
       </div>
 
       <div class="border-t px-6 py-5 sm:px-7">
-        <h2 class="text-sm font-semibold">{t("oauth.whatWillBeAbleTo", [app.name])}</h2>
+        <h2 class="text-sm font-semibold">{t("oauth.accessRequestedBy", [app.name])}</h2>
         <ul class="divide-border/60 mt-1 divide-y">
           {#each app.scopes as s (s.scope)}
             <li class="flex gap-3 py-3">
@@ -214,6 +221,9 @@
         <p class="text-muted-foreground mt-4 text-xs">
           {t("oauth.revokeNotice")}
         </p>
+        <p class="text-muted-foreground mt-1 text-xs wrap-break-word">
+          {t("oauth.redirectNotice", [redirectHost])}
+        </p>
       </div>
 
       <div class="bg-muted/30 space-y-4 border-t px-6 py-5 sm:px-7">
@@ -225,7 +235,7 @@
 
         {#if trustError && !confirmed}
           <p id="trust-error" class="text-sm font-medium text-rose-600 dark:text-rose-400">
-            <span class="sr-only">{t("common.error")}:</span>
+            <span class="sr-only">{t("generic.error")}:</span>
             {t("oauth.trustRequired", [app.name])}
           </p>
         {/if}
@@ -240,25 +250,25 @@
             class="checkbox checkbox-primary checkbox-sm mt-0.5"
           />
           <span class="text-muted-foreground text-sm">
-            {t("oauth.iTrust")} <span class="text-foreground font-medium">{app.name}</span> {t("oauth.andGrantItTheAccess")}
+            {trustParts[0]}<span class="text-foreground font-medium">{app.name}</span>{trustParts[1]}
           </span>
         </label>
         <div class="flex gap-3">
           <Button onclick={deny} variant="ghost" disabled={submitting || authorized} class="flex-1 rounded-lg">
-            {t("oauth.deny")}
+            {t("generic.deny")}
           </Button>
           <Button
             onclick={authorize}
             disabled={submitting || authorized}
             class="flex-[1.4] rounded-lg"
           >
-            {authorized ? t("oauth.authorized") : submitting ? t("oauth.authorizing") : t("oauth.authorizeAccess")}
+            {authorized ? t("generic.authorized") : submitting ? t("generic.authorizing") : t("generic.authorize")}
           </Button>
         </div>
 
         {#if showRedirectNote}
           <p class="text-muted-foreground text-center text-xs">
-            {t("oauth.redirectingToSettingsIn20")}
+            {t("oauth.redirectingToSettings")}
           </p>
         {/if}
       </div>

@@ -1,12 +1,19 @@
 <script lang="ts">
   import { t } from "$lib/i18n.svelte.js";
-  import { RiGithubFill, RiDiscordFill } from "$lib/icons.js";
+  import { RiGithubFill, RiDiscordFill, RiTiktokFill, RiYoutubeFill } from "$lib/icons.js";
   import LanguageSelect from "$lib/components/language-select.svelte";
   import { sonolusOpenUrl } from "$lib/config.js";
 
+  const socials = [
+    { label: "Discord", href: "https://discord.com/invite/mH3xWPPdEY", icon: RiDiscordFill },
+    { label: "TikTok", href: "https://www.tiktok.com/@untitledcharts", icon: RiTiktokFill },
+    { label: "YouTube", href: "https://www.youtube.com/@UntitledCharts", icon: RiYoutubeFill },
+    { label: "GitHub", href: "https://github.com/UntitledCharts", icon: RiGithubFill },
+  ];
+
   const groups = [
     {
-      heading: "footer.browse",
+      heading: "generic.browse",
       links: [
         { label: "footer.allCharts", href: "/browse" },
       ],
@@ -81,29 +88,23 @@
   </div>
 
   <div
-    class="border-border/60 text-muted-foreground mx-auto flex max-w-7xl items-center justify-between gap-4 border-t px-4 py-4 text-[11px] sm:px-6"
+    class="border-border/60 text-muted-foreground mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t px-4 py-4 text-[11px] sm:px-6"
   >
     <span>{t("footer.copyright", [new Date().getFullYear()])}</span>
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2">
       <LanguageSelect up class="w-44" />
-      <a
-        href="https://discord.com/invite/untitledcharts"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Discord"
-        class="hover:text-foreground inline-flex size-7 items-center justify-center rounded-full transition-colors"
-      >
-        <RiDiscordFill class="size-4" />
-      </a>
-      <a
-        href="https://github.com/UntitledCharts"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="GitHub"
-        class="hover:text-foreground inline-flex size-7 items-center justify-center rounded-full transition-colors"
-      >
-        <RiGithubFill class="size-4" />
-      </a>
+      {#each socials as social (social.href)}
+        {@const Icon = social.icon}
+        <a
+          href={social.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={social.label}
+          class="hover:text-foreground inline-flex size-7 items-center justify-center rounded-full transition-colors"
+        >
+          <Icon class="size-4" />
+        </a>
+      {/each}
     </div>
   </div>
 </footer>

@@ -1,5 +1,6 @@
 <script lang="ts">
   import GradeLabel from "./grade-label.svelte";
+  import AccountBadges from "./account-badges.svelte";
   import { t } from "$lib/i18n.svelte.js";
   import type { ScoreEntry, LeaderboardType } from "$lib/data/index.js";
   import { grouped, leaderboardMeta, formatAccuracy, profileUrl, relativeTime, replayName } from "$lib/data/index.js";
@@ -104,10 +105,11 @@
             <span class="font-heading">#1</span>
             {t("leaderboard.topScore")}
           </p>
-          <a href={`/creators/${top.account.sonolus_handle}`} class="block truncate font-bold hover:underline">
-            {top.account.sonolus_username}
-            {#if isMine(top)}<span class="bg-primary text-primary-foreground ml-1 rounded px-1.5 text-[10px] font-bold">{t("leaderboard.you")}</span>{/if}
-          </a>
+          <div class="flex min-w-0 items-center gap-1.5">
+            <a href={`/users/${top.account.sonolus_handle}`} class="truncate font-bold hover:underline">{top.account.sonolus_username}</a>
+            <AccountBadges badges={top.account.badges} class="size-4" />
+            {#if isMine(top)}<span class="bg-primary text-primary-foreground shrink-0 rounded px-1.5 text-[10px] font-bold">{t("leaderboard.you")}</span>{/if}
+          </div>
           <p class="text-muted-foreground truncate text-xs">#{top.account.sonolus_handle} · {relativeTime(top.created_at)}</p>
         </div>
         {#if replayHref(top)}
@@ -160,9 +162,10 @@
 
           <div class="min-w-0 flex-1">
             <div class="flex min-w-0 items-center gap-1.5">
-              <a href={`/creators/${e.account.sonolus_handle}`} class="truncate text-sm font-bold hover:underline"
+              <a href={`/users/${e.account.sonolus_handle}`} class="truncate text-sm font-bold hover:underline"
                 >{e.account.sonolus_username}</a
               >
+              <AccountBadges badges={e.account.badges} class="size-4" />
               <span class="text-muted-foreground hidden shrink-0 text-xs tabular-nums xl:inline">#{e.account.sonolus_handle}</span>
               {#if isMine(e)}
                 <span class="bg-primary text-primary-foreground shrink-0 rounded px-1.5 text-[10px] font-bold">{t("leaderboard.you")}</span>

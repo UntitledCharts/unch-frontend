@@ -1,28 +1,14 @@
 <script lang="ts">
+  import Seo from "$lib/components/seo.svelte";
   import { t } from "$lib/i18n.svelte.js";
   import LanguageSelect from "$lib/components/language-select.svelte";
-  import { prefs, setPref, loadPrefs, clampPageSize, DEFAULT_PAGE_SIZE, PAGE_SIZE_MIN, PAGE_SIZE_MAX, type DashboardCardStyle, type DashboardPaging } from "$lib/state/preferences.svelte.js";
+  import { prefs, setPref, loadPrefs, type DashboardCardStyle } from "$lib/state/preferences.svelte.js";
   import { onMount } from "svelte";
 
-  const pagingOptions: { value: DashboardPaging; label: string }[] = [
-    { value: "pages", get label() { return t("settings.pagingPages"); } },
-    { value: "infinite", get label() { return t("settings.pagingInfinite"); } },
-  ];
-  // the typed value stays as typed until it's committed (blur or Enter), then it's clamped and saved
-  let sizeDraft = $state("");
-  $effect(() => {
-    sizeDraft = String(prefs.dashboardPageSize);
-  });
-  function commitSize() {
-    const n = Number.parseInt(sizeDraft, 10);
-    const size = Number.isNaN(n) ? prefs.dashboardPageSize : clampPageSize(n);
-    setPref("dashboardPageSize", size);
-    sizeDraft = String(size);
-  }
   const cardStyles: { value: DashboardCardStyle; label: string }[] = [
     { value: "simple", get label() { return t("settings.cardSimple"); } },
-    { value: "background", get label() { return t("settings.cardBackground"); } },
-    { value: "cover", get label() { return t("settings.cardCoverOnly"); } },
+    { value: "background", get label() { return t("settings.background"); } },
+    { value: "cover", get label() { return t("settings.cardJacketOnly"); } },
   ];
   let prefsMounted = $state(false);
   onMount(() => {
@@ -33,18 +19,29 @@
   import CoverArt from "$lib/components/cover-art.svelte";
   import Modal from "$lib/components/modal.svelte";
   import ImageCropper from "$lib/components/image-cropper.svelte";
+  import UploadDialog from "$lib/components/upload-dialog.svelte";
   import EmojiTextarea from "$lib/components/emoji-textarea.svelte";
   import LevelBadge from "$lib/components/level-badge.svelte";
   import AuthorizedApps from "$lib/components/authorized-apps.svelte";
   import { session } from "$lib/state/session.svelte";
-  import { uploadProfileImage, uploadBanner, updateAccount } from "$lib/data/index.js";
+  import {
+    uploadProfileImage,
+    uploadBanner,
+    removeProfileImage,
+    removeBanner,
+    updateAccount,
+    DEFAULT_AVATAR,
+  } from "$lib/data/index.js";
+  import { DEFAULT_LIMITS, fetchLimits } from "$lib/data/limits.js";
+  import { formatBytes, formFailure } from "$lib/data/uploads.js";
   import { cn } from "$lib/utils.js";
   import { setMode, userPrefersMode } from "mode-watcher";
   import { accents, setAccent, resetAccent, storedAccentName } from "$lib/state/accent.js";
+  import { siteAssets } from "$lib/state/site-assets.svelte.js";
   import {
     RiArrowLeftLine,
     RiImageEditLine,
-    RiImageAddLine,
+    RiDeleteBinLine,
     RiCheckLine,
     RiHeart3Fill,
   } from "$lib/icons.js";
@@ -52,9 +49,9 @@
   const user = $derived(session.user);
 
   const modes = [
-    { value: "light", get label() { return t("header.light"); } },
-    { value: "dark", get label() { return t("header.dark"); } },
-    { value: "system", get label() { return t("header.system"); } },
+    { value: "light", get label() { return t("settings.themeLight"); } },
+    { value: "dark", get label() { return t("settings.themeDark"); } },
+    { value: "system", get label() { return t("settings.themeSystem"); } },
   ] as const;
 
   let activeAccent = $state("Violet");
@@ -87,11 +84,17 @@
   let pfpPreview = $state<string | null>(null);
   let bannerPreview = $state<string | null>(null);
 
+  let pickerOpen = $state(false);
   let cropOpen = $state(false);
   let cropType = $state<"pfp" | "banner">("pfp");
   let cropImage = $state<string | null>(null);
-  let dragOver = $state(false);
-  let fileInput = $state<HTMLInputElement>();
+  let cropError = $state<string | null>(null);
+
+  let limits = $state(DEFAULT_LIMITS);
+  onMount(() => {
+    fetchLimits().then((l) => (limits = l));
+  });
+  const cropLimit = $derived(cropType === "pfp" ? limits.files.avatar : limits.files.banner);
 
   let saving = $state(false);
   let justSaved = $state(false);
@@ -99,65 +102,105 @@
 
   function openPicker(type: "pfp" | "banner") {
     cropType = type;
-    cropImage = null;
+    pickerOpen = true;
+  }
+
+  function startCrop(file: File) {
+    if (cropImage) URL.revokeObjectURL(cropImage);
+    cropImage = URL.createObjectURL(file);
+    cropError = null;
     cropOpen = true;
   }
 
-  function useFile(f: File | undefined | null) {
-    if (f && f.type.startsWith("image/")) cropImage = URL.createObjectURL(f);
-  }
-  function onSelect(e: Event) {
-    const input = e.target as HTMLInputElement;
-    useFile(input.files?.[0]);
-    input.value = "";
-  }
-  function onDrop(e: DragEvent) {
-    e.preventDefault();
-    dragOver = false;
-    useFile(e.dataTransfer?.files?.[0]);
-  }
-
   function onCropApply(file: File) {
+    if (file.size > cropLimit) {
+      cropError = t("settings.cropTooLarge", [formatBytes(cropLimit)]);
+      return;
+    }
     if (cropType === "pfp") {
+      if (pfpPreview) URL.revokeObjectURL(pfpPreview);
       pfpFile = file;
       pfpPreview = URL.createObjectURL(file);
     } else {
+      if (bannerPreview) URL.revokeObjectURL(bannerPreview);
       bannerFile = file;
       bannerPreview = URL.createObjectURL(file);
     }
     cropOpen = false;
-    cropImage = null;
+  }
+
+  // what's saved on the account; a picked image that isn't saved yet is only discarded
+  const hasAvatar = $derived(!!user?.avatar && user.avatar !== DEFAULT_AVATAR);
+  const hasBanner = $derived(!!user?.banner && user.banner !== siteAssets.banner);
+
+  let removeOpen = $state(false);
+  let removeType = $state<"pfp" | "banner">("pfp");
+  let removing = $state(false);
+  let removeError = $state<string | null>(null);
+
+  function discard(type: "pfp" | "banner") {
+    if (type === "pfp") {
+      if (pfpPreview) URL.revokeObjectURL(pfpPreview);
+      pfpFile = null;
+      pfpPreview = null;
+    } else {
+      if (bannerPreview) URL.revokeObjectURL(bannerPreview);
+      bannerFile = null;
+      bannerPreview = null;
+    }
+  }
+
+  function askRemove(type: "pfp" | "banner") {
+    if (!(type === "pfp" ? hasAvatar : hasBanner)) return discard(type);
+    removeType = type;
+    removeError = null;
+    removeOpen = true;
+  }
+
+  async function confirmRemove() {
+    const key = session.sessionKey;
+    if (!key) return;
+    removing = true;
+    removeError = null;
+    const res = await (removeType === "pfp" ? removeProfileImage(key) : removeBanner(key));
+    removing = false;
+    if (!res.ok) {
+      removeError = t("settings.removeFailed");
+      return;
+    }
+    discard(removeType);
+    removeOpen = false;
+    await session.init();
   }
 
   async function save() {
     const key = session.sessionKey;
-    const id = user?.sonolus_id;
-    if (!key || !id) {
-      errorMsg = t("settings.loginRequired");
+    if (!key || !user) {
+      errorMsg = t("error.unauthorizedBody");
       return;
     }
     saving = true;
     errorMsg = null;
-    let profile_hash: string | undefined;
-    let banner_hash: string | undefined;
+    let failure: string | null = null;
     if (pfpFile) {
-      const h = await uploadProfileImage(key, id, pfpFile);
-      if (h) profile_hash = h;
+      const res = await uploadProfileImage(key, pfpFile);
+      if (res.ok) pfpFile = null;
+      else failure ??= formFailure(res, { kind: "avatar" });
     }
     if (bannerFile) {
-      const h = await uploadBanner(key, id, bannerFile);
-      if (h) banner_hash = h;
+      const res = await uploadBanner(key, bannerFile);
+      if (res.ok) bannerFile = null;
+      else failure ??= formFailure(res, { kind: "banner" });
     }
-    const ok = await updateAccount(key, id, { description: description.trim(), profile_hash, banner_hash });
+    const res = await updateAccount(key, { description: description.trim() });
+    if (!res.ok) failure ??= formFailure(res);
     saving = false;
-    if (ok) {
-      pfpFile = null;
-      bannerFile = null;
-      justSaved = true;
-      session.init();
-      setTimeout(() => (justSaved = false), 1800);
+    session.init();
+    if (failure) {
+      errorMsg = failure;
     } else {
-      errorMsg = t("settings.saveFailed");
+      justSaved = true;
+      setTimeout(() => (justSaved = false), 1800);
     }
   }
 
@@ -166,9 +209,7 @@
   const dirty = $derived(!!pfpFile || !!bannerFile || (user ? description.trim() !== (user.description ?? "") : false));
 </script>
 
-<svelte:head>
-  <title>{t("settings.settingsUntitledcharts")}</title>
-</svelte:head>
+<Seo title={t("generic.settings")} metaTitle="Settings" />
 
 <main class="mx-auto max-w-3xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
   {#if session.isLoggedIn}
@@ -179,35 +220,47 @@
     <RiArrowLeftLine
       class="size-4 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none"
     />
-    {t("nav.dashboard")}
+    {t("generic.dashboard")}
   </a>
   {/if}
 
   <header class="space-y-1">
-    <h1 class="font-heading text-2xl font-bold tracking-tight">{t("settings.title")}</h1>
+    <h1 class="font-heading text-2xl font-bold tracking-tight">{t("generic.settings")}</h1>
     <p class="text-muted-foreground text-sm">{t("settings.subtitle")}</p>
   </header>
 
   {#if session.isLoggedIn}
-  <section class="bg-card ring-border/70 rounded-2xl border ring-1">
+  <section id="profile" class="bg-card ring-border/70 scroll-mt-24 rounded-2xl border ring-1">
     <div class="relative overflow-hidden rounded-t-2xl">
       {#if bannerSrc}
         <div class="h-28 bg-cover bg-center sm:h-36" style={`background-image:url(${bannerSrc})`}></div>
       {:else}
         <div class="from-primary/25 to-card h-28 bg-linear-to-br sm:h-36"></div>
       {/if}
-      <button
-        type="button"
-        onclick={() => openPicker("banner")}
-        class="bg-background/70 hover:bg-background absolute top-3 right-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium shadow-sm backdrop-blur transition-colors"
-      >
-        <RiImageEditLine class="size-4" /> {t("settings.changeBackground")}
-      </button>
+      <div class="absolute top-3 right-3 flex flex-wrap justify-end gap-2">
+        {#if hasBanner || bannerFile}
+          <button
+            type="button"
+            onclick={() => askRemove("banner")}
+            class="bg-background/70 hover:bg-background inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium text-rose-600 shadow-sm backdrop-blur transition-colors dark:text-rose-400"
+          >
+            <RiDeleteBinLine class="size-4" />
+            <span class="sr-only sm:not-sr-only">{t("settings.removeBackground")}</span>
+          </button>
+        {/if}
+        <button
+          type="button"
+          onclick={() => openPicker("banner")}
+          class="bg-background/70 hover:bg-background inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium shadow-sm backdrop-blur transition-colors"
+        >
+          <RiImageEditLine class="size-4" /> {t("settings.changeBackground")}
+        </button>
+      </div>
     </div>
 
     <div class="px-5 pb-5">
-      <div class="-mt-10 w-fit">
-        <div class="relative">
+      <div class="-mt-10 flex items-end gap-3">
+        <div class="relative w-fit">
           <CoverArt
             id={user?.username ?? "guest"}
             title={user?.username ?? "?"}
@@ -224,6 +277,15 @@
             <RiImageEditLine class="size-4" />
           </button>
         </div>
+        {#if hasAvatar || pfpFile}
+          <button
+            type="button"
+            onclick={() => askRemove("pfp")}
+            class="hover:bg-muted mb-0.5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium text-rose-600 transition-colors dark:text-rose-400"
+          >
+            <RiDeleteBinLine class="size-4" /> {t("settings.removeProfilePicture")}
+          </button>
+        {/if}
       </div>
 
       <div class="mt-3 min-w-0">
@@ -232,12 +294,12 @@
       </div>
 
       <div class="mt-5 space-y-1.5">
-        <span class="text-muted-foreground text-xs font-medium">{t("levelDetail.description")}</span>
+        <span class="text-muted-foreground text-xs font-medium">{t("generic.description")}</span>
         <EmojiTextarea
           bind:value={description}
           rows={4}
           maxlength={2000}
-          placeholder={t("settings.tellPeopleAboutYourCharts")}
+          placeholder={t("settings.bioPlaceholder")}
           class="bg-card focus-visible:ring-ring/50 w-full rounded-xl border px-3 py-2.5 text-sm outline-none focus-visible:ring-2"
         />
         <span class="text-muted-foreground block text-right text-[11px] tabular-nums">{description.length}/2000</span>
@@ -255,7 +317,7 @@
             justSaved && "!border-emerald-500 !bg-emerald-500 !text-white",
           )}
         >
-          {saving ? t("edit.saving") : justSaved ? t("settings.saved") : t("edit.saveChanges")}
+          {saving ? t("generic.saving") : justSaved ? t("generic.saved") : t("generic.saveChanges")}
         </Button>
       </div>
     </div>
@@ -263,14 +325,13 @@
   {:else if !session.loading}
     <section class="bg-card ring-border/70 flex flex-col items-start gap-3 rounded-2xl border p-5 ring-1 sm:flex-row sm:items-center sm:justify-between">
       <p class="text-muted-foreground text-sm">{t("settings.accountSignedOut")}</p>
-      <Button size="sm" class="shrink-0 rounded-full" onclick={() => session.login()}>{t("nav.login")}</Button>
+      <Button size="sm" class="shrink-0 rounded-full" onclick={() => session.login()}>{t("generic.logIn")}</Button>
     </section>
   {/if}
 
   <section class="bg-card ring-border/70 space-y-3 rounded-2xl border p-5 ring-1">
     <div class="space-y-0.5">
       <h2 class="font-semibold">{t("settings.appearance")}</h2>
-      <p class="text-muted-foreground text-sm">{t("settings.appearanceHint")}</p>
     </div>
     <div class="bg-muted/50 inline-flex items-center rounded-xl border p-1">
       {#each modes as m (m.value)}
@@ -315,57 +376,11 @@
       {/each}
     </div>
 
-    <div class="space-y-0.5 pt-2">
-      <h3 class="text-sm font-semibold">{t("settings.dashboardPaging")}</h3>
-      <p class="text-muted-foreground text-sm">{t("settings.dashboardPagingHint")}</p>
-    </div>
-    <div class="bg-muted/50 inline-flex flex-wrap items-center rounded-xl border p-1" role="radiogroup" aria-label={t("settings.dashboardPaging")}>
-      {#each pagingOptions as o (o.value)}
-        {@const active = prefsMounted && prefs.dashboardPaging === o.value}
-        <button
-          type="button"
-          role="radio"
-          aria-checked={active}
-          onclick={() => setPref("dashboardPaging", o.value)}
-          class={cn(
-            "rounded-lg px-4 py-1.5 text-sm font-medium transition-colors",
-            active ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
-          )}
-        >
-          {o.label}
-        </button>
-      {/each}
-    </div>
-    {#if prefsMounted && prefs.dashboardPaging === "pages"}
-      <div class="flex flex-wrap items-center gap-2">
-        <label for="page-size" class="text-sm">{t("settings.cardsPerPage")}</label>
-        <input
-          id="page-size"
-          type="number"
-          inputmode="numeric"
-          min={PAGE_SIZE_MIN}
-          max={PAGE_SIZE_MAX}
-          bind:value={sizeDraft}
-          onblur={commitSize}
-          onkeydown={(e) => e.key === "Enter" && commitSize()}
-          class="bg-background focus-visible:ring-ring/50 h-9 w-20 rounded-lg border px-3 text-sm tabular-nums outline-none focus-visible:ring-2"
-        />
-        {#if prefs.dashboardPageSize !== DEFAULT_PAGE_SIZE}
-          <button
-            type="button"
-            onclick={() => setPref("dashboardPageSize", DEFAULT_PAGE_SIZE)}
-            class="text-muted-foreground hover:text-foreground hover:bg-muted h-9 rounded-lg px-3 text-sm transition-colors"
-          >
-            {t("settings.resetTo", [String(DEFAULT_PAGE_SIZE)])}
-          </button>
-        {/if}
-      </div>
-    {/if}
   </section>
 
   <section class="bg-card ring-border/70 space-y-3 rounded-2xl border p-5 ring-1">
     <div class="space-y-0.5">
-      <h2 class="font-semibold">{t("settings.language")}</h2>
+      <h2 class="font-semibold">{t("generic.language")}</h2>
       <p class="text-muted-foreground text-sm">{t("settings.languageHint")}</p>
     </div>
     <LanguageSelect class="w-full sm:w-72" />
@@ -400,7 +415,7 @@
         onclick={clearAccent}
         class="text-muted-foreground hover:text-foreground text-sm underline underline-offset-2"
       >
-        {t("settings.reset")}
+        {t("generic.reset")}
       </button>
     </div>
 
@@ -412,8 +427,6 @@
         {t("settings.accentLink")}
       </span>
     </div>
-
-    <p class="text-muted-foreground text-xs">{t("settings.accentChangesApplyLiveBut")}</p>
   </section>
 
   {#if session.isLoggedIn}
@@ -421,46 +434,64 @@
   {/if}
 </main>
 
+<UploadDialog
+  bind:open={pickerOpen}
+  kind={cropType === "pfp" ? "avatar" : "banner"}
+  label={cropType === "pfp" ? t("settings.profilePicture") : t("settings.background")}
+  limit={cropType === "pfp" ? limits.files.avatar : limits.files.banner}
+  paste
+  confirmLabel={t("generic.next")}
+  onconfirm={startCrop}
+/>
+
 <Modal bind:open={cropOpen}>
   <div class="p-1">
     <h2 class="mb-3 text-base font-semibold">
       {cropType === "pfp" ? t("settings.profilePicture") : t("settings.background")}
     </h2>
 
-    <input
-      bind:this={fileInput}
-      type="file"
-      accept="image/png,image/jpeg,image/webp"
-      onchange={onSelect}
-      class="hidden"
-    />
-
     {#if cropImage}
-      <ImageCropper
-        image={cropImage}
-        aspect={cropType === "pfp" ? 1 : 3}
-        round={false}
-        onapply={onCropApply}
-        oncancel={() => (cropOpen = false)}
-      />
-    {:else}
-      <button
-        type="button"
-        onclick={() => fileInput?.click()}
-        ondragover={(e) => {
-          e.preventDefault();
-          dragOver = true;
-        }}
-        ondragleave={() => (dragOver = false)}
-        ondrop={onDrop}
-        class={`flex min-h-44 w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition-colors ${dragOver ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-foreground/30"}`}
-      >
-        <RiImageAddLine class="size-9 opacity-70" />
-        <span class="text-sm font-medium">{t("settings.dropAnImageHereOr")}</span>
-        <span class="text-xs opacity-70">
-          {t("settings.pngJpegOrWebp", [cropType === "pfp" ? t("settings.aspectSquare") : t("settings.aspectWide")])}
-        </span>
-      </button>
+      {#key cropImage}
+        <ImageCropper
+          image={cropImage}
+          aspect={cropType === "pfp" ? 1 : 3}
+          round={false}
+          onapply={onCropApply}
+          oncancel={() => (cropOpen = false)}
+        />
+      {/key}
     {/if}
+    {#if cropError}<p role="alert" class="mt-3 text-sm text-rose-500">{cropError}</p>{/if}
+  </div>
+</Modal>
+
+<Modal bind:open={removeOpen}>
+  <div role="alertdialog" aria-labelledby="remove-image-title" aria-describedby="remove-image-body" class="space-y-4 p-1">
+    <div class="flex gap-3">
+      <span class="grid size-10 shrink-0 place-items-center rounded-full bg-rose-500/15 text-rose-500">
+        <RiDeleteBinLine class="size-5" />
+      </span>
+      <div class="space-y-1.5">
+        <h2 id="remove-image-title" class="text-lg font-semibold">
+          {removeType === "pfp" ? t("settings.removeProfilePictureTitle") : t("settings.removeBackgroundTitle")}
+        </h2>
+        <p id="remove-image-body" class="text-muted-foreground text-sm">{t("settings.removeImageBody")}</p>
+      </div>
+    </div>
+    {#if removeError}<p role="alert" class="text-sm text-rose-500">{removeError}</p>{/if}
+    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      <Button variant="outline" type="button" class="rounded-full" onclick={() => (removeOpen = false)}>
+        {t("generic.cancel")}
+      </Button>
+      <Button
+        type="button"
+        disabled={removing}
+        onclick={confirmRemove}
+        class="rounded-full border-rose-600 bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-40"
+      >
+        <RiDeleteBinLine class="size-4" />
+        {removing ? t("generic.removing") : t("generic.remove")}
+      </Button>
+    </div>
   </div>
 </Modal>

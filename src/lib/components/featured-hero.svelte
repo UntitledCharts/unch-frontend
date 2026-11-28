@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { t } from "$lib/i18n.svelte.js";
+  import { segments, t } from "$lib/i18n.svelte.js";
   import type { Chart } from "$lib/data/index.js";
   import { compact, coverUrl } from "$lib/data/index.js";
+  import { hoverCard } from "$lib/state/author-card.svelte.js";
   import CoverArt from "./cover-art.svelte";
   import LevelBadge from "./level-badge.svelte";
   import FormattedText from "./formatted-text.svelte";
@@ -94,9 +95,9 @@
               <div class="flex min-w-0 flex-1 flex-col gap-3.5">
                 <div class="flex flex-wrap items-center gap-2">
                   <span
-                    class="inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-400/15 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-amber-700 dark:text-amber-300"
+                    class="inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-400/15 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-amber-700 uppercase dark:text-amber-300"
                   >
-                    <RiStarFill class="size-3" /> {t("hero.staffPick")}
+                    <RiStarFill class="size-3" /> {t("generic.staffPick")}
                   </span>
                   <LevelBadge level={current.rating} />
                 </div>
@@ -109,12 +110,16 @@
                     <span class="text-featured-foreground/70 truncate"><FormattedText text={current.artists} /></span>
                     <span class="bg-featured-foreground/30 size-1 rounded-full"></span>
                     <span class="text-featured-foreground/70">
-                      {t("common.by")}
-                      <a
-                        href={`/creators/${current.author_handle}`}
-                        class="font-medium text-sky-600 hover:text-sky-500 dark:text-sky-400 dark:hover:text-sky-300"
-                        >{current.chart_design}</a
-                      >
+                      {#each segments(t("generic.by")) as part, i (i)}
+                        {#if part === 1}
+                          <a
+                            href={`/users/${current.author_handle}`}
+                            {@attach hoverCard(current.author)}
+                            class="font-medium text-sky-600 hover:text-sky-500 dark:text-sky-400 dark:hover:text-sky-300"
+                            >{current.chart_design}</a
+                          >
+                        {:else if typeof part === "string"}{part}{/if}
+                      {/each}
                     </span>
                   </p>
                 </div>
@@ -139,7 +144,7 @@
 
                 <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-1">
                   <Button href={`/levels/UnCh-${current.id}`} aria-label={t("hero.openChart", [current.title])} class="rounded-full">
-                    {t("hero.viewDetails2")}
+                    {t("hero.viewDetails")}
                     <RiArrowRightLine class="size-4" />
                   </Button>
                   <div class="text-featured-foreground/70 flex items-center gap-4 text-sm tabular-nums">

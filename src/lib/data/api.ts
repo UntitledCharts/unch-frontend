@@ -1,19 +1,31 @@
 import type {
   Account,
+  AccountBadge,
   Chart,
+  ChartDetails,
+  ChartFiles,
+  ChartViewer,
   Comment,
+  ImageUrls,
   ScoreEntry,
   Trends,
   LeaderboardType,
 } from "./types.js";
 
+import { MOD_PERMISSIONS } from "./types.js";
 import { API_URL } from "$lib/config.js";
+import { statusMessage } from "$lib/errors.js";
 
 export { API_URL };
 
 type Fetch = typeof fetch;
 
-type RawChart = Record<string, unknown>;
+type Raw = Record<string, unknown>;
+
+export type Failure = { ok: false; error: string; code: string | null; params?: Record<string, unknown> };
+
+export type Result = { ok: true } | Failure;
+
 
 function str(v: unknown, fallback = ""): string {
   return typeof v === "string" ? v : fallback;
@@ -22,13 +34,66 @@ function num(v: unknown, fallback = 0): number {
   return typeof v === "number" ? v : fallback;
 }
 
+export function bearer(key: string): Record<string, string> {
+  return { Authorization: `Bearer ${key}` };
+}
+
+let unauthorized: ((key: string) => void) | null = null;
+
+export function onUnauthorized(handler: (key: string) => void): void {
+  unauthorized = handler;
+}
+
+function sentKey(init?: RequestInit): string | null {
+  const header = new Headers(init?.headers).get("Authorization");
+  return header?.startsWith("Bearer ") ? header.slice(7) : null;
+}
+
+// a 401 means the session sent along stopped working: the session state hears about it, and reads are
+// tried again without it so public pages still load
+export async function apiFetch(fetchFn: Fetch, url: string, init?: RequestInit): Promise<Response> {
+  const res = await fetchFn(url, init);
+  const key = res.status === 401 ? sentKey(init) : null;
+  if (!key) return res;
+  unauthorized?.(key);
+  if ((init?.method ?? "GET").toUpperCase() !== "GET") return res;
+  const headers = new Headers(init?.headers);
+  headers.delete("Authorization");
+  return fetchFn(url, { ...init, headers });
+}
+
+// Failures come back as {"error": "error.x.y", "params": {...}}. The message is the generic one for the status;
+// callers that expect a code word it themselves from `code` and `params`.
+export async function readError(res: Response): Promise<Failure> {
+  const body = (await res.json().catch(() => null)) as { error?: unknown; params?: Raw } | null;
+  const code = typeof body?.error === "string" ? body.error : null;
+  if (!code) return { ok: false, error: statusMessage(res.status), code: null };
+  return { ok: false, error: statusMessage(res.status), code, params: body?.params ?? {} };
+}
+
+export async function send(url: string, init: RequestInit): Promise<Result> {
+  try {
+    const res = await apiFetch(fetch, url, init);
+    return res.ok ? { ok: true } : await readError(res);
+  } catch {
+    return { ok: false, error: statusMessage(0), code: null };
+  }
+}
+
+const auth = (sessionKey?: string | null): RequestInit | undefined =>
+  sessionKey ? { headers: bearer(sessionKey) } : undefined;
+
+export function jsonBody(body: unknown): { headers: Record<string, string>; body: string } {
+  return { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
+}
+
 async function getJson(
   fetchFn: Fetch,
   url: string,
   init?: RequestInit,
-): Promise<Record<string, unknown> | null> {
+): Promise<Raw | null> {
   try {
-    const res = await fetchFn(url, init);
+    const res = await apiFetch(fetchFn, url, init);
     if (!res.ok) return null;
     return await res.json();
   } catch {
@@ -36,15 +101,52 @@ async function getJson(
   }
 }
 
-export function mapChart(r: RawChart): Chart {
+async function getList(fetchFn: Fetch, url: string, init?: RequestInit): Promise<Raw[] | null> {
+  try {
+    const res = await apiFetch(fetchFn, url, init);
+    if (!res.ok) return null;
+    const json = await res.json();
+    return Array.isArray(json) ? json : null;
+  } catch {
+    return null;
+  }
+}
+
+function query(params: Record<string, string | number | boolean | string[] | undefined>): string {
+  const qs = new URLSearchParams();
+  for (const [name, value] of Object.entries(params)) {
+    if (value === undefined) continue;
+    for (const item of Array.isArray(value) ? value : [value]) qs.append(name, String(item));
+  }
+  return qs.toString();
+}
+
+function fileUrl(files: Raw, name: keyof ChartFiles): string | null {
+  const file = files[name] as Raw | null | undefined;
+  return file && typeof file.url === "string" ? file.url : null;
+}
+
+function mapFiles(files: Raw): ChartFiles {
+  return {
+    jacket: fileUrl(files, "jacket"),
+    music: fileUrl(files, "music"),
+    chart: fileUrl(files, "chart"),
+    preview: fileUrl(files, "preview"),
+    background: fileUrl(files, "background"),
+    background_v1: fileUrl(files, "background_v1"),
+    background_v3: fileUrl(files, "background_v3"),
+  };
+}
+
+export function mapChart(r: Raw): Chart {
   const created = str(r.created_at);
+  const owner = (r.owner ?? {}) as Raw;
   return {
     id: str(r.id),
     rating: num(r.rating),
-    author: str(r.author),
-    author_handle: num(r.author_handle),
-    author_full: str(r.author_full),
-    chart_design: str(r.chart_design) || str(r.author_full),
+    author: str(owner.id),
+    author_handle: num(owner.handle),
+    chart_design: str(r.charter) || str(owner.username),
     title: str(r.title),
     artists: str(r.artists),
     tags: Array.isArray(r.tags) ? (r.tags as string[]) : [],
@@ -56,127 +158,140 @@ export function mapChart(r: RawChart): Chart {
     created_at: created,
     published_at: str(r.published_at) || created,
     updated_at: str(r.updated_at) || created,
-    jacket_file_hash: str(r.jacket_file_hash),
-    music_file_hash: str(r.music_file_hash),
-    background_file_hash:
-      str(r.background_file_hash) || str(r.background_v3_file_hash) || str(r.background_v1_file_hash),
-    chart_file_hash: str(r.chart_file_hash),
-    preview_file_hash: str(r.preview_file_hash),
-    custom_background: !!str(r.background_file_hash),
+    files: mapFiles((r.files ?? {}) as Raw),
     scheduled_publish: str(r.scheduled_publish) || null,
   };
 }
 
-function mapAccount(a: Record<string, unknown> = {}): Account {
+function mapViewer(v: Raw = {}): ChartViewer {
+  const list = (value: unknown) => (Array.isArray(value) ? (value as string[]) : []);
   return {
-    sonolus_id: str(a.sonolus_id),
-    sonolus_handle: num(a.sonolus_handle),
-    sonolus_username: str(a.sonolus_username, "Unknown"),
-    profile_hash: typeof a.profile_hash === "string" ? a.profile_hash : null,
-    banner_hash: typeof a.banner_hash === "string" ? a.banner_hash : null,
-    description: typeof a.description === "string" ? a.description : null,
-    mod: !!a.mod,
-    admin: !!a.admin,
-    banned: !!a.banned,
+    is_owner: !!v.is_owner,
+    chart_permissions: list(v.chart_permissions),
+    staff_permissions: list(v.staff_permissions),
   };
+}
+
+function mapImage(v: unknown): ImageUrls | null {
+  const image = v as Raw | null | undefined;
+  return image && typeof image.url === "string" && typeof image.webp_url === "string"
+    ? { url: image.url, webp_url: image.webp_url }
+    : null;
+}
+
+function mapBadges(v: unknown): AccountBadge[] {
+  if (!Array.isArray(v)) return [];
+  return (v as Raw[])
+    .filter((b) => typeof b.badge === "string" && typeof b.image === "string")
+    .map((b) => ({ badge: str(b.badge), level: num(b.level, 1), image: str(b.image), description_key: str(b.description_key) }));
+}
+
+export function mapAccount(a: Raw = {}): Account {
+  const permissions = Array.isArray(a.permissions) ? (a.permissions as string[]) : [];
+  return {
+    sonolus_id: str(a.id),
+    sonolus_handle: num(a.handle),
+    sonolus_username: str(a.username, "Unknown"),
+    avatar: mapImage(a.avatar),
+    banner: mapImage(a.banner),
+    description: typeof a.description === "string" ? a.description : null,
+    permissions,
+    mod: permissions.some((p) => (MOD_PERMISSIONS as readonly string[]).includes(p)),
+    admin: permissions.includes("staff.manage"),
+    banned: !!a.banned,
+    badges: mapBadges(a.badges),
+  };
+}
+
+export type ChartParams = Record<string, string | number | boolean | string[] | undefined>;
+
+function mapPage(json: Raw | null): { data: Chart[]; pageCount: number } {
+  if (!json) return { data: [], pageCount: 1 };
+  const data = Array.isArray(json.items) ? (json.items as Raw[]).map(mapChart) : [];
+  return { data, pageCount: Math.max(1, num(json.page_count, 1)) };
 }
 
 export async function fetchCharts(
   fetchFn: Fetch,
-  params: Record<string, string | number | boolean>,
+  params: ChartParams,
+  sessionKey?: string | null,
 ): Promise<{ data: Chart[]; pageCount: number }> {
-  const qs = new URLSearchParams(
-    Object.entries(params).map(([k, v]) => [k, String(v)]),
-  ).toString();
-  const json = await getJson(fetchFn, `${API_URL}/api/charts?${qs}`);
-  if (!json) return { data: [], pageCount: 1 };
-  const data = Array.isArray(json.data) ? (json.data as RawChart[]).map(mapChart) : [];
-  return { data, pageCount: num(json.pageCount, 1) };
+  return mapPage(await getJson(fetchFn, `${API_URL}/v1/charts?${query(params)}`, auth(sessionKey)));
 }
 
-// The charts API always pages by 10 and ignores `limit`. Grids want 12 (fills 2, 3 or 4 columns), so
-// this reads `count` charts starting at `offset` from whichever API pages cover them.
+// The charts API always pages by 10. Grids want 12 (fills 2, 3 or 4 columns), so this reads `count`
+// charts starting at `offset` from whichever API pages cover them.
 const API_PAGE = 10;
 export async function fetchChartsWindow(
   fetchFn: Fetch,
-  params: Record<string, string | number | boolean>,
+  params: ChartParams,
   offset: number,
   count: number,
+  sessionKey?: string | null,
 ): Promise<{ data: Chart[]; total: number }> {
   const first = Math.floor(offset / API_PAGE);
   const last = Math.floor((offset + count - 1) / API_PAGE);
   const pages = await Promise.all(
-    Array.from({ length: last - first + 1 }, (_, i) => fetchCharts(fetchFn, { ...params, page: first + i })),
+    Array.from({ length: last - first + 1 }, (_, i) =>
+      fetchCharts(fetchFn, { ...params, page: first + i }, sessionKey),
+    ),
   );
-  // random searches can repeat a chart across two pages
+  // random sorts can repeat a chart across two pages
   const seen = new Set<string>();
   const all = pages.flatMap((r) => r.data).filter((c) => !seen.has(c.id) && seen.add(c.id));
   const start = offset - first * API_PAGE;
   return { data: all.slice(start, start + count), total: (pages[0]?.pageCount ?? 1) * API_PAGE };
 }
 
+// The random endpoint hands out 5 charts a call, so a grid takes a few calls; they can repeat a chart.
+const RANDOM_BATCH = 5;
+export async function fetchRandomCharts(fetchFn: Fetch, count: number): Promise<{ data: Chart[]; total: number }> {
+  const url = `${API_URL}/v1/charts/random`;
+  const batches = await Promise.all(
+    Array.from({ length: Math.ceil(count / RANDOM_BATCH) }, () => getList(fetchFn, url)),
+  );
+  const seen = new Set<string>();
+  const data = batches
+    .flatMap((b) => (b ?? []).map(mapChart))
+    .filter((c) => !seen.has(c.id) && seen.add(c.id))
+    .slice(0, count);
+  return { data, total: data.length };
+}
+
+// private charts, and their comments and leaderboards, only come back with the owner's or staff's session
 export async function fetchChart(
   fetchFn: Fetch,
   id: string,
-  sessionKey?: string,
-): Promise<Chart | null> {
-  const init = sessionKey ? { headers: { Authorization: sessionKey } } : undefined;
-  const json = await getJson(fetchFn, `${API_URL}/api/charts/${id}`, init);
-  if (!json) return null;
-  const raw = (json.data ?? json) as RawChart;
-  return raw && raw.id ? mapChart(raw) : null;
+  sessionKey?: string | null,
+): Promise<ChartDetails | null> {
+  const json = await getJson(fetchFn, `${API_URL}/v1/charts/${id}`, auth(sessionKey));
+  return json && json.id ? { ...mapChart(json), viewer: mapViewer(json.viewer as Raw) } : null;
 }
 
 // Public details of a chart that's scheduled but not released yet (title, artists, cover, release
 // time). Returns null for charts that aren't scheduled.
 export async function fetchScheduledChart(fetchFn: Fetch, id: string): Promise<Chart | null> {
-  const json = await getJson(fetchFn, `${API_URL}/api/charts/${id}/scheduled/`);
-  const raw = json?.data as RawChart | undefined;
-  return raw && raw.id ? mapChart(raw) : null;
-}
-
-// Schedules a chart to go public at `at`, or cancels the schedule when `at` is null.
-export async function scheduleChart(sessionKey: string, id: string, at: Date | null): Promise<boolean> {
-  try {
-    const res = await fetch(`${API_URL}/api/charts/${id}/visibility/schedule-public/`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", Authorization: sessionKey },
-      body: JSON.stringify({ publish_time: at ? Math.floor(at.getTime() / 1000) : null }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
+  const json = await getJson(fetchFn, `${API_URL}/v1/charts/${id}/schedule`);
+  if (!json || !json.id) return null;
+  return mapChart({
+    ...json,
+    files: { jacket: json.jacket, background: json.background, background_v3: json.background_v3 },
+  });
 }
 
 export async function fetchMyCharts(
   fetchFn: Fetch,
   sessionKey: string,
-  params: Record<string, string | number> = {},
+  params: ChartParams = {},
 ): Promise<{ data: Chart[]; pageCount: number }> {
-  const merged: Record<string, string | number> = {
-    type: "advanced",
+  const merged: ChartParams = {
     status: "ALL",
     sort_by: "created_at",
     sort_order: "desc",
     page: 0,
-    limit: 24,
     ...params,
   };
-  const qs = new URLSearchParams(
-    Object.entries(merged).map(([k, v]) => [k, String(v)]),
-  ).toString();
-  try {
-    const res = await fetchFn(`${API_URL}/api/charts?${qs}`, {
-      headers: { Authorization: sessionKey },
-    });
-    if (!res.ok) return { data: [], pageCount: 1 };
-    const json = await res.json();
-    const data = Array.isArray(json.data) ? (json.data as RawChart[]).map(mapChart) : [];
-    return { data, pageCount: num(json.pageCount, 1) };
-  } catch {
-    return { data: [], pageCount: 1 };
-  }
+  return mapPage(await getJson(fetchFn, `${API_URL}/v1/charts?${query(merged)}`, { headers: bearer(sessionKey) }));
 }
 
 export type UploadData = {
@@ -185,9 +300,9 @@ export type UploadData = {
   artists: string;
   author: string;
   description: string;
+  status: "PRIVATE" | "UNLISTED";
   includes_background: boolean;
   includes_preview: boolean;
-  status: string;
   tags: string[];
 };
 
@@ -199,222 +314,148 @@ export type UploadFiles = {
   background_image?: File | null;
 };
 
+type FileFields = { [K in keyof UploadFiles]?: File | null };
+
+function appendFiles(fd: FormData, files: FileFields) {
+  for (const [field, file] of Object.entries(files)) if (file) fd.append(field, file);
+}
+
+// uploads always land private; making them public is a separate step on the edit page
 export async function uploadChart(
   sessionKey: string,
   data: UploadData,
   files: UploadFiles,
-): Promise<{ ok: true; id: string } | { ok: false; error: string }> {
+): Promise<{ ok: true; id: string } | Failure> {
   const fd = new FormData();
   fd.append("data", JSON.stringify(data));
-  fd.append("jacket_image", files.jacket_image);
-  fd.append("audio_file", files.audio_file);
-  fd.append("chart_file", files.chart_file);
-  if (files.preview_file) fd.append("preview_file", files.preview_file);
-  if (files.background_image) fd.append("background_image", files.background_image);
-
+  appendFiles(fd, files);
   try {
-    const res = await fetch(`${API_URL}/api/charts/upload/`, {
-      method: "POST",
-      headers: { Authorization: sessionKey },
-      body: fd,
-    });
-    if (!res.ok) {
-      let msg = `Upload failed (${res.status})`;
-      try {
-        const e = await res.json();
-        msg = e.detail || e.message || JSON.stringify(e);
-      } catch {
-        try {
-          msg = (await res.text()) || msg;
-        } catch {
-        }
-      }
-      return { ok: false, error: msg };
-    }
+    const res = await apiFetch(fetch, `${API_URL}/v1/charts`, { method: "POST", headers: bearer(sessionKey), body: fd });
+    if (!res.ok) return await readError(res);
     const result = await res.json();
     return { ok: true, id: str(result.id) };
   } catch {
-    return { ok: false, error: "Network error, please try again." };
+    return { ok: false, error: statusMessage(0), code: null };
   }
 }
 
-async function uploadAccountImage(url: string, key: string, file: File): Promise<string | null> {
+async function uploadAccountImage(url: string, key: string, file: File): Promise<{ ok: true; image: ImageUrls | null } | Failure> {
   const fd = new FormData();
   fd.append("file", file);
   try {
-    const res = await fetch(url, { method: "POST", headers: { Authorization: key }, body: fd });
-    if (!res.ok) return null;
-    const j = await res.json().catch(() => ({}) as Record<string, unknown>);
-    return typeof j.hash === "string" ? j.hash : null;
+    const res = await apiFetch(fetch, url, { method: "PUT", headers: bearer(key), body: fd });
+    if (!res.ok) return await readError(res);
+    return { ok: true, image: mapImage(await res.json().catch(() => null)) };
   } catch {
-    return null;
+    return { ok: false, error: statusMessage(0), code: null };
   }
 }
 
-export function uploadProfileImage(key: string, sonolusId: string, file: File): Promise<string | null> {
-  return uploadAccountImage(`${API_URL}/api/accounts/${sonolusId}/profile/upload`, key, file);
+export function uploadProfileImage(key: string, file: File): Promise<{ ok: true; image: ImageUrls | null } | Failure> {
+  return uploadAccountImage(`${API_URL}/v1/me/avatar`, key, file);
 }
 
-export function uploadBanner(key: string, sonolusId: string, file: File): Promise<string | null> {
-  return uploadAccountImage(`${API_URL}/api/accounts/${sonolusId}/banner/upload`, key, file);
+export function uploadBanner(key: string, file: File): Promise<{ ok: true; image: ImageUrls | null } | Failure> {
+  return uploadAccountImage(`${API_URL}/v1/me/banner`, key, file);
 }
 
-export async function updateAccount(
-  key: string,
-  sonolusId: string,
-  fields: { description: string; profile_hash?: string; banner_hash?: string },
-): Promise<boolean> {
-  const body: Record<string, unknown> = { description: fields.description };
-  if (fields.profile_hash) {
-    body.profile_hash = fields.profile_hash;
-    body.profile_image_hash = fields.profile_hash;
-    body.pfp = fields.profile_hash;
-    body.hash = fields.profile_hash;
-  }
-  if (fields.banner_hash) {
-    body.banner_hash = fields.banner_hash;
-    body.banner_image_hash = fields.banner_hash;
-    body.banner = fields.banner_hash;
-  }
-  try {
-    const res = await fetch(`${API_URL}/api/accounts/${sonolusId}/description`, {
-      method: "POST",
-      headers: { Authorization: key, "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
+export function removeProfileImage(key: string): Promise<Result> {
+  return send(`${API_URL}/v1/me/avatar`, { method: "DELETE", headers: bearer(key) });
 }
 
+export function removeBanner(key: string): Promise<Result> {
+  return send(`${API_URL}/v1/me/banner`, { method: "DELETE", headers: bearer(key) });
+}
+
+export function updateAccount(key: string, fields: { description: string }): Promise<Result> {
+  const { headers, body } = jsonBody({ description: fields.description });
+  return send(`${API_URL}/v1/me`, { method: "PATCH", headers: { ...headers, ...bearer(key) }, body });
+}
+
+// only the fields that are present get changed
 export type EditData = {
-  title: string;
-  artists: string;
-  author: string;
-  rating: number;
-  description: string;
-  status: string;
-  tags: string[];
-  includes_jacket: boolean;
-  includes_audio: boolean;
-  includes_chart: boolean;
-  includes_preview: boolean;
-  includes_background: boolean;
-  delete_background: boolean;
-  delete_preview: boolean;
+  title?: string;
+  artists?: string;
+  author?: string;
+  rating?: number;
+  description?: string;
+  tags?: string[];
+  includes_jacket?: boolean;
+  includes_audio?: boolean;
+  includes_chart?: boolean;
+  includes_preview?: boolean;
+  includes_background?: boolean;
+  delete_background?: boolean;
 };
 
-export async function editChart(
-  sessionKey: string,
-  id: string,
-  data: EditData,
-  files: Partial<UploadFiles>,
-  statusChanged: boolean,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+export function editChart(sessionKey: string, id: string, data: EditData, files: FileFields): Promise<Result> {
   const fd = new FormData();
   fd.append("data", JSON.stringify(data));
-  if (files.jacket_image) fd.append("jacket_image", files.jacket_image);
-  if (files.audio_file) fd.append("audio_file", files.audio_file);
-  if (files.chart_file) fd.append("chart_file", files.chart_file);
-  if (files.preview_file) fd.append("preview_file", files.preview_file);
-  if (files.background_image) fd.append("background_image", files.background_image);
-
-  try {
-    const res = await fetch(`${API_URL}/api/charts/${id}/edit/`, {
-      method: "PATCH",
-      headers: { Authorization: sessionKey },
-      body: fd,
-    });
-    if (!res.ok) {
-      let msg = `Edit failed (${res.status})`;
-      try {
-        const e = await res.json();
-        msg = e.detail || e.message || JSON.stringify(e);
-      } catch {
-        try {
-          msg = (await res.text()) || msg;
-        } catch {
-        }
-      }
-      return { ok: false, error: msg };
-    }
-    if (statusChanged) {
-      await fetch(`${API_URL}/api/charts/${id}/visibility/`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json", Authorization: sessionKey },
-        body: JSON.stringify({ status: data.status }),
-      });
-    }
-    return { ok: true };
-  } catch {
-    return { ok: false, error: "Network error, please try again." };
-  }
+  appendFiles(fd, files);
+  return send(`${API_URL}/v1/charts/${id}`, { method: "PATCH", headers: bearer(sessionKey), body: fd });
 }
 
-export async function fetchAccountByHandle(
-  fetchFn: Fetch,
-  handle: string,
-): Promise<{ account: Account; charts: Chart[] } | null> {
-  let sonolusId = "";
-  const h = await getJson(fetchFn, `${API_URL}/api/accounts/handle/${handle}/`);
-  if (h && typeof h.sonolus_id === "string") sonolusId = h.sonolus_id;
+export type Profile = { account: Account; charts: Chart[]; collaborations: Chart[] };
 
-  const j = await getJson(fetchFn, `${API_URL}/api/accounts/${sonolusId || handle}`);
-  if (j && j.account) {
-    const account = mapAccount(j.account as Record<string, unknown>);
-    const charts = Array.isArray(j.charts) ? (j.charts as RawChart[]).map(mapChart) : [];
-    return { account, charts };
-  }
-
-  const list = await fetchCharts(fetchFn, {
-    type: "advanced",
-    sonolus_handle_is: handle,
-    sort_by: "created_at",
-    sort_order: "desc",
-    limit: 50,
-  });
-  if (list.data.length === 0) return null;
-
-  const account: Account = {
-    sonolus_id: list.data[0].author,
-    sonolus_handle: Number(handle) || 0,
-    sonolus_username: str(list.data[0].author_full).split("#")[0] || "Unknown",
-    profile_hash: null,
-    banner_hash: null,
-    description: null,
-    mod: false,
-    admin: false,
-    banned: false,
-  };
-  return { account, charts: list.data };
+async function fetchProfile(fetchFn: Fetch, id: string): Promise<Profile | null> {
+  const j = await getJson(fetchFn, `${API_URL}/v1/accounts/${encodeURIComponent(id)}`);
+  if (!j || !j.account) return null;
+  const charts = (value: unknown) => (Array.isArray(value) ? (value as Raw[]).map(mapChart) : []);
+  return { account: mapAccount(j.account as Raw), charts: charts(j.charts), collaborations: charts(j.collaborations) };
 }
 
-function mapComment(r: Record<string, unknown>): Comment {
+// profile pages are addressed by handle, but an account id works too
+export async function fetchAccountByHandle(fetchFn: Fetch, handle: string): Promise<Profile | null> {
+  const h = /^\d+$/.test(handle) ? await getJson(fetchFn, `${API_URL}/v1/accounts/by-handle/${handle}`) : null;
+  return fetchProfile(fetchFn, h && typeof h.id === "string" ? h.id : handle);
+}
+
+function mapComment(r: Raw): Comment {
   return {
     id: num(r.id),
-    username: str(r.username),
     content: str(r.content),
-    created_at: num(r.created_at),
-    deleted_at: typeof r.deleted_at === "number" ? r.deleted_at : null,
-    account: mapAccount(r.account as Record<string, unknown>),
+    created_at: str(r.created_at),
+    deleted_at: str(r.deleted_at) || null,
+    is_own: !!r.is_own,
+    account: mapAccount(r.author as Raw),
   };
 }
 
+// the API pages comments by 10 and lists deleted ones too (blanked unless you moderate); the page only shows live ones
 export async function fetchComments(
   fetchFn: Fetch,
   id: string,
   page = 0,
-  limit = 10,
+  sessionKey?: string | null,
 ): Promise<{ data: Comment[]; pageCount: number }> {
-  const json = await getJson(fetchFn, `${API_URL}/api/charts/${id}/comment/?page=${page}&limit=${limit}`);
+  const json = await getJson(fetchFn, `${API_URL}/v1/charts/${id}/comments?page=${page}`, auth(sessionKey));
   if (!json) return { data: [], pageCount: 1 };
-  const data = Array.isArray(json.data) ? (json.data as Record<string, unknown>[]).map(mapComment) : [];
-  return { data, pageCount: num(json.pageCount, 1) };
+  const items = Array.isArray(json.items) ? (json.items as Raw[]) : [];
+  const data = items.filter((c) => !c.deleted).map(mapComment);
+  return { data, pageCount: Math.max(1, num(json.page_count, 1)) };
 }
 
-export async function fetchTrends(fetchFn: Fetch, id: string): Promise<Trends> {
-  const json = await getJson(fetchFn, `${API_URL}/api/charts/${id}/trends/`);
+export async function postComment(
+  sessionKey: string,
+  chartId: string,
+  content: string,
+): Promise<{ ok: true; comment: Comment } | Failure> {
+  const { headers, body } = jsonBody({ content });
+  try {
+    const res = await apiFetch(fetch, `${API_URL}/v1/charts/${chartId}/comments`, {
+      method: "POST",
+      headers: { ...headers, ...bearer(sessionKey) },
+      body,
+    });
+    if (!res.ok) return await readError(res);
+    return { ok: true, comment: mapComment(await res.json()) };
+  } catch {
+    return { ok: false, error: statusMessage(0), code: null };
+  }
+}
+
+export async function fetchTrends(fetchFn: Fetch, id: string, sessionKey?: string | null): Promise<Trends> {
+  const json = await getJson(fetchFn, `${API_URL}/v1/charts/${id}/trends`, auth(sessionKey));
   if (!json) return { likes: [], comments: [] };
   return {
     likes: Array.isArray(json.likes) ? (json.likes as number[]) : [],
@@ -422,57 +463,54 @@ export async function fetchTrends(fetchFn: Fetch, id: string): Promise<Trends> {
   };
 }
 
-function mapScore(r: Record<string, unknown>): ScoreEntry {
+function mapScore(r: Raw): ScoreEntry {
+  const replay = ((r.replay ?? {}) as Raw).data as Raw | undefined;
   return {
     id: num(r.id),
     engine: str(r.engine),
     grade: str(r.grade),
-    nperfect: num(r.nperfect),
-    ngreat: num(r.ngreat),
-    ngood: num(r.ngood),
-    nmiss: num(r.nmiss),
+    nperfect: num(r.perfect),
+    ngreat: num(r.great),
+    ngood: num(r.good),
+    nmiss: num(r.miss),
     arcade_score: num(r.arcade_score),
     accuracy_score: num(r.accuracy_score),
     speed: num(r.speed),
     display_name: str(r.display_name),
-    account: mapAccount(r.account as Record<string, unknown>),
+    account: mapAccount(r.submitter as Raw),
     created_at: str(r.created_at),
     chart_id: str(r.chart_id),
-    replay_data_hash: typeof r.replay_data_hash === "string" ? r.replay_data_hash : null,
+    replay_data_hash: replay && typeof replay.hash === "string" ? replay.hash : null,
   };
 }
 
+// The API only allows limit=3 or limit=10.
 export async function fetchLeaderboard(
   fetchFn: Fetch,
   id: string,
   type: LeaderboardType,
   page = 0,
   limit = 10,
+  sessionKey?: string | null,
 ): Promise<{ data: ScoreEntry[]; pageCount: number }> {
   const json = await getJson(
     fetchFn,
-    `${API_URL}/api/charts/${id}/leaderboards/?page=${page}&leaderboard_type=${type}&limit=${limit}`,
+    `${API_URL}/v1/charts/${id}/leaderboards?${query({ page, limit, leaderboard_type: type })}`,
+    auth(sessionKey),
   );
   if (!json) return { data: [], pageCount: 1 };
-  const data = Array.isArray(json.data) ? (json.data as Record<string, unknown>[]).map(mapScore) : [];
-  return { data, pageCount: num(json.pageCount, 1) };
+  const data = Array.isArray(json.items) ? (json.items as Raw[]).map(mapScore) : [];
+  return { data, pageCount: Math.max(1, num(json.page_count, 1)) };
 }
 
-// There's no single-score endpoint, so walk the chart's leaderboard until the id shows up.
-// The API only allows limit=3 or limit=10.
-export async function findScore(
+export async function fetchScore(
   fetchFn: Fetch,
   chartId: string,
   scoreId: number,
-  maxPages = 30,
+  sessionKey?: string | null,
 ): Promise<ScoreEntry | null> {
-  for (let page = 0; page < maxPages; page++) {
-    const { data, pageCount } = await fetchLeaderboard(fetchFn, chartId, "arcade_score_speed", page, 10);
-    const hit = data.find((e) => e.id === scoreId);
-    if (hit) return hit;
-    if (page + 1 >= pageCount) break;
-  }
-  return null;
+  const json = await getJson(fetchFn, `${API_URL}/v1/charts/${chartId}/leaderboards/${scoreId}`, auth(sessionKey));
+  return json && json.record ? mapScore(json.record as Raw) : null;
 }
 
 export function replayName(chartId: string, scoreId: number): string {
@@ -480,10 +518,7 @@ export function replayName(chartId: string, scoreId: number): string {
 }
 
 export async function fetchAccountById(fetchFn: Fetch, id: string): Promise<Account | null> {
-  const j = await getJson(fetchFn, `${API_URL}/api/accounts/${id}`);
-  if (!j) return null;
-  const raw = (j.account ?? j) as Record<string, unknown>;
-  return raw && raw.sonolus_id ? mapAccount(raw) : null;
+  return (await fetchProfile(fetchFn, id))?.account ?? null;
 }
 
 export type AccountStats = {
@@ -495,13 +530,13 @@ export type AccountStats = {
 };
 
 export async function fetchAccountStats(fetchFn: Fetch, id: string): Promise<AccountStats | null> {
-  const j = await getJson(fetchFn, `${API_URL}/api/accounts/${id}/stats`);
+  const j = await getJson(fetchFn, `${API_URL}/v1/accounts/${encodeURIComponent(id)}/stats`);
   if (!j) return null;
   return {
     chartsPublished: num(j.charts_published),
     likesReceived: num(j.likes_received),
     commentsReceived: num(j.comments_received),
-    likedCharts: num(j.liked_charts_count),
-    commentsWritten: num(j.comments_count),
+    likedCharts: num(j.liked_charts),
+    commentsWritten: num(j.comments),
   };
 }

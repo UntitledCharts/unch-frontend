@@ -6,7 +6,7 @@ import type { RequestHandler } from "./$types";
 // ?bytes=N returns just the first N bytes, enough to draw a card's waveform without the whole song.
 export const GET: RequestHandler = async ({ url, fetch }) => {
   const target = url.searchParams.get("url");
-  if (!target || !target.startsWith(`${CDN_URL}/`)) {
+  if (!CDN_URL || !target || !target.startsWith(`${CDN_URL}/`)) {
     return new Response("Only CDN files can be proxied", { status: 400 });
   }
 

@@ -1,0 +1,108 @@
+{
+  "generic": {
+    "save": "저장",
+    "home": "홈",
+    "dashboard": "대시보드",
+    "cancel": "취소",
+    "charts": "채보",
+    "staffPick": "스태프 추천",
+    "order": "정렬 순서",
+    "rating": "별점순",
+    "likes": "좋아요 수",
+    "tags": "태그",
+    "newest": "최신순",
+    "share": "공유",
+    "comments": "댓글",
+    "linkCopied": "링크가 복사되었습니다!",
+    "edit": "편집",
+    "loading": "로딩중...",
+    "error": "오류가 발생하였습니다.",
+    "next": "다음",
+    "undo": "실행 취소",
+    "visibility": "공개 상태",
+    "sortBy": "정렬 기준",
+    "public": "공개",
+    "unlisted": "일부 공개",
+    "private": "비공개",
+    "language": "언어",
+    "saving": "저장중...",
+    "delete": "삭제",
+    "uploading": "업로드중...",
+    "back": "뒤로",
+    "pageOf": "{2}페이지 중 {1}"
+  },
+  "nav": {
+    "logout": "로그아웃"
+  },
+  "userProfile": {
+    "editProfile": "프로필 편집",
+    "chartsLiked": "좋아요 한 차트 수",
+    "commentsMade": "댓글 작성 수"
+  },
+  "home": {
+    "viewAll": "전부 보기"
+  },
+  "search": {
+    "random": "랜덤",
+    "quick": "간편 검색",
+    "advanced": "상세 검색",
+    "ascending": "오름차순",
+    "descending": "내림차순",
+    "alphabetical": "가나다순",
+    "reroll": "재검색"
+  },
+  "levelDetail": {
+    "chartedBy": "제작: {1}",
+    "openViaSonolus": "{1}로 열기",
+    "like": "좋아요",
+    "leaderboard": "리더보드",
+    "noComments": "댓글이 없습니다.",
+    "comment": "댓글",
+    "days": "일",
+    "hours": "시간",
+    "mins": "분",
+    "secs": "초",
+    "makeStaffPick": "스태프 추천 설정",
+    "removeStaffPick": "스태프 추천 제거",
+    "levelLabel": "레벨",
+    "published": "공개됨",
+    "uploaded": "업로드됨"
+  },
+  "footer": {
+    "openInSonolus": "Sonolus에서 열기"
+  },
+  "dashboard": {
+    "status": "상태",
+    "schedulePublish": "공개 예약",
+    "scheduledFor": "{1} 출시 예정"
+  },
+  "uploadPolicy": {
+    "title": "업로드 규정",
+    "subtitle": "채보를 업로드하기 전에 다음 규정을 읽어주세요.",
+    "fileSizeLimits": "파일 크기 제한",
+    "fileSizeDesc": "채보가 제한 용량을 초과할 경우, <strong>도움 요청</strong>을 통해 문의해 주세요! 실제 채보를 제한하려는 것이 아니므로 업로드를 도와드리겠습니다.",
+    "shitpostWarning": "해당 예외 사항에 shitpost는 포함되지 않습니다. 제한 용량을 초과하는 shitpost를 업로드하려 한다면 다시 한번 생각해 보세요.",
+    "supportedFileTypes": "지원되는 파일 형식",
+    "fileTypesNote": "<strong>참고:</strong> 익스트림 확장 기능은 LevelData에서만 지원됩니다! 편집기에서 .usc 파일을 열어 작업을 계속할 수 있습니다.",
+    "openEditor": "Next Sekai 편집기 열기",
+    "noInappropriate": "비속어, 인종차별, 정치, 부적절한 콘텐츠, 광고 금지 등",
+    "noAbuse": "서비스를 고의적으로 남용하지 마세요.",
+    "commonSense": "상식적인 선에서 활동해 주세요."
+  },
+  "countdown": {
+    "getReady": "준비하세요!",
+    "almostThere": "거의 다 됐습니다..."
+  },
+  "settings": {
+    "themeLight": "라이트",
+    "themeDark": "다크"
+  },
+  "browse": {
+    "titlePlaceholder": "제목으로 검색...",
+    "artistsPlaceholder": "아티스트 검색...",
+    "descriptionPlaceholder": "설명으로 검색..."
+  },
+  "preview": {
+    "qualityMax": "최대"
+  }
+}

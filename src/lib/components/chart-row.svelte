@@ -1,7 +1,8 @@
 <script lang="ts">
   import { t } from "$lib/i18n.svelte.js";
   import type { Chart } from "$lib/data/index.js";
-  import { compact, relativeTime, coverUrl, previewProxyUrl } from "$lib/data/index.js";
+  import { compact, relativeTime, coverUrl, previewProxyUrl, chartDate, fullDate } from "$lib/data/index.js";
+  import { hoverCard } from "$lib/state/author-card.svelte.js";
   import CoverArt from "./cover-art.svelte";
   import LevelBadge from "./level-badge.svelte";
   import Waveform from "./waveform.svelte";
@@ -38,13 +39,13 @@
           class="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-400 px-1.5 py-0.5 text-[10px] font-bold text-amber-950"
         >
           <RiStarFill class="size-2.5" />
-          {t("common.staff")}
+          {t("generic.staff")}
         </span>
       {/if}
     </div>
 
     <p class="text-muted-foreground truncate text-xs">
-      <a href={`/creators/${chart.author_handle}`} class="text-accent relative z-10 font-bold hover:underline"
+      <a href={`/users/${chart.author_handle}`} {@attach hoverCard(chart.author)} class="text-accent relative z-10 font-bold hover:underline"
         >{chart.chart_design}</a
       >
       · <FormattedText text={chart.artists} />
@@ -67,9 +68,9 @@
       <span><RiHeart3Fill class="size-3.5 text-rose-400" />{compact(chart.like_count)}</span>
       <span><RiChat3Line class="size-3.5" />{compact(chart.comment_count)}</span>
     </div>
-    <span class="inline-flex items-center gap-1 text-[11px] whitespace-nowrap">
+    <span class="inline-flex items-center gap-1 text-[11px] whitespace-nowrap" title={fullDate(chartDate(chart))}>
       <RiTimeLine class="size-3" />
-      {relativeTime(chart.updated_at)}
+      {relativeTime(chartDate(chart))}
     </span>
   </div>
 </article>

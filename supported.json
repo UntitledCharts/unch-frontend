@@ -5,5 +5,54 @@
         "english_name": "English",
         "file": "en.json",
         "locale": "en-US"
+    },
+    "ja": {
+        "country": "jp",
+        "name": "日本語",
+        "english_name": "Japanese",
+        "file": "ja.json",
+        "locale": "ja-JP"
+    },
+    "ko": {
+        "country": "kr",
+        "name": "한국어",
+        "english_name": "Korean",
+        "file": "ko.json",
+        "locale": "ko-KR"
+    },
+    "it": {
+        "country": "it",
+        "name": "Italiano",
+        "english_name": "Italian",
+        "file": "it.json",
+        "locale": "it-IT"
+    },
+    "pt": {
+        "country": "br",
+        "name": "Português",
+        "english_name": "Portuguese",
+        "file": "pt.json",
+        "locale": "pt-BR"
+    },
+    "zh_tw": {
+        "country": "tw",
+        "name": "繁體中文",
+        "english_name": "Traditional Chinese",
+        "file": "zh_tw.json",
+        "locale": "zh-TW"
+    },
+    "ru": {
+        "country": "ru",
+        "name": "Русский",
+        "english_name": "Russian",
+        "file": "ru.json",
+        "locale": "ru-RU"
+    },
+    "vi": {
+        "country": "vn",
+        "name": "Tiếng Việt",
+        "english_name": "Vietnamese",
+        "file": "vi.json",
+        "locale": "vi-VN"
     }
 }

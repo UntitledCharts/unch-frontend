@@ -2,7 +2,7 @@
   import { page } from "$app/state";
   import SiteHeader from "$lib/components/site-header.svelte";
   import SiteFooter from "$lib/components/site-footer.svelte";
-  import AwaitingLogin from "$lib/components/awaiting-login.svelte";
+  import LoginPanel from "$lib/components/login-panel.svelte";
   import { session } from "$lib/state/session.svelte";
 
   let { children } = $props();
@@ -20,7 +20,7 @@
     <span class="loading loading-spinner text-muted-foreground size-8"></span>
   </main>
 {:else}
-  <AwaitingLogin />
+  <LoginPanel />
 {/if}
 
 <SiteFooter />

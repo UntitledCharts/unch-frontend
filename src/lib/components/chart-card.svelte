@@ -1,7 +1,8 @@
 <script lang="ts">
   import { t } from "$lib/i18n.svelte.js";
   import type { Chart } from "$lib/data/index.js";
-  import { compact, relativeTime, coverUrl, previewProxyUrl } from "$lib/data/index.js";
+  import { compact, relativeTime, coverUrl, previewProxyUrl, chartDate, fullDate } from "$lib/data/index.js";
+  import { hoverCard } from "$lib/state/author-card.svelte.js";
   import CoverArt from "./cover-art.svelte";
   import LevelBadge from "./level-badge.svelte";
   import Waveform from "./waveform.svelte";
@@ -46,12 +47,12 @@
 
   {#if chart.staff_pick}
     <span
-      title={t("common.staff")}
+      title={t("generic.staff")}
       class="absolute top-2.5 right-2.5 inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-bold text-amber-950"
     >
       <RiStarFill class="size-2.5" />
       <!-- on narrow cards (two per row on phones) the label would run into the level badge -->
-      <span class="hidden @[13rem]:inline">{t("common.staff")}</span>
+      <span class="hidden @[13rem]:inline">{t("generic.staff")}</span>
     </span>
   {/if}
 
@@ -63,7 +64,8 @@
     </h3>
     <p class="text-muted-foreground truncate text-xs"><FormattedText text={chart.artists} /></p>
     <a
-      href={`/creators/${chart.author_handle}`}
+      href={`/users/${chart.author_handle}`}
+      {@attach hoverCard(chart.author)}
       class="text-accent relative z-10 mt-0.5 self-start truncate text-xs font-bold hover:underline"
       >{chart.chart_design}</a
     >
@@ -76,7 +78,7 @@
     >
       <span><RiHeart3Fill class="size-3.5 text-rose-400" />{compact(chart.like_count)}</span>
       <span><RiChat3Line class="size-3.5" />{compact(chart.comment_count)}</span>
-      <span><RiTimeLine class="size-3.5" />{relativeTime(chart.updated_at)}</span>
+      <span title={fullDate(chartDate(chart))}><RiTimeLine class="size-3.5" />{relativeTime(chartDate(chart))}</span>
     </div>
   </div>
 </article>

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { t, i18n } from "$lib/i18n.svelte.js";
+  import { goBack } from "$lib/navigation.js";
+  import { segments, t, i18n } from "$lib/i18n.svelte.js";
   import SiteHeader from "$lib/components/site-header.svelte";
   import SiteFooter from "$lib/components/site-footer.svelte";
   import CoverArt from "$lib/components/cover-art.svelte";
@@ -7,22 +8,36 @@
   import FormattedText from "$lib/components/formatted-text.svelte";
   import Button from "$lib/components/button.svelte";
   import Seo from "$lib/components/seo.svelte";
+  import AdSlot from "$lib/components/ad-slot.svelte";
   import { invalidateAll } from "$app/navigation";
+  import { untrack } from "svelte";
   import { cn } from "$lib/utils.js";
+  import { hoverCard } from "$lib/state/author-card.svelte.js";
   import { ambientFrom, ambientStyle, tintPage, type Ambient } from "$lib/ambient.js";
-  import { coverUrl, type Chart } from "$lib/data/index.js";
-  import { SITE_URL } from "$lib/config.js";
+  import { bannerUrl, coverUrl, profileUrl, type Account, type Chart } from "$lib/data/index.js";
+  import AccountBadges from "$lib/components/account-badges.svelte";
+  import { SITE_URL, ogChartUrl } from "$lib/config.js";
   import { RiArrowLeftLine, RiCalendarEventLine, RiShareLine, RiCheckLine } from "$lib/icons.js";
 
   // What everyone but the charter sees while a release is pending: the artwork, the names and a live
   // countdown. No audio, preview or files; those unlock when the API flips the chart to public.
   // Under the timer is a small note lane: one note lands on the judgement line every second.
-  let { chart, at }: { chart: Chart; at: string } = $props();
+  // The last minute swaps the digits for one big number of seconds, and the last ten turn urgent.
+  // `onskip` is set for viewers who can open the chart itself before the release
+  let {
+    chart,
+    at,
+    author,
+    onreleased,
+    onskip,
+  }: { chart: Chart; at: string; author?: Promise<Account | null>; onreleased?: () => void; onskip?: () => void } = $props();
 
   const releaseTime = $derived(new Date(at).getTime());
   let now = $state(Date.now());
   const left = $derived(Math.max(0, releaseTime - now));
   const tick = $derived(Math.ceil(left / 1000));
+  const finalMinute = $derived(left > 0 && tick <= 60);
+  const critical = $derived(left > 0 && tick <= 10);
   const parts = $derived([
     { value: Math.floor(left / 86_400_000), label: t("levelDetail.days") },
     { value: Math.floor(left / 3_600_000) % 24, label: t("levelDetail.hours") },
@@ -32,17 +47,30 @@
   const releaseLabel = $derived(
     new Date(at).toLocaleString(i18n.locale, { dateStyle: "full", timeStyle: "short" }),
   );
+  // crawlers have no time zone or language, so the preview spells the release out in English UTC
+  const metaRelease = $derived(
+    new Date(at).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short", timeZone: "UTC" }),
+  );
+  // the visitor's own time zone, shown after the release time
+  const releaseZone = $derived(
+    new Intl.DateTimeFormat(i18n.locale, { timeZoneName: "short" })
+      .formatToParts(new Date(at))
+      .find((part) => part.type === "timeZoneName")?.value ?? "",
+  );
   const pageUrl = $derived(`${SITE_URL}/levels/UnCh-${chart.id}`);
   const title = $derived(chart.title.replace(/:[a-zA-Z0-9_]+:/g, "").trim());
 
+  // the big final number has to flip right on the second, so it's checked more often near the end
+  const fast = $derived(left <= 61_000);
   $effect(() => {
-    const timer = setInterval(() => (now = Date.now()), 1000);
+    const timer = setInterval(() => (now = Date.now()), fast ? 200 : 1000);
     return () => clearInterval(timer);
   });
 
   // once the timer runs out, reload until the API has actually published it (that can lag a few seconds)
   $effect(() => {
     if (left > 0) return;
+    untrack(() => onreleased?.());
     const retry = setInterval(() => invalidateAll(), 5000);
     invalidateAll();
     return () => clearInterval(retry);
@@ -107,8 +135,8 @@
 
 <Seo
   title={chart.title}
-  description={`${chart.artists}, Lv.${chart.rating}, charted by ${chart.chart_design}. ${t("levelDetail.releasesOn", [releaseLabel])}`}
-  image={`/og/level/UnCh-${chart.id}`}
+  description={`${chart.artists}, Lv.${chart.rating}, charted by ${chart.chart_design}. Out ${metaRelease} UTC`}
+  image={ogChartUrl(chart.id)}
   type="article"
 />
 
@@ -116,13 +144,16 @@
 
 <div class={cn(ambient && "ambient")} style={ambientStyle(ambient)}>
   <main class="mx-auto max-w-5xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
-    <a
-      href="/browse"
+    <button
+      type="button"
+      onclick={goBack}
       class="text-muted-foreground hover:text-foreground group inline-flex items-center gap-1.5 text-sm transition-colors"
     >
       <RiArrowLeftLine class="size-4 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none" />
-      {t("nav.browse")}
-    </a>
+      {t("generic.back")}
+    </button>
+
+    <AdSlot />
 
     <section class="bg-card clip-rounded relative isolate overflow-hidden rounded-3xl border">
       <!-- the cover, blown up and blurred, is the stage everything sits on -->
@@ -146,10 +177,11 @@
           </h1>
           <p class="text-muted-foreground sm:text-lg"><FormattedText text={chart.artists} /></p>
           <a
-            href={`/creators/${chart.author_handle}`}
+            href={`/users/${chart.author_handle}`}
+            {@attach hoverCard(chart.author)}
             class="text-muted-foreground hover:text-foreground inline-block text-sm transition-colors"
           >
-            {t("levelDetail.chartedBy", [""])}<span class="text-accent font-semibold"><FormattedText text={chart.chart_design} /></span>
+            {#each segments(t("levelDetail.chartedBy")) as part, i (i)}{#if part === 1}<span class="text-accent font-semibold"><FormattedText text={chart.chart_design} /></span>{:else if typeof part === "string"}{part}{/if}{/each}
           </a>
         </div>
       </div>
@@ -159,16 +191,29 @@
           {left > 0 ? t("levelDetail.releasesIn") : t("levelDetail.releasingNow")}
         </p>
 
-        <div class="flex items-end justify-between gap-2 sm:justify-start sm:gap-8" role="timer" aria-live="off">
-          {#each parts as part (part.label)}
-            <div class="min-w-0">
-              <div class="font-heading text-[2.6rem] leading-none font-bold tabular-nums sm:text-7xl">
-                {String(part.value).padStart(2, "0")}
-              </div>
-              <div class="text-muted-foreground mt-1.5 text-xs sm:text-sm">{part.label}</div>
+        {#if finalMinute}
+          <div class="flex flex-col items-center gap-3 sm:items-start">
+            <div role="timer" aria-live="off" class="h-28 sm:h-44">
+              {#key tick}
+                <span class={cn("final-number font-heading block text-[7rem] leading-none font-black tabular-nums sm:text-[11rem]", critical && "critical text-rose-500")}>{tick}</span>
+              {/key}
             </div>
-          {/each}
-        </div>
+            <p aria-live="polite" class={cn("final-message text-lg font-semibold sm:text-2xl", critical ? "critical text-amber-500" : "text-muted-foreground")}>
+              {critical ? t("countdown.getReady") : t("countdown.almostThere")}
+            </p>
+          </div>
+        {:else}
+          <div class="flex items-end justify-between gap-2 sm:justify-start sm:gap-8" role="timer" aria-live="off">
+            {#each parts as part (part.label)}
+              <div class="min-w-0">
+                <div class="font-heading text-[2.6rem] leading-none font-bold tabular-nums sm:text-7xl">
+                  {String(part.value).padStart(2, "0")}
+                </div>
+                <div class="text-muted-foreground mt-1.5 text-xs sm:text-sm">{part.label}</div>
+              </div>
+            {/each}
+          </div>
+        {/if}
 
         <!-- note lane: four columns tilted back, a note per second dropping onto the judgement line -->
         <div class="lane-wrap mt-6" aria-hidden="true">
@@ -186,7 +231,7 @@
 
         <div class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div class="max-w-md space-y-1">
-            <p class="font-semibold">{t("levelDetail.releasesOn", [releaseLabel])}</p>
+            <p class="font-semibold">{t("levelDetail.releasesOn", [releaseZone ? `${releaseLabel} ${releaseZone}` : releaseLabel])}</p>
             <p class="text-muted-foreground text-sm">{t("levelDetail.scheduledNote")}</p>
           </div>
           <div class="flex gap-2">
@@ -196,12 +241,47 @@
             </Button>
             <Button type="button" variant="outline" onclick={share} class="rounded-full">
               {#if copied}<RiCheckLine class="size-4" />{:else}<RiShareLine class="size-4" />{/if}
-              {copied ? t("levelDetail.linkCopied") : t("levelDetail.share")}
+              {copied ? t("generic.linkCopied") : t("generic.share")}
             </Button>
+            {#if onskip}
+              <Button type="button" variant="outline" onclick={onskip} class="rounded-full">
+                {t("levelDetail.viewChartAnyways")}
+              </Button>
+            {/if}
           </div>
         </div>
       </div>
     </section>
+
+    {#if author}
+      {#await author then account}
+        {#if account}
+          <a
+            href={`/users/${account.sonolus_handle}`}
+            class="bg-card hover:border-primary/40 block overflow-hidden rounded-2xl border transition-colors sm:max-w-sm"
+          >
+            <div class="h-16 bg-cover bg-center" style={`background-image:url(${bannerUrl(account)})`}></div>
+            <div class="-mt-6 flex items-end gap-3 px-4 pb-3">
+              <CoverArt
+                id={account.sonolus_id}
+                title={account.sonolus_username}
+                src={profileUrl(account)}
+                rounded="rounded-full"
+                class="ring-card size-12 shrink-0 ring-4"
+              />
+              <div class="min-w-0">
+                <p class="text-muted-foreground text-xs">{t("generic.charter")}</p>
+                <p class="flex min-w-0 items-center gap-1.5 font-semibold">
+                  <span class="truncate"><FormattedText text={account.sonolus_username} /></span>
+                  <AccountBadges badges={account.badges} class="size-4" />
+                </p>
+                <p class="text-muted-foreground text-xs tabular-nums">#{account.sonolus_handle}</p>
+              </div>
+            </div>
+          </a>
+        {/if}
+      {/await}
+    {/if}
   </main>
 </div>
 
@@ -307,10 +387,49 @@
       box-shadow: 0 0 28px var(--accent);
     }
   }
+  .final-number {
+    text-shadow: 0 0 60px color-mix(in oklab, var(--primary) 60%, transparent);
+    animation: number-in 1s ease-out;
+  }
+  .final-number.critical {
+    text-shadow: 0 0 80px color-mix(in oklab, currentColor 80%, transparent);
+    animation: critical-pulse 0.5s ease-in-out 2;
+  }
+  .final-message.critical {
+    animation: message-glow 0.5s ease-in-out infinite alternate;
+  }
+  @keyframes number-in {
+    from {
+      transform: scale(1.12);
+      opacity: 0.4;
+    }
+    40% {
+      opacity: 1;
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes critical-pulse {
+    50% {
+      transform: scale(1.15);
+    }
+  }
+  @keyframes message-glow {
+    from {
+      text-shadow: 0 0 10px color-mix(in oklab, currentColor 50%, transparent);
+    }
+    to {
+      text-shadow: 0 0 30px color-mix(in oklab, currentColor 80%, transparent);
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .note,
     .hit,
-    .judge-live {
+    .judge-live,
+    .final-number,
+    .final-number.critical,
+    .final-message.critical {
       animation: none;
     }
     .note {

@@ -31,28 +31,28 @@
   <div class={cn("mx-auto grid h-16 max-w-md", session.isLoggedIn ? "grid-cols-5" : "grid-cols-2")}>
     <a href="/" aria-current={isHome ? "page" : undefined} class={cn(tab, isHome ? "text-primary" : "text-muted-foreground")}>
       {#if isHome}<RiHome5Fill class="size-6" />{:else}<RiHome5Line class="size-6" />{/if}
-      {t("nav.home")}
+      {t("generic.home")}
     </a>
 
     <a href="/browse" aria-current={isBrowse ? "page" : undefined} class={cn(tab, isBrowse ? "text-primary" : "text-muted-foreground")}>
       {#if isBrowse}<RiCompass3Fill class="size-6" />{:else}<RiCompass3Line class="size-6" />{/if}
-      {t("nav.browse")}
+      {t("generic.browse")}
     </a>
 
     <!-- upload, dashboard and notifications need an account; signed-out visitors log in from the header -->
     {#if session.isLoggedIn}
-      <a href="/dashboard/upload" aria-label={t("nav.upload")} class="flex flex-col items-center justify-center">
+      <a href="/dashboard/upload" aria-label={t("generic.upload")} class="flex flex-col items-center justify-center">
         <span
           class="bg-primary text-primary-foreground! -mt-5 grid size-13 place-items-center rounded-full shadow-lg shadow-primary/30 ring-4 ring-background transition-transform active:scale-95"
         >
           <RiUpload2Line class="size-6" />
         </span>
-        <span class="text-muted-foreground -mt-0.5 text-[10px] font-medium">{t("nav.upload")}</span>
+        <span class="text-muted-foreground -mt-0.5 text-[10px] font-medium">{t("generic.upload")}</span>
       </a>
 
       <a href="/dashboard" aria-current={isDashboard ? "page" : undefined} class={cn(tab, isDashboard ? "text-primary" : "text-muted-foreground")}>
         {#if isDashboard}<RiDashboardFill class="size-6" />{:else}<RiDashboardLine class="size-6" />{/if}
-        {t("nav.dashboard")}
+        {t("generic.dashboard")}
       </a>
 
       <a
@@ -61,7 +61,7 @@
         class={cn(tab, isNotifications ? "text-primary" : "text-muted-foreground")}
       >
         {#if isNotifications}<RiNotification3Fill class="size-6" />{:else}<RiNotification3Line class="size-6" />{/if}
-        {t("nav.notifications")}
+        {t("generic.notifications")}
       </a>
     {/if}
   </div>

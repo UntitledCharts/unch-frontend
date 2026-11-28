@@ -22,7 +22,7 @@ export const GET: RequestHandler = ({ url }) => {
     if (page?.startsWith("/")) payload.provider_url = SITE_URL + page;
   } else if (author) {
     payload.author_name = author;
-    payload.author_url = handle ? `${SITE_URL}/creators/${handle}` : SITE_URL;
+    payload.author_url = handle ? `${SITE_URL}/users/${handle}` : SITE_URL;
   }
 
   return json(payload, {

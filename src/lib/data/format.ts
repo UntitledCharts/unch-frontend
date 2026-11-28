@@ -1,4 +1,4 @@
-import { i18n, t, localized } from "$lib/i18n.svelte.js";
+import { i18n, t } from "$lib/i18n.svelte.js";
 
 import type { LeaderboardType } from "./types.js";
 
@@ -81,11 +81,11 @@ export function compact(n: number): string {
     f = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
     compactFormatters.set(locale, f);
   }
-  return localized(f.format(n));
+  return f.format(n);
 }
 
 export function grouped(n: number): string {
-  return localized(n.toLocaleString(i18n.locale));
+  return n.toLocaleString(i18n.locale);
 }
 
 export function plural(n: number, singular: string, pluralForm = `${singular}s`): string {
@@ -112,13 +112,22 @@ function rtf(): Intl.RelativeTimeFormat {
   return f;
 }
 
+// a public chart dates from when it first went public; an unlisted or private one from its upload
+export function chartDate(chart: { status: string; published_at: string; created_at: string }): string {
+  return chart.status === "PUBLIC" ? chart.published_at : chart.created_at;
+}
+
+export function fullDate(input: string | number): string {
+  return new Date(input).toLocaleString(i18n.locale, { dateStyle: "long", timeStyle: "short" });
+}
+
 export function relativeTime(input: string | number, now: number = Date.now()): string {
   const then = typeof input === "number" ? input : Date.parse(input);
   if (Number.isNaN(then)) return "";
   let duration = (then - now) / 1000;
   for (const division of RELATIVE_DIVISIONS) {
     if (Math.abs(duration) < division.amount) {
-      return localized(rtf().format(Math.round(duration), division.unit));
+      return rtf().format(Math.round(duration), division.unit);
     }
     duration /= division.amount;
   }

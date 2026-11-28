@@ -15,10 +15,12 @@ export default defineConfig({
       'wavesurfer.js',
       'mode-watcher',
     ],
-    // Only the /og server endpoints import these, and they load .wasm files the optimizer can't handle.
-    exclude: ['@cf-wasm/resvg', '@cf-wasm/satori'],
   },
   server: {
+    // the translations live outside src, so the dev server has to be allowed to serve them
+    fs: {
+      allow: ['i18n', 'supported.json'],
+    },
     warmup: {
       ssrFiles: [
         './src/routes/**/+page.svelte',

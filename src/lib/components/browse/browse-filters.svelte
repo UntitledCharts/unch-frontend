@@ -4,11 +4,12 @@
   import { cn } from "$lib/utils.js";
   import {
     searchTypes,
-    sortByOptions,
+    browseSortOptions,
     orderOptions,
     type Filters,
   } from "$lib/data/index.js";
-  import { RiStarFill, RiEqualizerLine } from "$lib/icons.js";
+  import { RiStarFill, RiEqualizerLine, RiHeart3Fill } from "$lib/icons.js";
+  import { session } from "$lib/state/session.svelte";
 
   let { filters = $bindable() }: { filters: Filters } = $props();
 
@@ -36,17 +37,17 @@
     {#if showSort}
       <Select
         bind:value={filters.sortBy}
-        options={sortByOptions}
-        label={t("dashboard.sort")}
-        ariaLabel={t("dashboard.sortBy")}
+        options={browseSortOptions}
+        label={t("generic.sort")}
+        ariaLabel={t("generic.sortBy")}
         class="sm:w-48"
       />
 
       <Select
         bind:value={filters.sortOrder}
         options={orderOptions}
-        label={t("search.order")}
-        ariaLabel={t("search.order")}
+        label={t("generic.order")}
+        ariaLabel={t("generic.order")}
         class="sm:w-40"
       />
 
@@ -61,7 +62,23 @@
             : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30",
         )}
       >
-        <RiStarFill class="size-3" /> {t("home.staffPicks2")}
+        <RiStarFill class="size-3" /> {t("generic.staffPicks")}
+      </button>
+    {/if}
+
+    {#if session.isLoggedIn && filters.searchType !== "random"}
+      <button
+        type="button"
+        onclick={() => (filters.likedByMe = !filters.likedByMe)}
+        aria-pressed={filters.likedByMe}
+        class={cn(
+          "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors",
+          filters.likedByMe
+            ? "border-rose-400/40 bg-rose-400/15 text-rose-600 dark:text-rose-300"
+            : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30",
+        )}
+      >
+        <RiHeart3Fill class="size-3" /> {t("browse.likedByMe")}
       </button>
     {/if}
   </div>
@@ -77,24 +94,24 @@
         <input type="number" min="1" max="99" placeholder="e.g. 32" bind:value={filters.maxRating} class={inputClass} />
       </label>
       <label class="space-y-1">
-        <span class="text-muted-foreground text-xs">{t("browse.authorHandle")}</span>
+        <span class="text-muted-foreground text-xs">{t("browse.charterHandle")}</span>
         <input type="text" placeholder="e.g. 78302" bind:value={filters.authorHandle} class={inputClass} />
       </label>
       <label class="space-y-1">
         <span class="text-muted-foreground text-xs">{t("browse.titleIncludes")}</span>
-        <input type="text" placeholder={t("browse.searchInTitles")} bind:value={filters.titleIncludes} class={inputClass} />
+        <input type="text" placeholder={t("browse.titlePlaceholder")} bind:value={filters.titleIncludes} class={inputClass} />
       </label>
       <label class="space-y-1">
         <span class="text-muted-foreground text-xs">{t("browse.artistsIncludes")}</span>
-        <input type="text" placeholder={t("browse.searchInArtists")} bind:value={filters.artistsIncludes} class={inputClass} />
+        <input type="text" placeholder={t("browse.artistsPlaceholder")} bind:value={filters.artistsIncludes} class={inputClass} />
       </label>
       <label class="space-y-1">
         <span class="text-muted-foreground text-xs">{t("browse.descriptionIncludes")}</span>
-        <input type="text" placeholder={t("browse.searchInDescriptions")} bind:value={filters.descriptionIncludes} class={inputClass} />
+        <input type="text" placeholder={t("browse.descriptionPlaceholder")} bind:value={filters.descriptionIncludes} class={inputClass} />
       </label>
       <label class="space-y-1 sm:col-span-2 lg:col-span-3">
-        <span class="text-muted-foreground text-xs">{t("search.tags")}</span>
-        <input type="text" placeholder={t("browse.commaSeparatedTags")} bind:value={filters.tags} class={inputClass} />
+        <span class="text-muted-foreground text-xs">{t("generic.tags")}</span>
+        <input type="text" placeholder={t("generic.commaSeparatedTags")} bind:value={filters.tags} class={inputClass} />
       </label>
     </div>
   {/if}

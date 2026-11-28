@@ -8,7 +8,7 @@
   $effect(() => {
     const d = dialog;
     if (!d) return;
-    const show = session.pending && !session.inlineLogin;
+    const show = session.pending;
     if (show && !d.open) d.showModal();
     else if (!show && d.open) d.close();
   });
@@ -26,13 +26,16 @@
     </div>
     <h2 class="text-lg font-semibold tracking-tight">{t("login.waitingForConfirmation")}</h2>
     <p class="text-muted-foreground mt-1 text-sm">
-      {t("login.approveTheLoginInThe")}
+      {t("login.approveOnSonolus")}
     </p>
+    {#if session.popupBlocked}
+      <Button onclick={() => session.openLoginWindow()} class="mt-5 w-full rounded-full">{t("login.openLoginAgain")}</Button>
+    {/if}
     <Button variant="outline" onclick={() => session.cancelLogin()} class="mt-5 w-full rounded-full">
-      {t("oauth.cancel")}
+      {t("generic.cancel")}
     </Button>
   </div>
   <form method="dialog" class="modal-backdrop">
-    <button aria-label={t("login.cancelLogin")}>{t("login.cancel")}</button>
+    <button aria-label={t("login.cancelLogin")}>{t("generic.cancel")}</button>
   </form>
 </dialog>

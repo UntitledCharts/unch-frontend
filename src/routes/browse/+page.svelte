@@ -11,16 +11,21 @@
   import Seo from "$lib/components/seo.svelte";
   import Pager from "$lib/components/pager.svelte";
   import Button from "$lib/components/button.svelte";
+  import AdSlot from "$lib/components/ad-slot.svelte";
   import { cn } from "$lib/utils.js";
   import { page } from "$app/state";
+  import { replaceState } from "$app/navigation";
+  import { ogSiteUrl } from "$lib/config.js";
+  import { session } from "$lib/state/session.svelte";
   import {
     fetchChartsWindow,
+    fetchRandomCharts,
     filtersToApiParams,
+    filtersFromQuery,
+    filtersToQuery,
     defaultFilters,
     isDefault,
-    sortByOptions,
     type Filters,
-    type SortBy,
     type Chart,
   } from "$lib/data/index.js";
   import { RiListUnordered, RiGridFill, RiEmotionSadLine, RiSearchLine } from "$lib/icons.js";
@@ -29,31 +34,7 @@
 
   const LIMIT = 12;
 
-  function initFilters(): Filters {
-    const p = page.url.searchParams;
-    const f: Filters = { ...defaultFilters };
-    if (p.get("staff") === "1") f.staffPick = true;
-    const type = p.get("type");
-    if (type === "newest" || type === "quick" || type === "advanced" || type === "random") {
-      f.searchType = type;
-    }
-    const sort = p.get("sort");
-    if (sort) {
-      const [by, order] = sort.split(":");
-      if (sortByOptions.some((o) => o.value === by)) f.sortBy = by as SortBy;
-      if (order === "asc" || order === "desc") f.sortOrder = order;
-    }
-    const q = p.get("q");
-    if (q) f.keywords = q;
-    const handle = p.get("sonolus_handle_is");
-    if (handle) {
-      f.authorHandle = handle;
-      f.searchType = "advanced";
-    }
-    return f;
-  }
-
-  let filters = $state<Filters>(initFilters());
+  let filters = $state<Filters>(filtersFromQuery(page.url.searchParams));
   let view = $state<"list" | "grid">("grid");
   let current = $state(1);
   const autofocusSearch = page.url.searchParams.get("focus") === "1";
@@ -68,6 +49,16 @@
     current = 1;
   });
 
+  // the filters live in the URL; the first state came from it, so only changes are written back
+  let written = filtersToQuery(filtersFromQuery(page.url.searchParams)).toString();
+  $effect(() => {
+    const qs = filtersToQuery(filters).toString();
+    if (qs === written) return;
+    written = qs;
+    lastQuery = filters.keywords.trim() || null;
+    replaceState(qs ? `${page.url.pathname}?${qs}` : page.url.pathname, page.state);
+  });
+
   let charts = $state<Chart[]>([]);
   let pageCount = $state(1);
   let loading = $state(true);
@@ -76,6 +67,7 @@
     [
       filters.searchType,
       filters.staffPick,
+      filters.likedByMe,
       filters.sortBy,
       filters.sortOrder,
       filters.keywords,
@@ -97,10 +89,22 @@
   let reqToken = 0;
   $effect(() => {
     rerollNonce;
-    const params = filtersToApiParams(filters, current - 1, LIMIT);
+    // "liked by me" needs the session, so it waits for it and is dropped when signed out
+    if (filters.likedByMe && session.loading) return;
+    const liked = filters.likedByMe && session.isLoggedIn;
+    const request =
+      filters.searchType === "random"
+        ? fetchRandomCharts(fetch, LIMIT)
+        : fetchChartsWindow(
+            fetch,
+            filtersToApiParams({ ...filters, likedByMe: liked }),
+            (current - 1) * LIMIT,
+            LIMIT,
+            liked ? session.sessionKey : null,
+          );
     const mine = ++reqToken;
     loading = true;
-    fetchChartsWindow(fetch, params, (current - 1) * LIMIT, LIMIT).then((r) => {
+    request.then((r) => {
       if (mine !== reqToken) return;
       charts = r.data;
       pageCount = Math.max(1, Math.ceil(r.total / LIMIT));
@@ -118,19 +122,17 @@
 </script>
 
 <Seo
-  title={t("nav.browse")}
-  description={t("browse.filterTheCatalogByDifficulty2")}
-  image="/og?title=Browse&subtitle=Filter+the+catalog+by+difficulty%2C+level+and+staff+picks"
+  title={t("generic.browse")}
+  metaTitle="Browse"
+  description="Filter by difficulty, level and staff picks."
+  image={ogSiteUrl("Browse", "Filter by difficulty, level and staff picks")}
 />
 
 <SiteHeader />
 
 <main class="mx-auto max-w-5xl space-y-4 px-4 py-6 sm:space-y-5 sm:px-6 sm:py-8">
   <header class="space-y-1">
-    <h1 class="font-heading text-xl font-bold tracking-tight sm:text-2xl">{t("error.browseCharts")}</h1>
-    <p class="text-muted-foreground hidden text-sm sm:block">
-      {t("browse.filterTheCatalogByDifficulty")}
-    </p>
+    <h1 class="font-heading text-xl font-bold tracking-tight sm:text-2xl">{t("generic.browseCharts")}</h1>
   </header>
 
   <div class="md:hidden">
@@ -145,7 +147,7 @@
       <input
         bind:value={filters.keywords}
         type="search"
-        placeholder={t("browse.searchChartsSongsCharters")}
+        placeholder={t("browse.searchPlaceholder")}
         aria-label={t("nav.searchCharts")}
         class="bg-card focus-visible:ring-ring/50 h-11 w-full rounded-xl border pr-4 pl-10 text-sm outline-none focus-visible:ring-2"
       />
@@ -156,12 +158,12 @@
   <div class="flex items-center justify-between gap-3">
     <p class="text-muted-foreground text-sm">
       {#if loading}
-        {t("common.loading")}
+        {t("generic.loading")}
       {:else}
         {charts.length === 1 ? t("browse.onThisPage_singular", [charts.length]) : t("browse.onThisPage_plural", [charts.length])}
       {/if}
       {#if !isDefault(filters)}
-        <button onclick={reset} class="text-primary ml-2 hover:underline">{t("browse.clear")}</button>
+        <button onclick={reset} class="text-primary ml-2 hover:underline">{t("generic.clear")}</button>
       {/if}
     </p>
 
@@ -170,7 +172,7 @@
         type="button"
         onclick={() => (view = "grid")}
         aria-pressed={view === "grid"}
-        aria-label={t("browse.gridView")}
+        aria-label={t("generic.gridView")}
         class={cn(
           "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
           view === "grid"
@@ -178,13 +180,13 @@
             : "text-muted-foreground hover:text-foreground",
         )}
       >
-        <RiGridFill class="size-3.5" /> {t("browse.grid")}
+        <RiGridFill class="size-3.5" /> {t("generic.grid")}
       </button>
       <button
         type="button"
         onclick={() => (view = "list")}
         aria-pressed={view === "list"}
-        aria-label={t("browse.listView")}
+        aria-label={t("generic.listView")}
         class={cn(
           "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
           view === "list"
@@ -192,10 +194,12 @@
             : "text-muted-foreground hover:text-foreground",
         )}
       >
-        <RiListUnordered class="size-3.5" /> {t("browse.list")}
+        <RiListUnordered class="size-3.5" /> {t("generic.list")}
       </button>
     </div>
   </div>
+
+  <AdSlot refresh={`${current}:${rerollNonce}`} />
 
   {#if loading}
     <div class="space-y-2.5 md:hidden">
@@ -221,7 +225,7 @@
       class="text-muted-foreground flex flex-col items-center gap-3 rounded-2xl border border-dashed py-20"
     >
       <RiEmotionSadLine class="size-10 opacity-50" />
-      <p class="text-sm">{t("browse.noChartsMatchTheseFilters")}</p>
+      <p class="text-sm">{t("browse.noMatches")}</p>
       <Button variant="outline" size="sm" onclick={reset}>{t("browse.resetFilters")}</Button>
     </div>
   {:else}
@@ -250,6 +254,10 @@
         {/each}
       </div>
     {/if}
+  {/if}
+
+  {#if charts.length}
+    <AdSlot refresh={`${current}:${rerollNonce}`} />
   {/if}
 
   {#if filters.searchType === "random"}

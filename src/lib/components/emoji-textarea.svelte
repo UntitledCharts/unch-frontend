@@ -116,8 +116,8 @@
     <RiSearchLine class="text-muted-foreground size-4 shrink-0" />
     <input
       bind:value={search}
-      placeholder={t("common.searchEmoji")}
-      aria-label={t("common.searchEmoji")}
+      placeholder={t("generic.searchEmoji")}
+      aria-label={t("generic.searchEmoji")}
       class="min-w-0 flex-1 bg-transparent text-sm outline-none"
     />
   </label>
@@ -136,7 +136,7 @@
       {/each}
     </div>
   {:else}
-    <p class="text-muted-foreground py-6 text-center text-sm">{t("common.noEmoji")}</p>
+    <p class="text-muted-foreground py-6 text-center text-sm">{t("generic.noEmoji")}</p>
   {/if}
 {/snippet}
 
@@ -176,8 +176,8 @@
   <button
     type="button"
     onclick={openPicker}
-    aria-label={t("common.insertEmoji")}
-    title={t("common.insertEmoji")}
+    aria-label={t("generic.insertEmoji")}
+    title={t("generic.insertEmoji")}
     class={cn(
       "text-muted-foreground hover:text-foreground hover:bg-muted absolute right-1.5 grid size-8 place-items-center rounded-lg transition-colors",
       multiline ? "top-1.5" : "top-1/2 -translate-y-1/2",
@@ -214,7 +214,7 @@
   {#if pickerOpen && !asSheet}
     <button
       type="button"
-      aria-label={t("common.close2")}
+      aria-label={t("generic.close")}
       onclick={() => (pickerOpen = false)}
       class="fixed inset-0 z-[69] cursor-default"
     ></button>

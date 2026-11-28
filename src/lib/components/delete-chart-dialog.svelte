@@ -69,7 +69,7 @@
 
     <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
       <Button variant="outline" type="button" class="rounded-full" onclick={() => (open = false)}>
-        {t("oauth.cancel")}
+        {t("generic.cancel")}
       </Button>
       <Button
         type="button"
@@ -78,7 +78,7 @@
         class="rounded-full border-rose-600 bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-40"
       >
         <RiDeleteBinLine class="size-4" />
-        {busy ? t("deleteChart.deleting") : t("deleteChart.confirm")}
+        {busy ? t("generic.deleting") : t("generic.deleteChart")}
       </Button>
     </div>
   </div>

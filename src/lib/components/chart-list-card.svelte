@@ -2,6 +2,7 @@
   import { t } from "$lib/i18n.svelte.js";
   import type { Chart } from "$lib/data/index.js";
   import { compact, parseDescriptionMeta, coverUrl, previewProxyUrl } from "$lib/data/index.js";
+  import { hoverCard } from "$lib/state/author-card.svelte.js";
   import CoverArt from "./cover-art.svelte";
   import LevelBadge from "./level-badge.svelte";
   import Waveform from "./waveform.svelte";
@@ -49,7 +50,7 @@
           >
         </h3>
         {#if chart.staff_pick}
-          <span class="mt-0.5 inline-flex shrink-0 items-center rounded-full bg-amber-400 p-1 text-amber-950" title={t("common.staff")}>
+          <span class="mt-0.5 inline-flex shrink-0 items-center rounded-full bg-amber-400 p-1 text-amber-950" title={t("generic.staff")}>
             <RiStarFill class="size-2.5" />
           </span>
         {/if}
@@ -62,7 +63,8 @@
 
       <div class="mt-auto flex items-center justify-between gap-2 pt-0.5">
         <a
-          href={`/creators/${chart.author_handle}`}
+          href={`/users/${chart.author_handle}`}
+          {@attach hoverCard(chart.author)}
           class="text-accent relative z-10 min-w-0 truncate text-xs font-bold hover:underline">{chart.chart_design}</a
         >
         <div class="text-muted-foreground flex shrink-0 items-center gap-3 text-xs tabular-nums [&>span]:inline-flex [&>span]:items-center [&>span]:gap-1">
@@ -76,7 +78,7 @@
       <button
         type="button"
         onclick={toggle}
-        aria-label={expanded ? t("common.showLess") : t("common.showMoreDetails")}
+        aria-label={expanded ? t("generic.showLess") : t("generic.showMoreDetails")}
         aria-expanded={expanded}
         class="text-muted-foreground hover:text-foreground hover:bg-muted relative z-10 -mr-1 grid w-8 shrink-0 place-items-center rounded-full transition-colors"
       >
@@ -94,9 +96,9 @@
       <div class="border-foreground/10 space-y-3 border-t pt-3">
         {#if meta.bpm || meta.notes || meta.combo}
           <div class="flex flex-wrap gap-1.5 [&>span]:bg-muted [&>span]:text-muted-foreground [&>span]:rounded-full [&>span]:px-2.5 [&>span]:py-0.5 [&>span]:text-[11px] [&>span]:tabular-nums">
-            {#if meta.bpm}<span>{t("common.bpm", [meta.bpm])}</span>{/if}
-            {#if meta.notes}<span>{t("common.notes", [compact(meta.notes)])}</span>{/if}
-            {#if meta.combo}<span>{t("common.combo", [compact(meta.combo)])}</span>{/if}
+            {#if meta.bpm}<span>{t("generic.bpm", [meta.bpm])}</span>{/if}
+            {#if meta.notes}<span>{t("generic.notes", [compact(meta.notes)])}</span>{/if}
+            {#if meta.combo}<span>{t("generic.combo", [compact(meta.combo)])}</span>{/if}
           </div>
         {/if}
 

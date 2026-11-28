@@ -1,0 +1,99 @@
+{
+  "generic": {
+    "save": "Salvar",
+    "home": "Página Principal",
+    "dashboard": "Painel",
+    "cancel": "Cancelar",
+    "staffPick": "Escolha do Staff",
+    "order": "Ordem",
+    "rating": "Avaliação",
+    "likes": "Curtidas",
+    "newest": "Novo",
+    "share": "Compartilhar",
+    "comments": "Comentários",
+    "linkCopied": "Link copiado!",
+    "edit": "Editar",
+    "loading": "Carregando...",
+    "error": "Um erro ocorreu",
+    "next": "Próximo",
+    "undo": "Desfazer",
+    "by": "por {1}",
+    "visibility": "Visibilidade",
+    "sortBy": "Ordenar por",
+    "public": "Público",
+    "unlisted": "Não listado",
+    "private": "Privado",
+    "language": "Idioma",
+    "saving": "Salvando...",
+    "delete": "Deletar",
+    "uploading": "Dando Upload...",
+    "back": "Voltar",
+    "pageOf": "Página {1} de {2}"
+  },
+  "userProfile": {
+    "editProfile": "Editar Perfil",
+    "chartsLiked": "Charts Curtidas",
+    "commentsMade": "Comentários Postados"
+  },
+  "home": {
+    "viewAll": "Ver Todos"
+  },
+  "search": {
+    "random": "Aleatório",
+    "quick": "Rápido",
+    "advanced": "Avançado",
+    "ascending": "Ascendente",
+    "descending": "Descendente",
+    "alphabetical": "Alfabético"
+  },
+  "levelDetail": {
+    "chartedBy": "Chart feita por {1}",
+    "openViaSonolus": "Abrir via {1}",
+    "like": "Curtidas",
+    "leaderboard": "Classificação",
+    "noComments": "Sem comentários ainda",
+    "comment": "Comentar",
+    "days": "Dias",
+    "hours": "Horas",
+    "secs": "Segs",
+    "makeStaffPick": "Tornar Escolha do Staff",
+    "removeStaffPick": "Remover Escolha do Staff",
+    "levelLabel": "Nível",
+    "published": "Publicado",
+    "uploaded": "Deu Upload"
+  },
+  "footer": {
+    "openInSonolus": "Abrir no Sonolus"
+  },
+  "dashboard": {
+    "schedulePublish": "Publicação Programada",
+    "scheduledFor": "Programada pra {1}"
+  },
+  "uploadPolicy": {
+    "title": "Política de Upload",
+    "subtitle": "Por favor leia as regras a seguirá antes de dar upload de suas charts.",
+    "fileSizeLimits": "Limites de Tamanho dos Arquivos",
+    "fileSizeDesc": "Se suas charts forem maiores que o limite de upload, você pode <strong>solicitar suporte para obter ajuda</strong>! Não queremos limitar o tamanho das charts; por isso, ajudaremos você a enviá-los!",
+    "shitpostWarning": "Postagens de baixa qualidade (Shitposts) não são permitidas nesta exceção. Por favor, reconsidere suas escolhas de vida se estiver enviando postagens de baixa qualidade (Shitposts) com tamanho superior ao limite permitido.",
+    "supportedFileTypes": "Tipos de Arquivos Suportados",
+    "fileTypesNote": "<strong>Nota:</strong> Recursos avançados e exclusivos só podem ser encontrados no LevelData! Você pode abrir o arquivo .usc no editor para continuar trabalhando.",
+    "openEditor": "Abrir Editor do Next Sekai",
+    "noInappropriate": "Proibido o uso de insultos, racismo, política, conteúdo extremamente inapropriado, publicidade, etc.",
+    "noAbuse": "Não abuse dos nossos serviços apenas por abusar deles.",
+    "commonSense": "Tenha um pouco de senso comum por favor",
+    "correctMetadata": "Seus metadados devem estar corretos (incluindo as capas). "
+  },
+  "countdown": {
+    "getReady": "PREPARE-SE!",
+    "almostThere": "Quase lá..."
+  },
+  "settings": {
+    "themeLight": "Luz",
+    "themeDark": "Escuro"
+  },
+  "browse": {
+    "titlePlaceholder": "Pesquisar em títulos...",
+    "artistsPlaceholder": "Pesquisar em artistas...",
+    "descriptionPlaceholder": "Pesquisar em descrições..."
+  }
+}
