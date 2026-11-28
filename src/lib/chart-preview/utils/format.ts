@@ -1,0 +1,31 @@
+import type { TimeScaleEase } from '../chart/timeScale'
+
+export const formatIntegerTime = (time: number) =>
+    `${`${Math.floor(time / 60)}`.padStart(2, '0')}:${`${time % 60}`.padStart(2, '0')}`
+
+export const formatTime = (time: number) =>
+    `${`${Math.floor(time / 60)}`.padStart(2, '0')}:${(time % 60).toFixed(3).padStart(6, '0')}`
+
+export const formatIntegerBeat = (beat: number) => `${beat}`
+
+export const formatBeat = (beat: number) => beat.toFixed(3)
+
+export const formatBpm = (value: number) => `${value}`
+
+export const formatTimeScale = (value: number, skip: number, timeScaleEase: TimeScaleEase) => {
+    let text = `${value}x`
+
+    if (skip) {
+        if (skip > 0) text += '+'
+        text += `${skip}`
+    }
+
+    if (timeScaleEase === 'linear') {
+        text += '^'
+    }
+
+    return text
+}
+
+export const formatShortcut = (shortcut: string | undefined) =>
+    shortcut === ' ' ? 'Space' : shortcut

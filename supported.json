@@ -40,5 +40,26 @@
         "english_name": "Traditional Chinese",
         "file": "zh_tw.json",
         "locale": "zh-TW"
+    },
+    "fr": {
+        "country": "fr",
+        "name": "Français",
+        "english_name": "French",
+        "file": "fr.json",
+        "locale": "fr-FR"
+    },
+    "ru": {
+        "country": "ru",
+        "name": "Русский",
+        "english_name": "Russian",
+        "file": "ru.json",
+        "locale": "ru-RU"
+    },
+    "vi": {
+        "country": "vn",
+        "name": "Tiếng Việt",
+        "english_name": "Vietnamese",
+        "file": "vi.json",
+        "locale": "vi-VN"
     }
 }

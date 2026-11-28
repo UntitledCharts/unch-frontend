@@ -1,0 +1,116 @@
+{
+  "generic": {
+    "save": "Sauvegarder",
+    "home": "Maison",
+    "dashboard": "Tableau de bord",
+    "cancel": "Annuler",
+    "charts": "Graphiques",
+    "staffPick": "Sélection du personnel",
+    "order": "Commande",
+    "rating": "Notation",
+    "likes": "Goûts",
+    "tags": "Étiquettes",
+    "newest": "Nouveautés",
+    "share": "Partager",
+    "comments": "Commentaires",
+    "linkCopied": "Lien copié !",
+    "edit": "Modifier",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite.",
+    "next": "Suivant",
+    "undo": "Défaire",
+    "by": "par {1}",
+    "visibility": "Visibilité",
+    "sortBy": "Trier par",
+    "public": "Publique",
+    "unlisted": "Non répertorié",
+    "private": "Privé",
+    "language": "Langue",
+    "saving": "Économie...",
+    "delete": "Supprimer",
+    "uploading": "Chargement en cours...",
+    "back": "Arrière",
+    "revoking": "Révocation...",
+    "authorizing": "Autorisation en cours...",
+    "authorize": "Autoriser",
+    "pageOf": "Page {1} de {2}"
+  },
+  "nav": {
+    "logout": "Déconnexion"
+  },
+  "oauth": {
+    "revokeNotice": "Vous pouvez révoquer cette autorisation à tout moment depuis les applications autorisées.",
+    "invalidRequest": "Cette demande d'autorisation n'est pas valide.",
+    "connectionFailed": "Impossible de contacter le serveur. Veuillez réessayer.",
+    "authorizedSubtitle": "Applications auxquelles vous avez donné accès à votre compte. La révocation prend effet immédiatement.",
+    "noApps": "Vous n'avez autorisé aucune application pour le moment.",
+    "revokeFailed": "Impossible de révoquer cette demande.",
+    "loadFailed": "Impossible de charger vos applications autorisées."
+  },
+  "userProfile": {
+    "editProfile": "Modifier le profil",
+    "chartsLiked": "Graphiques appréciés",
+    "commentsMade": "Commentaires publiés"
+  },
+  "home": {
+    "viewAll": "Afficher tout"
+  },
+  "search": {
+    "random": "Aléatoire",
+    "quick": "Rapide",
+    "advanced": "Avancé",
+    "ascending": "Ascendant",
+    "descending": "Descendant",
+    "alphabetical": "Alphabétique",
+    "reroll": "Relancer"
+  },
+  "levelDetail": {
+    "chartedBy": "Graphique réalisé par {1}",
+    "openViaSonolus": "Ouvrir via {1}",
+    "like": "Comme",
+    "leaderboard": "Classement",
+    "noComments": "Aucun commentaire pour l'instant",
+    "comment": "Commentaire",
+    "days": "Jours",
+    "hours": "Heures",
+    "mins": "Minutes",
+    "makeStaffPick": "Faire une sélection du personnel",
+    "removeStaffPick": "Supprimer la sélection du personnel",
+    "levelLabel": "Niveau",
+    "published": "Publié",
+    "uploaded": "Téléchargé"
+  },
+  "footer": {
+    "openInSonolus": "Ouvert à Sonolus"
+  },
+  "dashboard": {
+    "status": "Statut",
+    "schedulePublish": "Publication du calendrier",
+    "scheduledFor": "Prévu pour {1}"
+  },
+  "uploadPolicy": {
+    "title": "Politique de téléchargement",
+    "subtitle": "Veuillez lire les règles suivantes avant de télécharger vos graphiques.",
+    "fileSizeLimits": "Limites de taille des fichiers",
+    "supportedFileTypes": "Types de fichiers pris en charge",
+    "fileTypesNote": "<strong>Remarque :</strong> Les fonctionnalités étendues les plus avancées ne sont disponibles que dans LevelData ! Vous pouvez ouvrir le fichier .usc dans l’éditeur pour continuer à travailler.",
+    "openEditor": "Ouvrir l'éditeur Next Sekai",
+    "noInappropriate": "Pas d'insultes, de racisme, de politique, de contenu totalement inapproprié, de publicité, etc.",
+    "noAbuse": "N'abusez pas de nos services par simple plaisir d'en abuser.",
+    "commonSense": "Faites preuve de bon sens, s'il vous plaît.",
+    "correctMetadata": "Vos métadonnées doivent être correctes (y compris les jaquettes)."
+  },
+  "countdown": {
+    "getReady": "PRÉPAREZ-VOUS!",
+    "almostThere": "On y est presque..."
+  },
+  "settings": {
+    "themeLight": "Lumière",
+    "themeDark": "Sombre"
+  },
+  "browse": {
+    "titlePlaceholder": "Recherche dans les titres...",
+    "artistsPlaceholder": "Recherche parmi les artistes...",
+    "descriptionPlaceholder": "Rechercher dans les descriptions..."
+  }
+}

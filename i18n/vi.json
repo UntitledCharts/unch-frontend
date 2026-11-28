@@ -1,0 +1,120 @@
+{
+  "generic": {
+    "save": "Lưu",
+    "home": "Trang chủ",
+    "dashboard": "Chart của bạn",
+    "cancel": "Hủy",
+    "charts": "Chart",
+    "staffPick": "Được đội ngũ đánh giá tích cực",
+    "order": "Theo hướng",
+    "rating": "Cấp độ",
+    "likes": "Lượt thích",
+    "tags": "Tag",
+    "newest": "Mới nhất",
+    "share": "Chia sẻ",
+    "comments": "Bình luận",
+    "linkCopied": "Đã sao chép link!",
+    "edit": "Chỉnh sửa",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "next": "Kế tiếp",
+    "undo": "Hoàn tác",
+    "by": "Nghệ sĩ {1}",
+    "visibility": "Chế độ hiển thị",
+    "sortBy": "Sắp xếp theo",
+    "public": "Công khai",
+    "unlisted": "Không công khai",
+    "private": "Riêng tư",
+    "language": "Ngôn ngữ",
+    "saving": "Đang lưu...",
+    "delete": "Xóa",
+    "uploading": "Đang đăng lên...",
+    "back": "Quay lại",
+    "revoking": "Đang thu hồi...",
+    "authorizing": "Đang phê duyệt...",
+    "authorize": "Ủy quyền",
+    "pageOf": "Trang {1} trên {2}"
+  },
+  "nav": {
+    "logout": "Đăng xuất"
+  },
+  "oauth": {
+    "revokeNotice": "Bạn có thể thu hồi quyền này bất cứ lúc nào từ mục Ứng dụng được ủy quyền.",
+    "invalidRequest": "Yêu cầu ủy quyền này không hợp lệ.",
+    "connectionFailed": "Không thể kết nối đến Server. Vui lòng thử lại.",
+    "authorizedSubtitle": "Các ứng dụng mà bạn đã cấp quyền truy cập vào tài khoản của mình. Việc thu hồi quyền sẽ có hiệu lực ngay lập tức.",
+    "noApps": "Bạn chưa cấp phép cho bất kỳ ứng dụng nào.",
+    "revokeFailed": "Không thể thu hồi ứng dụng đó.",
+    "loadFailed": "Không thể tải các ứng dụng được ủy quyền của bạn."
+  },
+  "userProfile": {
+    "editProfile": "Chỉnh sửa",
+    "chartsLiked": "Đã thích",
+    "commentsMade": "Đã bình luận"
+  },
+  "home": {
+    "viewAll": "Hiển thị tất cả"
+  },
+  "search": {
+    "random": "Ngẫu nhiên",
+    "quick": "Nhanh",
+    "advanced": "Nâng cao",
+    "ascending": "Tăng dần",
+    "descending": "Giảm dần",
+    "alphabetical": "Theo thứ tự chữ cái",
+    "reroll": "Quay lại"
+  },
+  "levelDetail": {
+    "chartedBy": "Được tạo bởi {1}",
+    "openViaSonolus": "Mở bằng {1}",
+    "like": "Lượt thích",
+    "leaderboard": "Bảng xếp hạng",
+    "noComments": "Chưa có bình luận nào.",
+    "comment": "Bình luận",
+    "days": "Ngày",
+    "hours": "Giờ",
+    "mins": "Phút",
+    "secs": "Giây",
+    "makeStaffPick": "Được đội ngũ đánh giá tích cực",
+    "removeStaffPick": "Gỡ bỏ đánh giá",
+    "levelLabel": "Cấp độ",
+    "published": "Đã công khai",
+    "uploaded": "Đã đăng lên"
+  },
+  "footer": {
+    "openInSonolus": "Mở bằng Sonolus"
+  },
+  "dashboard": {
+    "status": "Trạng thái",
+    "schedulePublish": "Lịch trình công khai",
+    "scheduledFor": "Đã lên lịch trình cho {1}"
+  },
+  "uploadPolicy": {
+    "title": "Chính sách đăng tải",
+    "subtitle": "Vui lòng đọc kỹ các quy tắc trước khi đăng tải chart.",
+    "fileSizeLimits": "Giới hạn kích thước của tệp file",
+    "supportedFileTypes": "Các loại tệp file được hỗ trợ",
+    "fileTypesNote": "<strong>Lưu ý:</strong> Các tính năng mở rộng rất nâng cao chỉ có trong LevelData. Bạn có thể mở tệp file .usc trong trình editor để thực hiện chỉnh sửa.</strong>",
+    "openEditor": "Mở editor \"Next Sekai\"",
+    "noInappropriate": "Không có lời lẽ xúc phạm, phân biệt chủng tộc, chính trị, nội dung quá phản cảm, quảng cáo, v.v.",
+    "noAbuse": "Không được phép lạm dụng dịch vụ của chúng tôi nhằm mục đích phá hoại.",
+    "commonSense": "Không được phép đăng tải các chart chưa hoàn thiện lên \"Công Khai\".",
+    "correctMetadata": "Hãy đảm bảo bạn đã cung cấp thông tin chart chính xác (như \"Tên Nghệ sĩ\", \"Ảnh đĩa nhạc\",...)"
+  },
+  "countdown": {
+    "getReady": "SẴN SÀNG!",
+    "almostThere": "Sắp tới rồi..."
+  },
+  "settings": {
+    "themeLight": "Sáng",
+    "themeDark": "Tối"
+  },
+  "browse": {
+    "titlePlaceholder": "Tìm kiếm theo tiêu đề...",
+    "artistsPlaceholder": "Tìm kiếm theo nghệ sĩ...",
+    "descriptionPlaceholder": "Tìm kiếm trong phần mô tả..."
+  },
+  "preview": {
+    "qualityMax": "???-???"
+  }
+}

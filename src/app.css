@@ -1,0 +1,316 @@
+@layer theme, base, components, daisyui, utilities;
+
+@import "tailwindcss";
+@import "@fontsource-variable/unbounded";
+@import "@fontsource-variable/geist";
+@import "@fontsource/zen-kaku-gothic-new/400.css";
+@import "@fontsource/zen-kaku-gothic-new/700.css";
+
+/* FOT-Rodin, only for result labels (FULL COMBO, ALL PERFECT...). Cut down to capitals and digits. */
+@font-face {
+  font-family: "Rodin";
+  src: url("/fonts/rodin-eb.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+
+@plugin "daisyui" {
+  themes: false;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Blue with a Miku-teal accent, dark first. --primary (blue) carries actions and selection,
+  --accent (teal) carries links, charter names and highlights. Accent presets in settings
+  only swap --primary.
+*/
+:root {
+  --background: oklch(0.975 0.008 235);
+  --foreground: oklch(0.23 0.035 252);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.23 0.035 252);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.23 0.035 252);
+  --primary: oklch(0.58 0.16 245);
+  --primary-foreground: oklch(0.98 0.01 252);
+  --secondary: oklch(0.945 0.013 235);
+  --secondary-foreground: oklch(0.23 0.035 252);
+  --muted: oklch(0.945 0.013 235);
+  --muted-foreground: oklch(0.5 0.03 245);
+  --accent: oklch(0.56 0.1 190);
+  --accent-foreground: oklch(0.98 0.01 190);
+  --destructive: oklch(0.58 0.21 25);
+  --bc: oklch(0.9 0.014 235);
+  --input: oklch(0.88 0.016 235);
+  --ring: oklch(0.58 0.16 245);
+  --chart-1: oklch(0.85 0.08 200);
+  --chart-2: oklch(0.75 0.12 195);
+  --chart-3: oklch(0.65 0.15 230);
+  --chart-4: oklch(0.58 0.16 245);
+  --chart-5: oklch(0.48 0.14 245);
+  --radius: 0.95rem;
+  --sidebar: oklch(0.96 0.01 235);
+  --sidebar-foreground: oklch(0.23 0.035 252);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: oklch(0.945 0.013 235);
+  --sidebar-accent-foreground: oklch(0.23 0.035 252);
+  --sidebar-border: oklch(0.9 0.014 235);
+  --sidebar-ring: var(--primary);
+  --featured: oklch(0.2 0.035 252);
+  --featured-foreground: oklch(0.97 0.01 230);
+
+  /* Meanings that had no name and were written as raw palette colours (files/design/02-foundations.md).
+     The values are the ones already in use: rose-400, amber-400 on amber-950. */
+  --like: oklch(0.712 0.194 13.428);
+  --staff: oklch(0.828 0.189 84.429);
+  --staff-foreground: oklch(0.279 0.077 45.635);
+
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.25, 1);
+
+  --color-base-100: var(--card);
+  --color-base-200: var(--muted);
+  --color-base-300: var(--secondary);
+  --color-base-content: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-content: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-content: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-content: var(--accent-foreground);
+  --color-neutral: var(--secondary);
+  --color-neutral-content: var(--secondary-foreground);
+  --color-info: oklch(0.7 0.13 220);
+  --color-info-content: oklch(0.2 0.04 220);
+  --color-success: oklch(0.72 0.15 160);
+  --color-success-content: oklch(0.2 0.05 160);
+  --color-warning: oklch(0.82 0.15 85);
+  --color-warning-content: oklch(0.28 0.06 85);
+  --color-error: var(--destructive);
+  --color-error-content: oklch(0.98 0.01 25);
+  --radius-selector: 999px;
+  --radius-field: var(--radius);
+  --radius-box: calc(var(--radius) * 1.6);
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+.dark {
+  --background: oklch(0.165 0.03 245);
+  --foreground: oklch(0.96 0.01 230);
+  --card: oklch(0.21 0.032 245);
+  --card-foreground: oklch(0.96 0.01 230);
+  --popover: oklch(0.23 0.032 245);
+  --popover-foreground: oklch(0.96 0.01 230);
+  --primary: oklch(0.67 0.155 243);
+  --primary-foreground: oklch(0.98 0.01 252);
+  --secondary: oklch(0.26 0.032 245);
+  --secondary-foreground: oklch(0.96 0.01 230);
+  --muted: oklch(0.26 0.032 245);
+  --muted-foreground: oklch(0.73 0.03 240);
+  --accent: oklch(0.8 0.12 188);
+  --accent-foreground: oklch(0.2 0.04 190);
+  --destructive: oklch(0.7 0.18 25);
+  --bc: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.67 0.155 243);
+  --sidebar: oklch(0.19 0.03 245);
+  --sidebar-foreground: oklch(0.96 0.01 230);
+  --sidebar-accent: oklch(0.26 0.032 245);
+  --sidebar-accent-foreground: oklch(0.96 0.01 230);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --featured: oklch(0.13 0.03 245);
+  --featured-foreground: oklch(0.97 0.01 230);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--bc);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-featured: var(--featured);
+  --color-featured-foreground: var(--featured-foreground);
+  --color-like: var(--like);
+  --color-staff: var(--staff);
+  --color-staff-foreground: var(--staff-foreground);
+
+  /* the smallest text: chips, tags, table headers */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: 'Geist Variable', 'Zen Kaku Gothic New', sans-serif;
+
+  --font-heading: 'Unbounded Variable', 'Geist Variable', 'Zen Kaku Gothic New', sans-serif;
+  --font-rodin: 'Rodin', 'Unbounded Variable', sans-serif;
+
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-3xl: calc(var(--radius) * 1.85);
+  --radius-4xl: calc(var(--radius) * 2.2);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  /* Tailwind v4 dropped the pointer cursor on buttons; bring it back for everything clickable */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary {
+    cursor: pointer;
+  }
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: inherit; }
+
+/* Tints a subtree with a colour picked from an image (see src/lib/ambient.ts, which sets --amb*).
+   The base values repeat the theme's own, since a variable can't be mixed with itself. */
+.ambient {
+  --background: color-mix(in oklab, var(--amb) 7%, oklch(0.975 0.008 235));
+  --card: color-mix(in oklab, var(--amb) 6%, oklch(1 0 0));
+  --popover: var(--card);
+  --muted: color-mix(in oklab, var(--amb) 12%, oklch(0.945 0.013 235));
+  --secondary: var(--muted);
+  --bc: color-mix(in oklab, var(--amb) 25%, oklch(0.9 0.014 235));
+  --primary: var(--amb-primary);
+  --primary-foreground: oklch(0.99 0 0);
+  --ring: var(--amb-primary);
+  --accent: var(--amb-text-light);
+  /* daisyUI reads these, and they were resolved at :root */
+  --color-primary: var(--primary);
+  --color-primary-content: var(--primary-foreground);
+  --color-base-100: var(--card);
+  --color-base-200: var(--muted);
+  --color-base-300: var(--secondary);
+}
+/* page background on tinted pages: the image colour blended into the normal background, plus a glow */
+body.ambient-page {
+  background:
+    radial-gradient(ellipse 80% 28rem at top, color-mix(in oklab, var(--amb) 18%, transparent), transparent) no-repeat,
+    color-mix(in oklab, var(--amb) 9%, oklch(0.975 0.008 235));
+}
+.dark body.ambient-page {
+  background:
+    radial-gradient(ellipse 80% 28rem at top, color-mix(in oklab, var(--amb) 22%, transparent), transparent) no-repeat,
+    color-mix(in oklab, var(--amb) 14%, oklch(0.165 0.03 245));
+}
+
+.dark .ambient {
+  --background: color-mix(in oklab, var(--amb) 12%, oklch(0.15 0.02 245));
+  --card: color-mix(in oklab, var(--amb) 14%, oklch(0.2 0.025 245));
+  --muted: color-mix(in oklab, var(--amb) 18%, oklch(0.25 0.025 245));
+  --bc: color-mix(in oklab, var(--amb) 30%, oklch(1 0 0 / 9%));
+  --accent: var(--amb-text-dark);
+}
+
+/* Safari drops border-radius clipping for children with filters (our blurred cover tints), which makes
+   rounded cards look square. Any mask makes WebKit clip properly; this one keeps everything visible. */
+.clip-rounded {
+  mask-image: radial-gradient(white, black);
+}
+
+/* Unbounded runs heavy; one step lighter than the requested weight reads right. */
+.font-heading {
+  letter-spacing: -0.01em;
+}
+.font-heading:is(.font-bold, .font-extrabold, .font-black) {
+  font-weight: 620;
+}
+
+@keyframes badge-pulse {
+  0% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  70% { box-shadow: 0 0 0 5px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; opacity: 1; }
+}
+.group:hover .badge-dot {
+  animation: badge-pulse 0.9s ease-out;
+}
+
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.heart-pop:hover {
+  animation: heart-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .badge-dot,
+  .heart-pop:hover {
+    animation: none;
+  }
+}
+
+.checkbox {
+  border-radius: 0.25rem;
+}
+
+/* A darker surface with a dot screen that fades out, like halftone print. Painted as background
+   layers only, so it never stacks above menus or popovers opened over it. */
+.halftone {
+  --halftone-base: color-mix(in oklab, black 22%, var(--card));
+  background-color: var(--halftone-base);
+  background-image:
+    linear-gradient(to bottom, transparent, var(--halftone-base) 70%),
+    radial-gradient(color-mix(in oklab, var(--foreground) 11%, transparent) 1.1px, transparent 1.7px);
+  background-size: 100% 100%, 7px 7px;
+}
