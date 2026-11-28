@@ -489,6 +489,7 @@
     "wrongType": "{1} can't be used here. Accepted formats: {2}.",
     "unreadableImage": "{1} couldn't be opened as an image.",
     "audioTooShort": "{1} is only {2} long. Songs have to be at least {3} seconds long.",
+    "audioProcessingFailed": "{1} couldn't be processed. Try again in a moment.",
     "chartTooShort": "The chart only has {1} charted. There must be at least {2} seconds of chart.",
     "pasteHint": "You can also paste an image with {1}",
     "dropOrChoose": "Drop a file here, or click to choose one",

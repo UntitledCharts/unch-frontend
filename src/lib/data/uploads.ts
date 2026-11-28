@@ -167,6 +167,8 @@ export function formFailure(res: Failure, options: { kind?: FileKind; minSeconds
   const label = kind ? t(FILE_LABELS[kind]) : "";
   const number = (value: unknown) => (typeof value === "number" ? value : Number(value));
   switch (res.code) {
+    case "error.chart.too_short":
+      return t("files.chartTooShort", [formatTime(number(params.seconds)), String(params.min_seconds ?? "")]);
     case "error.file.audio_too_short": {
       const min = params.min_seconds;
       return t("upload.audioTooShort", [typeof min === "number" ? min : (options.minSeconds ?? 0)]);
@@ -177,6 +179,8 @@ export function formFailure(res: Failure, options: { kind?: FileKind; minSeconds
     case "error.file.invalid_png":
     case "error.file.invalid_audio_type":
       return kind ? t("files.wrongType", [label, formatsLabel(kind)]) : res.error;
+    case "error.file.audio_processing_failed":
+      return kind ? t("files.audioProcessingFailed", [label]) : res.error;
     case "error.chart.invalid_format":
     case "error.chart.unsupported_format":
     case "error.chart.wrong_level_data":
